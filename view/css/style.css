@@ -1,0 +1,71 @@
+#background {
+	background:#949486;
+	padding:0;
+	margin:0;
+}
+
+#container {
+	width:960px;
+	height: 1000px;
+
+	margin-left:auto; 
+	margin-right:auto;
+
+	background:#EAEADF; 
+	color: #000; 
+}
+
+#header{
+	background:#D4D4BF;
+	height:20%;
+	padding-top:10px;
+	border-bottom: 4.0px solid #949486;
+}
+
+#content{
+	font-family: sans-serif;
+	height:75%;
+
+}
+
+#content p{
+	padding-left:20px;
+}
+
+#projectName p{
+	font-size:1.5em;
+	font-weight:bold;
+}
+
+#total{
+	border: 1.0px solid #949486;
+	background:#D4D4BF;
+	margin:10px; 
+	margin-top:20px;
+}
+
+#classTest{
+	font-weight:bold;
+}
+
+#testOK{
+	margin:10px;
+	border: 2.0px solid #63d13e; 
+	background:#B1E89E;
+	font-size:0.8em;
+}
+
+#testFailed{
+	margin:10px;
+	border: 2.0px solid red; 
+	background:#FF8080;
+	font-size:0.8em;
+}
+#footer{
+	font-family: sans-serif;
+	text-align:center;
+	font-size: 0.8em;
+	height:5%;
+	background:#EAEADF;
+	
+}
