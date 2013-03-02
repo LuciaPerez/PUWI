@@ -2,45 +2,54 @@
 
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 . $scriptDir/bash/messages.bash
+. $scriptDir/run.bash
 
 echo -e "\nLoading configuration...\n"
-end_with_ok 
 cp $scriptDir/config.ini.inc $scriptDir/config.ini
+end_with_ok 
 
+function main {
+	read_config
+	if [ ${#vendor_deps[@]} -eq 0 ]; 
+		then 
+		echo "You don't have any available dependency to load in the default location. Review your config file ($scriptDir/config.ini)"
+	else $scriptDir/load_deps.bash ${vendor_deps[*]} 
+	fi
+	
+	createAlias
+}
 
 function read_config {
 	regex="^.*\/vendor\/.*"
 	
 	while read line
 		do 
+		checkEnterSection && checkEnterDeps
 		path=`echo $line | awk '{print $3}'`
-		if [[ $path =~ $regex ]]; 
+		
+		if  [ "$inDeps" == "yes" ] && [[ $path =~ $regex ]]; 
 			then 
-			index=`echo ${#vendor_deps[@]}`
-			vendor_deps[$index]=`echo $line | awk '{print $1}'`
+			searchDepsName $path
 		fi
 	done < $scriptDir/config.ini.inc
 
 }
 
+function searchDepsName {
+	
+	dep=`echo $1 | cut -d"/" -f3`
+	index=`echo ${#vendor_deps[@]}`
+	vendor_deps[$index]=$dep
+}
 
-echo -e "Do you want to load all PHPUnit dependencies in the default location (vendor/)? (Y/N)"
-read ans
-
-if [ $ans = 'Y' ] || [ $ans = 'y' ] || [ $ans = 'yes' ] || [ $ans = 'YES' ];  
-	then read_config
-	if [ ${#vendor_deps[@]} -eq 0 ]; 
-	then echo "You don't have any available dependency to load in the default location. Review your config file ($scriptDir/config.ini)"
+function createAlias {	
+	if [[ `grep "^alias puwi=" ~/.bashrc` = "" ]]
+	then
+		echo 'alias puwi='$scriptDir'/launch_browser.bash' >> ~/.bashrc && . ~/.bashrc 
 	fi
+}
 
-else vi $scriptDir/config.ini
-     read_config
-fi
-$scriptDir/load_deps.bash ${vendor_deps[*]} 
-echo -e "\nPUWI successfully installed!"
-
-
-
+main $@
 
 
 

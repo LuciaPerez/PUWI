@@ -1,7 +1,5 @@
 #background {
 	background:#949486;
-	padding:0;
-	margin:0;
 }
 
 #container {
@@ -19,7 +17,7 @@
 	background:#D4D4BF;
 	height:20%;
 	padding-top:10px;
-	border-bottom: 3.0px solid #949486;
+	border-bottom: 4.0px solid #949486;
 }
 
 #content{
@@ -37,30 +35,35 @@
 	font-weight:bold;
 }
 
-#total{
-	border: 1.0px solid #949486;
-	background:#D4D4BF;
-	margin:10px; 
-	margin-top:20px;
-}
 
-#classTest{
+.classTest{
 	font-weight:bold;
 }
 
-#testOK{
+.box{
 	margin:10px;
-	border: 2.0px solid #63d13e; 
-	background:#B1E89E;
 	font-size:0.8em;
+	border-width:2.0px;
+	border-style:solid;
 }
 
-#testFailed{
-	margin:10px;
-	border: 2.0px solid red; 
-	background:#FF8080;
-	font-size:0.8em;
+#totalTests{
+	border-color:#949486;
+	background:#D4D4BF;
+	margin-top:20px;
+	font-size:1.0em;
 }
+
+.testOK{
+	border-color:#63d13e; 
+	background:#B1E89E;	
+}
+
+.testFailed{
+	border-color: red; 
+	background:#FF8080;
+}
+
 #footer{
 	font-family: sans-serif;
 	text-align:center;
