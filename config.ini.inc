@@ -1,11 +1,10 @@
-;Archivo de configuración
-
 [paths]
 
 pathAutoload = ./vendor/phpunit/PHPUnit/Autoload.php
 pathPear = /usr/share/php
+pathWWW = /var/www/puwi/
 
-;Dependencias
+[dependencies]
 
 pathPhpunit = ./vendor/phpunit/ 
 pathDbunit = ./vendor/dbunit/
