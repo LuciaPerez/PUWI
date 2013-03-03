@@ -1,8 +1,10 @@
 #!/bin/bash
 
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-. $scriptDir/bash/messages.bash
+
 . $scriptDir/run.bash
+. $scriptDir/bash/messages.bash
+wwwDir=""
 
 echo -e "\nLoading configuration...\n"
 cp $scriptDir/config.ini.inc $scriptDir/config.ini
@@ -30,9 +32,18 @@ function read_config {
 		if  [ "$inDeps" == "yes" ] && [[ $path =~ $regex ]]; 
 			then 
 			searchDepsName $path
+		else 
+			key=`echo $line | awk '{print $1}'`
+			searchPathWWW $key $path
+
 		fi
 	done < $scriptDir/config.ini.inc
 
+}
+
+function searchPathWWW {
+	[ "$1" == "pathWWW" ] && wwwDir=$2
+	cp -r $scriptDir/view $wwwDir
 }
 
 function searchDepsName {
