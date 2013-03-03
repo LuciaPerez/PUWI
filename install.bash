@@ -37,7 +37,7 @@ function read_config {
 			searchPathWWW $key $path
 
 		fi
-	done < $scriptDir/config.ini.inc
+	done < $scriptDir/config.ini
 
 }
 
