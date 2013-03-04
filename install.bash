@@ -56,7 +56,7 @@ function searchDepsName {
 function createAlias {	
 	if [[ `grep "^alias puwi=" ~/.bashrc` = "" ]]
 	then
-		echo 'alias puwi='$scriptDir'/launch_browser.bash' >> ~/.bashrc && . ~/.bashrc 
+		echo 'alias puwi='$scriptDir'/launch_project.bash' >> ~/.bashrc && . ~/.bashrc 
 	fi
 }
 
