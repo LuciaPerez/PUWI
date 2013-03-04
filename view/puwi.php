@@ -19,11 +19,20 @@
 	<img src="images/cabecera.png" alt="Cabecera" width="1000" height="170"/>
 	</div>
 	<div id="content">
+		<form> 
+		<input type="button" onclick="createDiv(this)" value="divsDinamicos"/> 
+		</form> 
 		<div id="projectName">
-		<p>My project</p>
+		<?
+			$projectName=$_GET['projectName'];
+			echo "<p>$projectName</p>";			
+		?>
 		</div>
 		<div id="totalTests" class="box">
-		<p>X test passing </p>
+		<?
+			$totalTests=$_GET['totalTests'];
+			echo "<p>$totalTests test passing</p>";			
+		?>
 		</div>
 
 		<div class="classTest">
