@@ -2,9 +2,9 @@
 
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-. $scriptDir/run.bash
+. $scriptDir/functions.bash
 . $scriptDir/bash/messages.bash
-wwwDir=""
+
 
 echo -e "\nLoading configuration...\n"
 cp $scriptDir/config.ini.inc $scriptDir/config.ini
@@ -40,7 +40,7 @@ function read_config {
 	done < $scriptDir/config.ini
 
 }
-
+wwwDir=""
 function searchPathWWW {
 	[ "$1" == "pathWWW" ] && wwwDir=$2
 	cp -r $scriptDir/view $wwwDir
