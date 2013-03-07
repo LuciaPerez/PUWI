@@ -75,13 +75,13 @@
 }
 
 #footer{
+	background: -moz-linear-gradient(#333333 0%, #000000 100%) ;
+	background: linear-gradient(#333333 0%, #000000 100%); 
 	color:#EAEADF;
 	font-family: sans-serif;
 	font-size: 0.8em;
 	text-align:center;
 	height:5%;
 	padding:20px;
-	background:black;
-	
 }
 
