@@ -145,7 +145,11 @@ include 'PUWI_LaunchBrowser.php';
 		}
 
 		$totalTests=$result->count();
-		PUWI_LaunchBrowser::launchBrowser($totalTests,$argv[1]);
+
+		$passed=$this->getTestsPassed($result);
+		$failures=$this->getTestsFailed($result);
+
+		PUWI_LaunchBrowser::launchBrowser($totalTests,$argv[1],$passed,$failures);
 
 		if ($exit) {
 		    exit($ret);
@@ -154,6 +158,27 @@ include 'PUWI_LaunchBrowser.php';
 		}
 	}
 
+	function getTestsPassed($result){
+		echo "\n-------RESULT: Test Passed-----\n";
+		$r=$result->passed();
+		$passed=array_keys($r);
+		print_r($passed);
+		return($passed);
+	}
+
+	function getTestsFailed($result){
+		echo "\n-------RESULT: Test Fail-----\n";
+		$res_fail=$result->failures();
+		$failures=array();
+		foreach ($res_fail as $fail){
+			$f=$fail->failedTest();
+			$c=get_class($f);
+			$n=$f->getName();
+			$testFail=$c."::".$n;
+			array_push($failures,$testFail);
+		}
+		return($failures);
+	}
     /**
      * Create a PHPUnit_TextUI_TestRunner, override in subclasses.
      *
