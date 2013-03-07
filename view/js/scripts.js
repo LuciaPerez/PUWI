@@ -1,12 +1,20 @@
+$(document).ready(function(){
+	function exampleJQuery()
+	{
+	    $("p").click(function(){
+	    $(".classTest").hide();
+	    });
+	}
+});
 
-num=0; 
-function createDiv(fil) { 
-  obj=fil.form; 
-  tab = document.createElement('div');
-  tab.id = 'calendario';
-  tab.style.padding = "1px";
-  tab.style.border = "1px solid red";
-  tab.style.background = "blue";
-  obj.appendChild(tab); 
-} 
+	function createDiv(contentDiv,className) { 
+		var div = document.createElement('div');
+		div.className  = className;
+		var content = document.getElementById('content');
+		div.innerHTML = "<p>"+contentDiv+"</p>";
+		content.appendChild(div);
+	}
+
+
+
 
