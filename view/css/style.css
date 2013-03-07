@@ -1,9 +1,9 @@
 #background {
 	width:100%;
-	background: -moz-linear-gradient(45deg,red, 20%, #EAEADF) ;
-	background: -webkit-linear-gradient(#63D13E, #EAEADF);
-  	background: -o-linear-gradient(#63D13E, #EAEADF);
-	background: linear-gradient(#63D13E 20%, #EAEADF); 
+	background: -moz-linear-gradient(#63D13E 0%, #EAEADF 20%) ;
+	background: -webkit-linear-gradient(#63D13E 0%, #EAEADF 20%);
+  	background: -o-linear-gradient(#63D13E 0%, #EAEADF 20%);
+	background: linear-gradient( #63D13E 0%, #EAEADF 20%); 
 	padding:0px;
 }
 
@@ -46,12 +46,12 @@
 
 .classTest p{
 	margin-top:30px;
-	margin-left:10px;
+	margin-left:20px;
 	font-weight:bold;      
 }
 
 .box{
-	margin:10px 30px 10px 30px;
+	margin:10px 40px 10px 40px;
 	font-size:0.8em;
 	border-width:2.0px;
 	border-style:solid;
