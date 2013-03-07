@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es" background-color: "#000;">
 <head>
 	<meta  http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<link rel="icon" type="image/png" href="images/favicon.ico" />
@@ -66,7 +66,8 @@ function createDinamicDivs(){
 <div id="container">
 
 	<div id="header">
-	<img src="images/cabecera.png" alt="Cabecera" width="1000" height="170"/>
+	<!--<img src="images/cabecera.png" alt="Cabecera" width="1000" height="170"/>-->
+		<h1>PhpUnit Web Interface</h1>
 	</div>
 	<div id="content">
 
@@ -80,7 +81,11 @@ function createDinamicDivs(){
 		<div id="totalTests" class="box">
 		<?
 			$totalTests=$_GET['totalTests'];
-			echo "<p>$totalTests test passing</p>";			
+			if ($totalTests == 0){
+				echo "<p>No tests executed!</p>";
+			}else{
+				echo "<p>$totalTests test passing</p>";			
+			}
 		?>
 		</div>
 
