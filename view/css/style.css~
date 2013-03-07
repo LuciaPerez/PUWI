@@ -1,27 +1,45 @@
 #background {
-	background:#949486;
+	width:100%;
+	background: -ms-linear-gradient(#63D13E 0%, #EAEADF 20%) ;
+	background: -moz-linear-gradient(#63D13E 0%, #EAEADF 20%) ;
+	background: -webkit-gradient(#63D13E 0%, #EAEADF 20%);
+	background: -webkit-linear-gradient(#63D13E 0%, #EAEADF 20%);
+  	background: -o-linear-gradient(#63D13E 0%, #EAEADF 20%);
+	background: linear-gradient( #63D13E 0%, #EAEADF 20%); 
+	margin:0px;
 }
 
 #container {
 	width:960px;
-	height: 1000px;
-
+	min-height:600px;
 	margin-left:auto; 
 	margin-right:auto;
-
-	background:#EAEADF; 
 	color: #000; 
+	font-family: sans-serif;
 }
-
 #header{
-	background:#D4D4BF;
+	margin:20px 0;
+	float:left;
+}
+#logo{
+	width:200px;
+	float:left;
+	padding-top:10px;
+}
+#title{
+	float:left;
+	background: url('../images/code_puwi.png') no-repeat;
 	height:20%;
 	padding-top:10px;
-	border-bottom: 4.0px solid #949486;
 }
-
+.text_center{
+	text-align:center;
+	float:none;
+	width:100%;
+}
 #content{
-	font-family: sans-serif;
+	margin-top:70px;
+	clear:both;
 	height:75%;
 
 }
@@ -31,26 +49,29 @@
 }
 
 #projectName p{
+	margin-bottom:10px;
+	padding-left:0px;
 	font-size:1.5em;
 	font-weight:bold;
 }
 
 
-.classTest{
-	font-weight:bold;
+.classTest p{
+	margin:30px 0px 0px 20px;
+	font-weight:bold;      
 }
 
 .box{
-	margin:10px;
+	margin:10px 40px 10px 40px;
 	font-size:0.8em;
 	border-width:2.0px;
 	border-style:solid;
 }
 
 #totalTests{
+	margin:0px;
 	border-color:#949486;
 	background:#D4D4BF;
-	margin-top:20px;
 	font-size:1.0em;
 }
 
@@ -65,10 +86,21 @@
 }
 
 #footer{
+	background: -ms-linear-gradient(#333333 0%, #000000 100%);
+	background: -moz-linear-gradient(#333333 0%, #000000 100%);
+	background: -webkit-gradient(#333333 0%, #000000 100%);
+	background: -webkit-linear-gradient(#333333 0%, #000000 100%);
+  	background: -o-linear-gradient(#333333 0%, #000000 100%);
+	background: linear-gradient(#333333 0%, #000000 100%); 
+	color:#EAEADF;
 	font-family: sans-serif;
-	text-align:center;
 	font-size: 0.8em;
+	text-align:center;
 	height:5%;
-	background:#EAEADF;
-	
+	padding:20px;
+	margin-top:35px;
+	-webkit-box-shadow:  0 -4px 3px 1px #888888;
+	-moz-box-shadow:  0 -4px 3px 1px #888888;
+	box-shadow:  0 -4px 3px 1px #888888;
 }
+

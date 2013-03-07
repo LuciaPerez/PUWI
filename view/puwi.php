@@ -66,8 +66,14 @@ function createDinamicDivs(){
 <div id="container">
 
 	<div id="header">
-	<!--<img src="images/cabecera.png" alt="Cabecera" width="1000" height="170"/>-->
-		<h1>PhpUnit Web Interface</h1>
+		<div id="logo">
+			<img src="images/puwi_logo.png" alt="Logo"/>
+		</div>
+		<div id="title">
+			<div class='text_center'>
+				<h1>PhpUnit Web Interface</h1>
+			</div>
+		</div>
 	</div>
 	<div id="content">
 
