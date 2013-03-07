@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es" background-color: "#000;">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es" style="background-color: #000;">
 <head>
 	<meta  http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<link rel="icon" type="image/png" href="images/favicon.ico" />
