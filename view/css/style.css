@@ -15,17 +15,16 @@
 	margin-left:auto; 
 	margin-right:auto;
 	color: #000; 
+	font-family: sans-serif;
 }
 
 #header{
-
+	text-align:center;
 	height:20%;
 	padding-top:10px;
-
 }
 
 #content{
-	font-family: sans-serif;
 	height:75%;
 
 }
@@ -84,9 +83,9 @@
 	text-align:center;
 	height:5%;
 	padding:20px;
-	margin-top:10px;
-	-webkit-box-shadow:  0px -3px 4px 1px #888888;
-	-moz-box-shadow:  0px -3px 4px 1px #888888;
-	box-shadow:  0px -3px 4px 1px #888888;
+	margin-top:35px;
+	-webkit-box-shadow:  0 -4px 3px 1px #888888;
+	-moz-box-shadow:  0 -4px 3px 1px #888888;
+	box-shadow:  0 -4px 3px 1px #888888;
 }
 
