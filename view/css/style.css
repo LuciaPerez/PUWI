@@ -1,5 +1,10 @@
 #background {
-	background:#949486;
+	width:100%;
+	background: -moz-linear-gradient(45deg,red, 20%, #EAEADF) ;
+	background: -webkit-linear-gradient(#63D13E, #EAEADF);
+  	background: -o-linear-gradient(#63D13E, #EAEADF);
+	background: linear-gradient(#63D13E 20%, #EAEADF); 
+	padding:0px;
 }
 
 #container {
@@ -14,10 +19,13 @@
 }
 
 #header{
-	background:#D4D4BF;
+	background: -moz-linear-gradient(#63D13E, #EAEADF);
+	background: -webkit-linear-gradient(#63D13E, #EAEADF);
+  	background: -o-linear-gradient(#63D13E, #EAEADF);
+	background: linear-gradient(#63D13E, #EAEADF); 
 	height:20%;
 	padding-top:10px;
-	border-bottom: 4.0px solid #949486;
+
 }
 
 #content{
@@ -36,21 +44,23 @@
 }
 
 
-.classTest{
-	font-weight:bold;
+.classTest p{
+	margin-top:30px;
+	margin-left:10px;
+	font-weight:bold;      
 }
 
 .box{
-	margin:10px;
+	margin:10px 30px 10px 30px;
 	font-size:0.8em;
 	border-width:2.0px;
 	border-style:solid;
 }
 
 #totalTests{
+	margin:20px 20px 10px 20px;
 	border-color:#949486;
 	background:#D4D4BF;
-	margin-top:20px;
 	font-size:1.0em;
 }
 
@@ -65,15 +75,13 @@
 }
 
 #footer{
+	color:#EAEADF;
 	font-family: sans-serif;
-	text-align:center;
 	font-size: 0.8em;
+	text-align:center;
 	height:5%;
-	background:#EAEADF;
+	padding:20px;
+	background:black;
 	
 }
 
-#calendario{
-
-	background:green;
-}
