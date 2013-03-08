@@ -29,7 +29,13 @@ function createDinamicDivs(){
 	$failures=$_GET['failures'];
 	$failures=receive_array($failures);
 
-	$totalTestsReceived=array_merge($passed,$failures);
+	$incomplete=$_GET['incomplete'];
+	$incomplete=receive_array($incomplete);
+
+	$skipped=$_GET['skipped'];
+	$skipped=receive_array($skipped);
+
+	$totalTestsReceived=array_merge($passed,$failures,$incomplete,$skipped);
 	sort($totalTestsReceived);
 	
 	$showedClass="";
@@ -51,7 +57,10 @@ function createDinamicDivs(){
 
 		$contentDiv=$test;
 		if(in_array($value,$passed)){
-		$className="testOK box";} else {$className="testFailed box";}	
+			$className="testOK box";} 
+		else if((in_array($value,$incomplete)) || (in_array($value,$skipped))) {
+			$className="testIncomplete box";
+		}else{ $className="testFailed box"; }	
 		
 	?>
 		<script type="text/javascript">
@@ -95,7 +104,7 @@ function createDinamicDivs(){
 		?>
 		</div>
 
-		<?php createDinamicDivs();?>
+		<?php createDinamicDivs(); ?>
 
 	</div>
 </div>

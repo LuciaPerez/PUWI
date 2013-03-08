@@ -85,6 +85,11 @@
 	background:#B1E89E;	
 }
 
+.testIncomplete{
+	border-color:#FFCC00; 
+	background:#FFE066;	
+}
+
 .testFailed{
 	border-color: red; 
 	background:#FF8080;
