@@ -67,7 +67,7 @@ function createDinamicDivs(){
 
 	<div id="header">
 		<div id="logo">
-			<img src="images/puwi_logo.png" alt="Logo"/>
+			<img src="images/puwi_logo.png" alt="Logo" height="100";/>
 		</div>
 		<div id="title">
 			<div class='text_center'>
