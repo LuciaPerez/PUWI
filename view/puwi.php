@@ -76,7 +76,7 @@ function createDinamicDivs(){
 
 	<div id="header">
 		<div id="logo">
-			<img src="images/puwi_logo.png" alt="Logo" height="100";/>
+			<img src="images/puwi_logo_green.png" alt="Logo" height="80";/>
 		</div>
 		<div id="title">
 			<div class='text_center'>
@@ -109,7 +109,7 @@ function createDinamicDivs(){
 	</div>
 </div>
 <div id="footer">
-	<p> PUWI - PhpUnit Web Interface </p>
+	<p> PUWI - <span class='green'>PhpUnit Web Interface </span></p>
 </div>
 </body>
 </html>

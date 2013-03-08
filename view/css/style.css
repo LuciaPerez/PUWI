@@ -18,22 +18,23 @@
 	font-family: sans-serif;
 }
 #header{
-	margin:10px 0 35px;
+	margin:10px 0 25px;
 	float:left;
 	width:100%;
 	height:20%;
 }
 #logo{
-	width:250px;
+	width:270px;
+	height:150px;
 	float:left;
-	margin-top:10px;
+	margin-top:15px;	
 	background: url('../images/code_puwi.png') no-repeat;
 }
 #logo img{
 	margin-left:50px;
 }
 #title{
-	width:710px;
+	width:690px;
 	float:left;
 
 	margin-top:15px;
@@ -43,7 +44,7 @@
 	margin:30px 0 0 80px;
 }
 #content{
-	margin-top:70px;
+	margin-top:0px;
 	clear:both;
 	height:75%;
 
@@ -81,13 +82,13 @@
 }
 
 .testOK{
-	border-color:#63d13e; 
-	background:#B1E89E;	
+	border-color: #66cc33;
+	background: #B2E699;
 }
 
 .testIncomplete{
 	border-color:#FFCC00; 
-	background:#FFE066;	
+	background:#FFE680;	
 }
 
 .testFailed{
@@ -112,5 +113,9 @@
 	-webkit-box-shadow:  0 -4px 3px 1px #888888;
 	-moz-box-shadow:  0 -4px 3px 1px #888888;
 	box-shadow:  0 -4px 3px 1px #888888;
+}
+
+.green{
+	color:#66cc33;
 }
 
