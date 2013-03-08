@@ -7,14 +7,22 @@ class PUWI_LaunchBrowser{
 	*@param string  $projectName
 	*/
 
-	public function launchBrowser($totalTests,$projectName,$passed,$failures,$incomplete,$skipped){
+	public function launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped){
 				
 		$passed=PUWI_LaunchBrowser::send_array($passed); 
 		$failures=PUWI_LaunchBrowser::send_array($failures);
+		$errors=PUWI_LaunchBrowser::send_array($errors);
 		$incomplete=PUWI_LaunchBrowser::send_array($incomplete);
 		$skipped=PUWI_LaunchBrowser::send_array($skipped);
 	
-		$url="http://localhost/view/puwi.php"."?projectName=".$projectName."\&totalTests=".$totalTests."\&passed=".$passed."\&failures=".$failures."\&incomplete=".$incomplete."\&skipped=".$skipped;
+		$url="http://localhost/view/puwi.php".
+		     "?projectName=".$projectName.
+		     "\&totalTests=".$totalTests.
+		     "\&passed=".$passed.
+		     "\&failures=".$failures.
+		     "\&errors=".$errors.
+		     "\&incomplete=".$incomplete.
+		     "\&skipped=".$skipped;
 
 		$command="x-www-browser ".$url." &";
 		system($command);
@@ -27,10 +35,11 @@ class PUWI_LaunchBrowser{
 
 		$passed=PUWI_LaunchBrowser::getTestsPassed($result);
 		$failures=PUWI_LaunchBrowser::getTestsFailed($result);
+		$errors=PUWI_LaunchBrowser::getTestsError($result);
 		$incomplete=PUWI_LaunchBrowser::getTestsIncompleted($result);
 		$skipped=PUWI_LaunchBrowser::getTestsSkipped($result);
 
-		PUWI_LaunchBrowser::launchBrowser($totalTests,$projectName,$passed,$failures,$incomplete,$skipped);
+		PUWI_LaunchBrowser::launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped);
 
 	}
 
@@ -56,6 +65,10 @@ class PUWI_LaunchBrowser{
 
 	function getTestsFailed(PHPUnit_Framework_TestResult $result){
 		return(PUWI_LaunchBrowser::getClassAndNameTest($result->failures()));
+	}
+
+	function getTestsError(PHPUnit_Framework_TestResult $result){
+		return(PUWI_LaunchBrowser::getClassAndNameTest($result->errors()));
 	}
 
 	function getTestsIncompleted(PHPUnit_Framework_TestResult $result){

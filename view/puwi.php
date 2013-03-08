@@ -29,13 +29,16 @@ function createDinamicDivs(){
 	$failures=$_GET['failures'];
 	$failures=receive_array($failures);
 
+	$errors=$_GET['errors'];
+	$errors=receive_array($errors);
+
 	$incomplete=$_GET['incomplete'];
 	$incomplete=receive_array($incomplete);
 
 	$skipped=$_GET['skipped'];
 	$skipped=receive_array($skipped);
 
-	$totalTestsReceived=array_merge($passed,$failures,$incomplete,$skipped);
+	$totalTestsReceived=array_merge($passed,$failures,$incomplete,$skipped,$errors);
 	sort($totalTestsReceived);
 	
 	$showedClass="";
