@@ -15,7 +15,7 @@ class PUWI_LaunchBrowser{
 		$incomplete=PUWI_LaunchBrowser::send_array($incomplete);
 		$skipped=PUWI_LaunchBrowser::send_array($skipped);
 	
-		$url="http://localhost/view/puwi.php".
+		$url="http://localhost/view/index.php".
 		     "?projectName=".$projectName.
 		     "\&totalTests=".$totalTests.
 		     "\&passed=".$passed.
@@ -64,7 +64,9 @@ class PUWI_LaunchBrowser{
 	} 
 
 	function getTestsFailed(PHPUnit_Framework_TestResult $result){
-		return(PUWI_LaunchBrowser::getClassAndNameTest($result->failures()));
+		$fail=$result->failures();
+		PUWI_LaunchBrowser::printErrors($fail);
+		return(PUWI_LaunchBrowser::getClassAndNameTest($fail));
 	}
 
 	function getTestsError(PHPUnit_Framework_TestResult $result){
@@ -89,6 +91,36 @@ class PUWI_LaunchBrowser{
 			array_push($result,$fullName);
 		}
 		return($result);
+	}
+
+	function printErrors(array $fail){
+		echo "\n..........PRINT........\n";
+		foreach ($fail as $f){
+			$data=PHPUnit_Util_Filter::getFilteredStacktrace(
+			    $f->thrownException()
+			);
+			
+			$file=strstr($data, ':', true);
+			$line=substr(strstr($data, ':'),1);
+
+		
+			$file_to_open = fopen ($file, "r");
+			$text = "";
+			$number_line=1;
+			while ($aux = fgets($file_to_open, 1024)){
+				if (($line-2<=$number_line) && ($number_line<=$line+2)){ 
+					$text .= $aux; 
+				}
+				$number_line++;
+			}
+			echo $text;
+				
+		}
+	}
+	
+	function prueba(){
+		echo "\n...FUNCIONAAAAAAAAAA\n";
+
 	}
 }
 ?>
