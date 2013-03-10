@@ -9,13 +9,13 @@ class PUWI_LaunchBrowser{
 
 	public function launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped){
 				
-		$passed=PUWI_LaunchBrowser::send_array($passed); 
-		$failures=PUWI_LaunchBrowser::send_array($failures);
-		$errors=PUWI_LaunchBrowser::send_array($errors);
-		$incomplete=PUWI_LaunchBrowser::send_array($incomplete);
-		$skipped=PUWI_LaunchBrowser::send_array($skipped);
+		$passed = $this->send_array($passed); 
+		$failures = $this->send_array($failures);
+		$errors = $this->send_array($errors);
+		$incomplete = $this->send_array($incomplete);
+		$skipped = $this->send_array($skipped);
 	
-		$url="http://localhost/view/index.php".
+		$url="http://localhost/view/puwi.php".
 		     "?projectName=".$projectName.
 		     "\&totalTests=".$totalTests.
 		     "\&passed=".$passed.
@@ -31,15 +31,15 @@ class PUWI_LaunchBrowser{
 
 	function getResults($projectName,$result){
 		$totalTests = $result->count();
-		$projectName=PUWI_LaunchBrowser::getProjectName($projectName);
+		$projectName = $this->getProjectName($projectName);
 
-		$passed=PUWI_LaunchBrowser::getTestsPassed($result);
-		$failures=PUWI_LaunchBrowser::getTestsFailed($result);
-		$errors=PUWI_LaunchBrowser::getTestsError($result);
-		$incomplete=PUWI_LaunchBrowser::getTestsIncompleted($result);
-		$skipped=PUWI_LaunchBrowser::getTestsSkipped($result);
+		$passed = $this->getTestsPassed($result);
+		$failures = $this->getTestsFailed($result);
+		$errors = $this->getTestsError($result);
+		$incomplete = $this->getTestsIncompleted($result);
+		$skipped = $this->getTestsSkipped($result);
 
-		PUWI_LaunchBrowser::launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped);
+		$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped);
 
 	}
 
@@ -65,20 +65,20 @@ class PUWI_LaunchBrowser{
 
 	function getTestsFailed(PHPUnit_Framework_TestResult $result){
 		$fail=$result->failures();
-		PUWI_LaunchBrowser::printErrors($fail);
-		return(PUWI_LaunchBrowser::getClassAndNameTest($fail));
+		$this->printErrors($fail);
+		return($this->getClassAndNameTest($fail));
 	}
 
 	function getTestsError(PHPUnit_Framework_TestResult $result){
-		return(PUWI_LaunchBrowser::getClassAndNameTest($result->errors()));
+		return($this->getClassAndNameTest($result->errors()));
 	}
 
 	function getTestsIncompleted(PHPUnit_Framework_TestResult $result){
-		return(PUWI_LaunchBrowser::getClassAndNameTest($result->notImplemented()));
+		return($this->getClassAndNameTest($result->notImplemented()));
 	}
 
 	function getTestsSkipped(PHPUnit_Framework_TestResult $result){
-		return(PUWI_LaunchBrowser::getClassAndNameTest($result->skipped()));
+		return($this->getClassAndNameTest($result->skipped()));
 	}
 	
 	function getClassAndNameTest(array $tests){
@@ -94,7 +94,7 @@ class PUWI_LaunchBrowser{
 	}
 
 	function printErrors(array $fail){
-		echo "\n..........PRINT........\n";
+		echo "\n..........PRINT ERROR LINES........\n";
 		foreach ($fail as $f){
 			$data=PHPUnit_Util_Filter::getFilteredStacktrace(
 			    $f->thrownException()
@@ -118,9 +118,5 @@ class PUWI_LaunchBrowser{
 		}
 	}
 	
-	function prueba(){
-		echo "\n...FUNCIONAAAAAAAAAA\n";
-
-	}
 }
 ?>
