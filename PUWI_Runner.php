@@ -124,6 +124,9 @@ include 'PUWI_LaunchBrowser.php';
 		unset($this->arguments['test']);
 		unset($this->arguments['testFile']);
 
+
+
+
 		try {
 		    $result = $runner->doRun($suite, $this->arguments);
 		}
@@ -144,7 +147,8 @@ include 'PUWI_LaunchBrowser.php';
 		    $ret = PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT;
 		}
 
-		PUWI_LaunchBrowser::getResults($argv[1],$result);
+		$launch = new PUWI_LaunchBrowser();
+		$launch->getResults($argv[1],$result);
 
 		if ($exit) {
 		    exit($ret);
@@ -161,7 +165,6 @@ include 'PUWI_LaunchBrowser.php';
      */
     protected function createRunner()
     {
-
         return new PHPUnit_TextUI_TestRunner($this->arguments['loader']);
     }
 
@@ -192,7 +195,6 @@ include 'PUWI_LaunchBrowser.php';
      */
     protected function handleArguments(array $argv)
     {
-
         try {
             $this->options = PHPUnit_Util_Getopt::getopt(
               $argv,
@@ -206,6 +208,7 @@ include 'PUWI_LaunchBrowser.php';
         }
 
         foreach ($this->options[0] as $option) {
+		
             switch ($option[0]) {
 
                 case '--colors': {
@@ -477,6 +480,7 @@ include 'PUWI_LaunchBrowser.php';
             }
 
             if (isset($this->options[1][1])) {
+
                 $this->arguments['testFile'] = realpath($this->options[1][1]);
             } else {
                 $this->arguments['testFile'] = '';
@@ -487,7 +491,6 @@ include 'PUWI_LaunchBrowser.php';
                 substr($this->arguments['test'], -5, 5) != '.phpt') {
                 $this->arguments['testFile'] = realpath($this->arguments['test']);
                 $this->arguments['test']     = substr($this->arguments['test'], 0, strrpos($this->arguments['test'], '.'));
-
 
             }
         }
@@ -504,7 +507,6 @@ include 'PUWI_LaunchBrowser.php';
         }
 
         if (isset($this->arguments['bootstrap'])) {
-print "\naqui 7";
             $this->handleBootstrap($this->arguments['bootstrap']);
         }
 
