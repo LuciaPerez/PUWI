@@ -125,9 +125,8 @@ include 'PUWI_LaunchBrowser.php';
 		unset($this->arguments['testFile']);
 
 
-
-
 		try {
+		    $runner->setPrinter(new PHPUnit_TextUI_ResultPrinter($out = NULL, $verbose = FALSE, $colors = FALSE, $debug = FALSE));
 		    $result = $runner->doRun($suite, $this->arguments);
 		}
 
