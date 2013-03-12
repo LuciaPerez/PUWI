@@ -15,7 +15,7 @@ class PUWI_LaunchBrowser{
 		$incomplete = $this->send_array($incomplete);
 		$skipped = $this->send_array($skipped);
 	
-		$url="http://localhost/view/puwi.php".
+		$url="http://localhost/view/index.php".
 		     "?projectName=".$projectName.
 		     "\&totalTests=".$totalTests.
 		     "\&passed=".$passed.
@@ -65,7 +65,7 @@ class PUWI_LaunchBrowser{
 
 	function getTestsFailed(PHPUnit_Framework_TestResult $result){
 		$fail=$result->failures();
-		$this->printErrors($fail);
+		//$this->printErrors($fail);
 		return($this->getClassAndNameTest($fail));
 	}
 
