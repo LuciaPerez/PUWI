@@ -51,10 +51,9 @@ class PUWI_LaunchBrowser{
 	}
 	
 	public function getProjectName($projectName){
-		$names=preg_split("/[\/]tests/",$projectName);
-		$projectName=explode("/",$names[0]);
+		$projectName=explode("/",$projectName);
 		$size=sizeof($projectName);
-		return $projectName[$size-1];
+		return $projectName[$size-2];
 	}
 
 	function getTestsPassed(PHPUnit_Framework_TestResult $result){
@@ -116,6 +115,11 @@ class PUWI_LaunchBrowser{
 			echo $text;
 				
 		}
+	}
+
+	function pruebaVisibilidad(){
+		echo ">>>>>>>>>>>> OLA KE ASE <>>>>>>>>>>>>>>>>>>";
+
 	}
 	
 }
