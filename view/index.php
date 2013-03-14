@@ -1,6 +1,6 @@
 <?php
 require('puwi/setup.php');
-
+//include ("/home/lucia/PUWI/PUWI_LaunchBrowser.php");
 
 class index{
 	private $showedClass='';
@@ -56,7 +56,7 @@ class index{
 
 		$smarty->display("header.tpl");
 		$smarty->display("results.tpl");
-		
+
 		foreach ($totalTestsReceived as $key => $value){  
 			$class=strstr($value, ':', true);
 			$test=substr(strrchr($value, ":"), 1);
@@ -81,7 +81,10 @@ class index{
 		}
 
 		$smarty->display("footer.tpl");
-
+		$smarty->clear_all_assign();
+		$smarty->clear_all_cache();
+		/*$launch = new PUWI_LaunchBrowser();
+		$launch->pruebaVisibilidad();*/
 	}
 
 }
