@@ -1,20 +1,22 @@
 <?php
 
 class PUWI_LaunchBrowser{
-
+	private $prueba='PROBANDO......';
 	/*
 	*@param integer $totalTests
 	*@param string  $projectName
 	*/
 
-	public function launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped){
+	public function launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders){
 				
 		$passed = $this->send_array($passed); 
 		$failures = $this->send_array($failures);
 		$errors = $this->send_array($errors);
 		$incomplete = $this->send_array($incomplete);
 		$skipped = $this->send_array($skipped);
-	
+		$groups = $this->send_array($groups);	
+		$folders = $this->send_array($folders);
+
 		$url="http://localhost/view/index.php".
 		     "?projectName=".$projectName.
 		     "\&totalTests=".$totalTests.
@@ -22,27 +24,30 @@ class PUWI_LaunchBrowser{
 		     "\&failures=".$failures.
 		     "\&errors=".$errors.
 		     "\&incomplete=".$incomplete.
-		     "\&skipped=".$skipped;
+		     "\&skipped=".$skipped.
+		     "\&groups=".$groups.
+		     "\&folders=".$folders;
 
 		$command="x-www-browser ".$url." &";
 		system($command);
 
 	}
 
-	function getResults($projectName,$result){
+	function getResults($projectName,$result,$folders){
 		$totalTests = $result->count();
 		$projectName = $this->getProjectName($projectName);
 	
-		$groups = $this->getGroups($result);
-		echo "\n----------GROUPS-------------\n";
-		print_r($groups);
 		$passed = $this->getTestsPassed($result);
 		$failures = $this->getTestsFailed($result);
 		$errors = $this->getTestsError($result);
 		$incomplete = $this->getTestsIncompleted($result);
 		$skipped = $this->getTestsSkipped($result);
+		$groups = $this->getGroups($result);
 
-		$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped);
+		echo "\n----------GROUPS-------------\n";
+		print_r($groups);
+	
+		$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders);
 
 	}
 
@@ -143,8 +148,8 @@ class PUWI_LaunchBrowser{
 		}
 	}
 
-	function pruebaVisibilidad($s){
-		echo ">>>>>>>>>>>> OLA KE ASE <>>>>>>>>>>>>>>>>>> ".$s;
+	function pruebaVisibilidad(){
+		return $this->prueba;
 
 	}
 	
