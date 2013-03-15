@@ -46,10 +46,10 @@ class index{
 		$errors = $index->get_URLData('errors');
 		$incomplete = $index->get_URLData('incomplete');
 		$skipped = $index->get_URLData('skipped');
+		$groups = $index->get_URLData('groups');
 
 		$totalTestsReceived = array_merge($passed,$failures,$incomplete,$skipped,$errors);
 		sort($totalTestsReceived);
-
 
 		$smarty = new Smarty_Puwi();
 
@@ -82,6 +82,7 @@ class index{
 		$smarty->display("footer.tpl");
 		$smarty->clear_all_assign();
 		$smarty->clear_all_cache();
+
 	}
 
 }
