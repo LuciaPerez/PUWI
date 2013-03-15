@@ -80,15 +80,10 @@ include 'PUWI_LaunchBrowser.php';
 	public static function main($exit = TRUE)
 	{
 		$puwi = new PUWI_Runner;
-		$puwi->getFolder($_SERVER['argv'][1]);
-		echo "\n----------FOLDERS-------------\n";
-		print_r($puwi->arrayFolders);
 		return $puwi->run($_SERVER['argv'],$exit);
 
 	}
 
-
-	
 	public function getFolder($pathProject){
 	   $regex="/^\./";
 	   if (is_dir($pathProject)) { 
@@ -96,10 +91,9 @@ include 'PUWI_LaunchBrowser.php';
 		$arrayFiles = array();
 		if ($dir = opendir($pathProject)) { 
 			while (($file = readdir($dir)) !== false) { 
-
 				if (is_dir($pathProject . $file) && $file!="." && $file!=".." && !preg_match($regex,$file)){
 					$this->folder= $file;
-					
+				
 					$this->getFolder($pathProject . $file . "/"); 
 				} else{
 					if($file!="." && $file!=".." && $file!=".." && !preg_match($regex,$file)){
@@ -180,8 +174,12 @@ include 'PUWI_LaunchBrowser.php';
 		    $ret = PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT;
 		}
 
+		$this->getFolder($_SERVER['argv'][1]);
+		echo "\n----------FOLDERS-------------\n";
+		print_r($this->arrayFolders);
+
 		$launch = new PUWI_LaunchBrowser();
-		$launch->getResults($argv[1],$result);
+		$launch->getResults($argv[1],$result,$this->arrayFolders);
 
 		if ($exit) {
 		    exit($ret);
