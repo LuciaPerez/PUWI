@@ -32,7 +32,10 @@ class PUWI_LaunchBrowser{
 	function getResults($projectName,$result){
 		$totalTests = $result->count();
 		$projectName = $this->getProjectName($projectName);
-
+	
+		$groups = $this->getGroups($result);
+		echo "\n----------GROUPS-------------\n";
+		print_r($groups);
 		$passed = $this->getTestsPassed($result);
 		$failures = $this->getTestsFailed($result);
 		$errors = $this->getTestsError($result);
@@ -43,6 +46,29 @@ class PUWI_LaunchBrowser{
 
 	}
 
+	function getGroups($result){
+		$groups_details = $result->topTestSuite()->getGroupDetails();
+		$groups = $result->topTestSuite()->getGroups();
+		
+		$index=0;
+		$arrayResult = array();
+		foreach ($groups_details as $group){
+			$group_values = array_values($group);
+			$arrayClasses = array();
+			foreach ($group_values as $g){
+				$gd = $g->getGroupDetails();
+				$array= $gd[$groups[$index]];
+				$arrayTests = array();
+				foreach ($array as $test){
+					array_push($arrayTests,$test->getName());	
+				}
+				$arrayClasses[$g->getName()]=$arrayTests;			
+			}
+			$arrayResult[$groups[$index]] = $arrayClasses;
+			$index++;
+		}
+		return $arrayResult;
+	}
 
 	function send_array($array) { 
 	    $tmp = serialize($array); 
@@ -53,6 +79,7 @@ class PUWI_LaunchBrowser{
 	public function getProjectName($projectName){
 		$projectName=explode("/",$projectName);
 		$size=sizeof($projectName);
+		
 		return $projectName[$size-2];
 	}
 
@@ -101,24 +128,23 @@ class PUWI_LaunchBrowser{
 			
 			$file=strstr($data, ':', true);
 			$line=substr(strstr($data, ':'),1);
-
 		
 			$file_to_open = fopen ($file, "r");
 			$text = "";
 			$number_line=1;
 			while ($aux = fgets($file_to_open, 1024)){
 				if (($line-2<=$number_line) && ($number_line<=$line+2)){ 
-					$text .= $aux; 
+					$text .= $aux;
 				}
 				$number_line++;
 			}
 			echo $text;
-				
+			
 		}
 	}
 
-	function pruebaVisibilidad(){
-		echo ">>>>>>>>>>>> OLA KE ASE <>>>>>>>>>>>>>>>>>>";
+	function pruebaVisibilidad($s){
+		echo ">>>>>>>>>>>> OLA KE ASE <>>>>>>>>>>>>>>>>>> ".$s;
 
 	}
 	
