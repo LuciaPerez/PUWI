@@ -13,7 +13,10 @@
 
 include 'PUWI_LaunchBrowser.php';
      class PUWI_Runner{
-
+     	
+     	private $folder='';
+     	private $arrayFolders;
+     	
 	protected $arguments = array(
 		'listGroups'              => FALSE,
 		'loader'                  => NULL,
@@ -77,8 +80,39 @@ include 'PUWI_LaunchBrowser.php';
 	public static function main($exit = TRUE)
 	{
 		$puwi = new PUWI_Runner;
+		$puwi->getFolder($_SERVER['argv'][1]);
+		echo "\n----------FOLDERS-------------\n";
+		print_r($puwi->arrayFolders);
 		return $puwi->run($_SERVER['argv'],$exit);
 
+	}
+
+
+	
+	public function getFolder($pathProject){
+	   $regex="/^\./";
+	   if (is_dir($pathProject)) { 
+
+		$arrayFiles = array();
+		if ($dir = opendir($pathProject)) { 
+			while (($file = readdir($dir)) !== false) { 
+
+				if (is_dir($pathProject . $file) && $file!="." && $file!=".." && !preg_match($regex,$file)){
+					$this->folder= $file;
+					
+					$this->getFolder($pathProject . $file . "/"); 
+				} else{
+					if($file!="." && $file!=".." && $file!=".." && !preg_match($regex,$file)){
+						array_push($arrayFiles,$file);
+					}
+				}			
+			}
+			if (count($arrayFiles) != 0){
+				$this->arrayFolders[$this->folder]=$arrayFiles;
+			}
+			closedir($dir);	
+		} 
+	   } 
 	}
 
 	/**
