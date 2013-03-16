@@ -59,19 +59,20 @@ class PUWI_LaunchBrowser{
 		$arrayResult = array();
 		foreach ($groups_details as $group){
 			$group_values = array_values($group);
-			$arrayClasses = array();
+			$arrayTests = array();
 			foreach ($group_values as $g){
 				$gd = $g->getGroupDetails();
 				$array= $gd[$groups[$index]];
-				$arrayTests = array();
+		
 				foreach ($array as $test){
-					array_push($arrayTests,$test->getName());	
+					array_push($arrayTests,$g->getName()."::".$test->getName());
 				}
-				$arrayClasses[$g->getName()]=$arrayTests;			
+			
 			}
-			$arrayResult[$groups[$index]] = $arrayClasses;
+			$arrayResult[$groups[$index]] = $arrayTests;
 			$index++;
 		}
+
 		return $arrayResult;
 	}
 
