@@ -1,9 +1,11 @@
 <?php
 require('puwi/setup.php');
+//include ("/home/lucia/PUWI/PUWI_LaunchBrowser.php");
 
 class index{
 	private $showedClass='';
-
+	private $showedFolder='';
+	
 	function receive_array($url_array) { 
 	    $tmp = stripslashes($url_array); 
 	    $tmp = urldecode($tmp); 
@@ -33,10 +35,32 @@ class index{
 			$this->showedClass=$class;
 			return 'yes';
 		}
-		return $this->$is_showedClass;
 	}
-
-
+	
+	function is_showedFolder($folder){
+		if($this->showedFolder == $folder){
+			return 'no';
+		}else{
+			$this->showedFolder=$folder;
+			return 'yes';
+		}
+	}
+	
+	function getFolder ($input,$input_class){
+		$keys_input = array_keys($input);
+		$result='';
+		foreach ($keys_input as $folder){
+			$values = array_values($input[$folder]);
+			foreach ($values as $file){
+				$class = strstr($file, '.', true);
+				if ($class == $input_class){
+					$result = $folder;
+				}
+			}
+		}
+		return $result;
+	}
+	
 	public static function main($exit = TRUE)
 	{
 		$index = new index();
@@ -47,42 +71,58 @@ class index{
 		$incomplete = $index->get_URLData('incomplete');
 		$skipped = $index->get_URLData('skipped');
 		$groups = $index->get_URLData('groups');
-
-		$totalTestsReceived = array_merge($passed,$failures,$incomplete,$skipped,$errors);
-		sort($totalTestsReceived);
-
+		$folders = $index->get_URLData('folders');
+		
 		$smarty = new Smarty_Puwi();
 
 		$smarty->display("header.tpl");
 		$smarty->display("results.tpl");
-
-		foreach ($totalTestsReceived as $key => $value){  
-			$class=strstr($value, ':', true);
-			$test=substr(strrchr($value, ":"), 1);
-	
+		
+		$keys_groups = array_keys($groups);
+		
+		foreach ($keys_groups as $group){
+			$smarty->assign("group",$group);
 			$className="classTest";	
-			
-			$createClassNameDiv = $index->is_showedClass($class);
-
-			$smarty->assign("createClassNameDiv",$createClassNameDiv);
 			$smarty->assign("className",$className);
-			$smarty->assign("class",$class);
-
-			$classNameTest = $index->getClassNameTest($value, $passed, $incomplete, $skipped);
-
-			$smarty->assign("classNameTest",$classNameTest);
-			$smarty->assign("test",$test);	
-
-			$smarty->display("tests.tpl");
-
-			$smarty->clear_assign(array('className', 'class', 'classNameTest', 'test'));
+			
+			$values = array_values($groups[$group]);
+			foreach($values as $value){
+	
+				$class=strstr($value, ':', true);
+				$test=substr(strrchr($value, ":"), 1);
+				$classNameTest = $index->getClassNameTest($value, $passed, $incomplete, $skipped);
+				
+				$folder = $index->getFolder($folders,$class);
+				
+				$createClassNameDiv = $index->is_showedClass($class);
+				$createFolderDiv = $index->is_showedFolder($folder);
+				
+				$smarty->assign(array('createClassNameDiv' => $createClassNameDiv, 
+									  'createFolderDiv' => $createFolderDiv,
+									  'className' => $className,
+									  'class' => $class,
+									  'classNameTest' => $classNameTest,
+									  'test' => $test,
+									  'folder' => $folder));
+				
+				
+				$smarty->display("tests.tpl");
+				
+				$smarty->clear_assign(array('group','className','class','classNameTest', 'test','folder'));
+				$smarty->clear_cache('tests.tpl');
+				
+			}//end foreach values
+			
+			$smarty->clear_assign(array('group', 'className'));
 			$smarty->clear_cache('tests.tpl');
-		}
+
+		}//end foreach groups
 
 		$smarty->display("footer.tpl");
 		$smarty->clear_all_assign();
 		$smarty->clear_all_cache();
-
+		/*$launch = new PUWI_LaunchBrowser();
+		echo $launch->pruebaVisibilidad();*/
 	}
 
 }
