@@ -113,6 +113,8 @@ class index{
 				
 			}//end foreach values
 			
+			$index->showedClass = '';
+			$index->showedFolder = '';
 			$smarty->clear_assign(array('group', 'className'));
 			$smarty->clear_cache('tests.tpl');
 
