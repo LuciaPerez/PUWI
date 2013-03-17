@@ -1,10 +1,9 @@
 $(document).ready(function(){
-	function exampleJQuery()
-	{
-	    $("p").click(function(){
-	    $(".classTest").hide();
+
+	    $("button").click(function(){
+	    $(".testOK").slideToggle();
 	    });
-	}
+	
 });
 
 	function createDiv(contentDiv,className) { 
@@ -14,6 +13,15 @@ $(document).ready(function(){
 		div.innerHTML = "<p>"+contentDiv+"</p>";
 		content.appendChild(div);
 	}
+
+	function prueba (){
+		alert("Probando...");
+	}
+
+
+
+
+	
 
 
 
