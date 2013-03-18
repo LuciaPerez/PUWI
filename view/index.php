@@ -1,6 +1,6 @@
 <?php
 require('puwi/setup.php');
-
+//include ("/home/lucia/PUWI/PUWI_LaunchBrowser.php");
 
 class index{
 	private $showedClass='';
@@ -82,8 +82,6 @@ class index{
 		$count = 0;
 		foreach ($keys_groups as $group){
 			$smarty->assign("group",$group);
-			$classGroup = 'classGroup';
-			$smarty->assign("classGroup",$classGroup);
 			
 			$values = array_values($groups[$group]);
 			foreach($values as $value){
@@ -92,8 +90,6 @@ class index{
 				$class=strstr($value, ':', true);
 				$test=substr(strrchr($value, ":"), 1);
 				$classNameTest = $index->getClassNameTest($value, $passed, $incomplete, $skipped, $errors);
-				$classFolder= 'classFolder';
-				$className='classTest';
 
 				$folder = $index->getFolder($folders,$class);
 				
@@ -102,24 +98,22 @@ class index{
 				
 				$smarty->assign(array('createClassNameDiv' => $createClassNameDiv, 
 						      'createFolderDiv' => $createFolderDiv,
-						      'className' => $className,
 						      'class' => $class,
 						      'classNameTest' => $classNameTest,
 						      'test' => $test,
-						      'folder' => $folder,
-						      'classFolder' => $classFolder));
+						      'folder' => $folder));
 				
 				
 				$smarty->display("tests.tpl");
 				
-				$smarty->clear_assign(array('group','className','class','classNameTest', 'test','folder','classFolder'));
+				$smarty->clear_assign(array('group','class','classNameTest', 'test','folder'));
 				$smarty->clear_cache('tests.tpl');
 				$count++; 	
 			}//end foreach values
 			
 			$index->showedClass = '';
 			$index->showedFolder = '';
-			$smarty->clear_assign(array('group', 'classGroup'));
+			$smarty->clear_assign(array('group'));
 			$smarty->clear_cache('tests.tpl');
 
 		}//end foreach groups
@@ -127,7 +121,8 @@ class index{
 		$smarty->display("footer.tpl");
 		$smarty->clear_all_assign();
 		$smarty->clear_all_cache();
-
+		/*$launch = new PUWI_LaunchBrowser();
+		echo $launch->pruebaVisibilidad();*/
 	}
 
 }

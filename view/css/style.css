@@ -1,10 +1,10 @@
 #background {
 	width:100%;
-	background: -ms-linear-gradient(#63D13E 0%, #EAEADF 20%) ;
-	background: -moz-linear-gradient(#63D13E 0%, #EAEADF 20%) ;
-	background: -webkit-gradient(#63D13E 0%, #EAEADF 20%);
-	background: -webkit-linear-gradient(#63D13E 0%, #EAEADF 20%);
-  	background: -o-linear-gradient(#63D13E 0%, #EAEADF 20%);
+	background: -ms-linear-gradient(#757570 0%, #EAEADF 20%) ;
+	background: -moz-linear-gradient(#757570 0%, #EAEADF 20%) ;
+	background: -webkit-gradient(#757570 0%, #EAEADF 20%);
+	background: -webkit-linear-gradient(#757570 0%, #EAEADF 20%);
+  	background: -o-linear-gradient(#757570 0%, #EAEADF 20%);
 	background: linear-gradient( #757570 0%, #EAEADF 20%); 
 	margin:0px;
 }
@@ -68,18 +68,26 @@
 	border-width:2.0px;
 	border-style:solid;
 }
+.groupName p{
+	font-weight:bold;   
 
-.classGroup {
-	background:#D4D4BF;
+}
+.groupContent {
+	margin-bottom:10px;
+	border-width:2.0px;
+	border-style:solid;
+	border-color: #949486;
+	background:white;
+}
+
+.classFolder p{
+	color:#949486;
 	font-weight:bold;
 }
 
-.classFolder{
-	background:#FFFF99;
-}
 .classTest p{
-	margin:30px 0px 0px 20px;
-	font-weight:bold;    
+	margin:30px 0px 0px 20px; 
+	color:black;
 }
 
 

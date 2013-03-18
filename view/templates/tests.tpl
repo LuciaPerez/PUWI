@@ -1,7 +1,8 @@
 {if ($group) != ''}
 	<script type="text/javascript">
 	{literal}
-		  createDiv('{/literal}{$group}{literal}','{/literal}{$classGroup}{literal}', 'content', 'groupName{/literal}{$count}{literal}');
+		  createDiv('{/literal}{$group}{literal}','groupName', 'content', 'groupName');
+		  createDiv('','groupContent', 'content', 'groupName{/literal}{$count}{literal}');
 	{/literal}
 	</script>
 	{assign var="countGroup" value=$count} 
@@ -10,7 +11,7 @@
 {if ($createFolderDiv) == 'yes'}
 	<script type="text/javascript">
 	{literal}
-		  createDiv('{/literal}{$folder}{literal}','{/literal}{$classFolder}{literal}','groupName{/literal}{$countGroup}{literal}', 'folderName{/literal}{$count}{literal}');
+		  createDiv('{/literal}{$folder}{literal}','classFolder','groupName{/literal}{$countGroup}{literal}', 'folderName{/literal}{$count}{literal}');
 	{/literal}
 	</script>
 	{assign var="countFolder" value=$count}
@@ -21,7 +22,7 @@
 {if ($createClassNameDiv) == 'yes'}
 	<script type="text/javascript">
 	{literal}
-		  createDiv('{/literal}{$class}{literal}','{/literal}{$className}{literal}','folderName{/literal}{$countFolder}{literal}', 'fileName{/literal}{$count}{literal}');
+		  createDiv('{/literal}{$class}{literal}','className','folderName{/literal}{$countFolder}{literal}', 'fileName{/literal}{$count}{literal}');
 	{/literal}
 	</script>
 	 {assign var="countClass" value=$count} 
@@ -33,5 +34,5 @@
 {/literal}
 </script>
 
-
+<!--<button type="button" onclick="prueba()">run</button>-->
 
