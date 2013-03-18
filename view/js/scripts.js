@@ -1,22 +1,23 @@
 $(document).ready(function(){
 
-	    $("button").click(function(){
-	    $(".testOK").slideToggle();
-	    });
+	hideTestOK = function(){
+		$(".testOK").slideToggle();
+	}
 	
 });
 
-	function createDiv(contentDiv,className) { 
+	function createDiv(contentDiv,className,divParent,divName) { 
 		var div = document.createElement('div');
+		div.id = divName;
 		div.className  = className;
-		var content = document.getElementById('content');
+		var content = document.getElementById(divParent);
 		div.innerHTML = "<p>"+contentDiv+"</p>";
 		content.appendChild(div);
+
 	}
 
-	function prueba (){
-		alert("Probando...");
-	}
+
+
 
 
 

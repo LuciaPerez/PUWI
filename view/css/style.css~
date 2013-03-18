@@ -18,22 +18,24 @@
 	font-family: sans-serif;
 }
 #header{
-	margin:10px 0 35px;
+	margin:10px 0 25px;
 	float:left;
 	width:100%;
 	height:20%;
 }
 #logo{
-	width:250px;
+	width:270px;
+	height:150px;
 	float:left;
-	margin-top:10px;
+	margin-top:15px;
+	padding-top:10px;	
 	background: url('../images/code_puwi.png') no-repeat;
 }
 #logo img{
 	margin-left:50px;
 }
 #title{
-	width:710px;
+	width:690px;
 	float:left;
 
 	margin-top:15px;
@@ -43,7 +45,7 @@
 	margin:30px 0 0 80px;
 }
 #content{
-	margin-top:70px;
+	margin-top:0px;
 	clear:both;
 	height:75%;
 
@@ -60,18 +62,27 @@
 	font-weight:bold;
 }
 
-
-.classTest p{
-	margin:30px 0px 0px 20px;
-	font-weight:bold;      
-}
-
 .box{
 	margin:10px 40px 10px 40px;
 	font-size:0.8em;
 	border-width:2.0px;
 	border-style:solid;
 }
+
+.classGroup {
+	background:#D4D4BF;
+	
+	font-weight:bold;
+}
+
+.classFolder{
+	background:#FFFF99;
+}
+.classTest p{
+	margin:30px 0px 0px 20px;
+	font-weight:bold;    
+}
+
 
 #totalTests{
 	margin:0px;
@@ -80,14 +91,19 @@
 	font-size:1.0em;
 }
 
+
+#totalTests button{
+	margin-right:20px;
+	float:right;		
+}
 .testOK{
-	border-color:#63d13e; 
-	background:#B1E89E;	
+	border-color: #66cc33;
+	background: #B2E699;
 }
 
 .testIncomplete{
 	border-color:#FFCC00; 
-	background:#FFD633;	
+	background:#FFE680;	
 }
 
 .testFailed{
@@ -96,6 +112,7 @@
 }
 
 #footer{
+	width:100%;
 	background: -ms-linear-gradient(#333333 0%, #000000 100%);
 	background: -moz-linear-gradient(#333333 0%, #000000 100%);
 	background: -webkit-gradient(#333333 0%, #000000 100%);
@@ -112,5 +129,9 @@
 	-webkit-box-shadow:  0 -4px 3px 1px #888888;
 	-moz-box-shadow:  0 -4px 3px 1px #888888;
 	box-shadow:  0 -4px 3px 1px #888888;
+}
+
+.green{
+	color:#66cc33;
 }
 

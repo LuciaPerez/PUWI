@@ -1,6 +1,7 @@
 <?php
 require('puwi/setup.php');
 
+
 class index{
 	private $showedClass='';
 	private $showedFolder='';
@@ -17,7 +18,7 @@ class index{
 		return $this->receive_array($received); 
 	}
 
-	function getClassNameTest($value, $passed, $incomplete, $skipped){
+	function getClassNameTest($value, $passed, $incomplete, $skipped, $errors){
 		if(in_array($value,$passed)){
 			$classNameTest="testOK box";} 
 		else if((in_array($value,$incomplete)) || (in_array($value,$skipped))) {
@@ -61,7 +62,7 @@ class index{
 	}
 	
 	public static function main($exit = TRUE)
-	{
+	{       system("ls -l > /home/lucia/rdo.txt");
 		$index = new index();
 
 		$passed = $index->get_URLData('passed'); 
@@ -78,43 +79,47 @@ class index{
 		$smarty->display("results.tpl");
 		
 		$keys_groups = array_keys($groups);
-		
+		$count = 0;
 		foreach ($keys_groups as $group){
 			$smarty->assign("group",$group);
-			$className="classTest";	
-			$smarty->assign("className",$className);
+			$classGroup = 'classGroup';
+			$smarty->assign("classGroup",$classGroup);
 			
 			$values = array_values($groups[$group]);
 			foreach($values as $value){
-	
+				$smarty->assign("count",$count);
+
 				$class=strstr($value, ':', true);
 				$test=substr(strrchr($value, ":"), 1);
-				$classNameTest = $index->getClassNameTest($value, $passed, $incomplete, $skipped);
-				
+				$classNameTest = $index->getClassNameTest($value, $passed, $incomplete, $skipped, $errors);
+				$classFolder= 'classFolder';
+				$className='classTest';
+
 				$folder = $index->getFolder($folders,$class);
 				
 				$createClassNameDiv = $index->is_showedClass($class);
 				$createFolderDiv = $index->is_showedFolder($folder);
 				
 				$smarty->assign(array('createClassNameDiv' => $createClassNameDiv, 
-									  'createFolderDiv' => $createFolderDiv,
-									  'className' => $className,
-									  'class' => $class,
-									  'classNameTest' => $classNameTest,
-									  'test' => $test,
-									  'folder' => $folder));
+						      'createFolderDiv' => $createFolderDiv,
+						      'className' => $className,
+						      'class' => $class,
+						      'classNameTest' => $classNameTest,
+						      'test' => $test,
+						      'folder' => $folder,
+						      'classFolder' => $classFolder));
 				
 				
 				$smarty->display("tests.tpl");
 				
-				$smarty->clear_assign(array('group','className','class','classNameTest', 'test','folder'));
+				$smarty->clear_assign(array('group','className','class','classNameTest', 'test','folder','classFolder'));
 				$smarty->clear_cache('tests.tpl');
-				
+				$count++; 	
 			}//end foreach values
 			
 			$index->showedClass = '';
 			$index->showedFolder = '';
-			$smarty->clear_assign(array('group', 'className'));
+			$smarty->clear_assign(array('group', 'classGroup'));
 			$smarty->clear_cache('tests.tpl');
 
 		}//end foreach groups

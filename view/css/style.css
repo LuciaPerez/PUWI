@@ -27,7 +27,8 @@
 	width:270px;
 	height:150px;
 	float:left;
-	margin-top:15px;	
+	margin-top:15px;
+	padding-top:10px;	
 	background: url('../images/code_puwi.png') no-repeat;
 }
 #logo img{
@@ -61,18 +62,26 @@
 	font-weight:bold;
 }
 
-
-.classTest p{
-	margin:30px 0px 0px 20px;
-	font-weight:bold;      
-}
-
 .box{
 	margin:10px 40px 10px 40px;
 	font-size:0.8em;
 	border-width:2.0px;
 	border-style:solid;
 }
+
+.classGroup {
+	background:#D4D4BF;
+	font-weight:bold;
+}
+
+.classFolder{
+	background:#FFFF99;
+}
+.classTest p{
+	margin:30px 0px 0px 20px;
+	font-weight:bold;    
+}
+
 
 #totalTests{
 	margin:0px;
@@ -81,6 +90,11 @@
 	font-size:1.0em;
 }
 
+
+#totalTests button{
+	margin-right:20px;
+	float:right;		
+}
 .testOK{
 	border-color: #66cc33;
 	background: #B2E699;
@@ -97,6 +111,7 @@
 }
 
 #footer{
+	width:100%;
 	background: -ms-linear-gradient(#333333 0%, #000000 100%);
 	background: -moz-linear-gradient(#333333 0%, #000000 100%);
 	background: -webkit-gradient(#333333 0%, #000000 100%);
