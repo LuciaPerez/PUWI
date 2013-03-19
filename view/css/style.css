@@ -37,13 +37,11 @@
 #title{
 	width:690px;
 	float:left;
-
-	margin-top:15px;
-}
-.text_center{
+	margin-top: 30px;
+	text-align: center;
 	color:#F9F9F5;
-	margin:30px 0 0 80px;
 }
+
 #content{
 	margin-top:0px;
 	clear:both;

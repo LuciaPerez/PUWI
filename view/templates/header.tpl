@@ -22,9 +22,7 @@
 			<img src="images/puwi_logo_green.png" alt="Logo" height="80";/>
 		</div>
 		<div id="title">
-			<div class='text_center'>
-				<h1>PhpUnit Web Interface</h1>
-			</div>
+			<h1>PhpUnit Web Interface</h1>
 		</div>
 	</div>
 
