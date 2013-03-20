@@ -60,8 +60,19 @@ class index{
 		return $result;
 	}
 	
+	function getInfoFailedTests($testName, $infoFailedTests){
+		foreach($infoFailedTests as $failedTest){
+			if ($failedTest["testName"] == $testName){
+				return $failedTest;
+			}
+
+		}
+		
+		
+	}
+	
 	public static function main($exit = TRUE)
-	{       system("ls -l > /home/lucia/rdo.txt");
+	{       
 		$index = new index();
 
 		$passed = $index->get_URLData('passed'); 
@@ -71,6 +82,7 @@ class index{
 		$skipped = $index->get_URLData('skipped');
 		$groups = $index->get_URLData('groups');
 		$folders = $index->get_URLData('folders');
+		$infoFailedTests = $index->get_URLData('infoFailedTests');
 		
 		$smarty = new Smarty_Puwi();
 
@@ -89,6 +101,14 @@ class index{
 				$class=strstr($value, ':', true);
 				$test=substr(strrchr($value, ":"), 1);
 				$classNameTest = $index->getClassNameTest($value, $passed, $incomplete, $skipped, $errors);
+				
+				if ($classNameTest == 'testFailed box'){
+					$infoFail = $index->getInfoFailedTests($value,$infoFailedTests);
+					$file=strstr($infoFail["data"], ':', true);
+					$line=trim(substr(strstr($infoFail["data"], ':'),1));
+					$message = trim($infoFail["message"]);
+					$smarty->assign(array("file" => $file, "line" => $line, "message" => $message));
+				}
 
 				$folder = $index->getFolder($folders,$class);
 				
@@ -105,7 +125,7 @@ class index{
 				
 				$smarty->display("tests.tpl");
 				
-				$smarty->clear_assign(array('group','class','classNameTest', 'test','folder'));
+				$smarty->clear_assign(array('group','class','classNameTest', 'test','folder','file','line'));
 				$smarty->clear_cache('tests.tpl');
 				$count++; 	
 			}//end foreach values

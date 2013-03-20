@@ -67,8 +67,7 @@
 	border-style:solid;
 }
 .groupName p{
-	font-weight:bold;   
-
+	font-weight:bold;  
 }
 .groupContent {
 	margin-bottom:10px;
@@ -78,14 +77,14 @@
 	background:white;
 }
 
-.classFolder p{
-	color:#949486;
+.classFolder{
+
 	font-weight:bold;
 }
 
-.classTest p{
+.classTest{
 	margin:30px 0px 0px 20px; 
-	color:black;
+
 }
 
 
@@ -138,5 +137,20 @@
 
 .green{
 	color:#66cc33;
+}
+
+.grey{
+	font-weight:bold;
+	color:#949486;
+}
+
+.black{
+	font-weight:normal;
+	color:black;
+}
+
+.red{
+	font-weight:bold;
+	color:red;
 }
 
