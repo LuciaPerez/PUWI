@@ -2,6 +2,8 @@
 
 class PUWI_LaunchBrowser{
 	private $prueba='PROBANDO......';
+	private $infoFailedTests=array();
+	
 	/*
 	*@param integer $totalTests
 	*@param string  $projectName
@@ -16,6 +18,7 @@ class PUWI_LaunchBrowser{
 		$skipped = $this->send_array($skipped);
 		$groups = $this->send_array($groups);	
 		$folders = $this->send_array($folders);
+		$infoFailedTests = $this->send_array($this->infoFailedTests);
 
 		$url="http://localhost/view/index.php".
 		     "?projectName=".$projectName.
@@ -26,7 +29,8 @@ class PUWI_LaunchBrowser{
 		     "\&incomplete=".$incomplete.
 		     "\&skipped=".$skipped.
 		     "\&groups=".$groups.
-		     "\&folders=".$folders;
+		     "\&folders=".$folders.
+		     "\&infoFailedTests=".$infoFailedTests;
 
 		$command="x-www-browser ".$url." &";
 		system($command);
@@ -45,7 +49,7 @@ class PUWI_LaunchBrowser{
 		$groups = $this->getGroups($result);
 
 		echo "\n----------GROUPS-------------\n";
-		print_r($groups);
+		//print_r($groups);
 	
 		$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders);
 
@@ -97,7 +101,7 @@ class PUWI_LaunchBrowser{
 
 	function getTestsFailed(PHPUnit_Framework_TestResult $result){
 		$fail=$result->failures();
-		//$this->printErrors($fail);
+		$this->getFails($fail);
 		return($this->getClassAndNameTest($fail));
 	}
 
@@ -125,27 +129,23 @@ class PUWI_LaunchBrowser{
 		return($result);
 	}
 
-	function printErrors(array $fail){
-		echo "\n..........PRINT ERROR LINES........\n";
+	function getFails(array $fail){
+		$infoEachTest = array();
+
 		foreach ($fail as $f){
 			$data=PHPUnit_Util_Filter::getFilteredStacktrace(
 			    $f->thrownException()
 			);
 			
-			$file=strstr($data, ':', true);
-			$line=substr(strstr($data, ':'),1);
-		
-			$file_to_open = fopen ($file, "r");
-			$text = "";
-			$number_line=1;
-			while ($aux = fgets($file_to_open, 1024)){
-				if (($line-2<=$number_line) && ($number_line<=$line+2)){ 
-					$text .= $aux;
-				}
-				$number_line++;
-			}
-			echo $text;
-			
+			$testName = $f->failedTest()->toString();
+			$message = $f->getExceptionAsString();
+
+			$infoEachTest['testName'] = $testName;
+			$infoEachTest['data'] = $data;
+			$infoEachTest['message'] = $message;
+
+			array_push($this->infoFailedTests,$infoEachTest);
+
 		}
 	}
 
