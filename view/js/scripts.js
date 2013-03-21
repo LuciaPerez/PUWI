@@ -10,6 +10,7 @@ $(document).ready(function(){
 
 	}
 	
+	
 });
 
 	function createDivFailedTest(contentDiv,className,divParent,divName,file,line,message) { 
@@ -24,13 +25,7 @@ $(document).ready(function(){
 				+'<button type="button" onclick="hideCode()">Hide/Show test code</button>';
 		content.appendChild(div);
 
-		div = document.createElement('div');
-		div.className = "testInfo totalTests box";
-		content = document.getElementById(divName);
-		div.innerHTML = '<p> '+divName+' </p>';
-		content.appendChild(div);
-
-
+		createDiv("code","testInfo totalTests box",divName);
 	}
 
 	function createDiv(contentDiv,className,divParent,divName) { 
@@ -41,6 +36,8 @@ $(document).ready(function(){
 		div.innerHTML = '<p >'+contentDiv+"</p>";
 		content.appendChild(div);
 	}
+
+
 
 
 
