@@ -15,7 +15,8 @@ include 'PUWI_LaunchBrowser.php';
      class PUWI_Runner{
      	
      	private $folder='';
-     	private $arrayFolders;
+     	private $pathProject='';
+     	private $arrayFolders = array();
      	
 	protected $arguments = array(
 		'listGroups'              => FALSE,
@@ -83,30 +84,41 @@ include 'PUWI_LaunchBrowser.php';
 		return $puwi->run($_SERVER['argv'],$exit);
 
 	}
+	
+	protected function getFolderName($pathDir){
+		return substr($pathDir,strlen($this->pathProject));
+		
+	}
 
-	public function getFolder($pathProject){
+	protected function getFolder($pathDir){
 	   $regex="/^\./";
-	   if (is_dir($pathProject)) { 
+	   if (is_dir($pathDir)) { 
 
 		$arrayFiles = array();
-		if ($dir = opendir($pathProject)) { 
+		if ($dir = opendir($pathDir)) { 
 			while (($file = readdir($dir)) !== false) { 
-				if (is_dir($pathProject . $file) && $file!="." && $file!=".." && !preg_match($regex,$file)){
-					$this->folder= $file;
-				
-					$this->getFolder($pathProject . $file . "/"); 
+				if (is_dir($pathDir . $file) && $file!="." && $file!=".." && !preg_match($regex,$file)){
+					$this->folder= $pathDir . $file;
+					$this->getFolder($this->folder . "/"); 
 				} else{
 					if($file!="." && $file!=".." && $file!=".." && !preg_match($regex,$file)){
 						array_push($arrayFiles,$file);
+						
 					}
-				}			
+					if (count($arrayFiles) != 0){
+						$folderName = $this->getFolderName($pathDir);
+						$this->arrayFolders[$folderName]=$arrayFiles;				
+					}
+				}	
+
 			}
-			if (count($arrayFiles) != 0){
-				$this->arrayFolders[$this->folder]=$arrayFiles;
-			}
+			
 			closedir($dir);	
 		} 
+	
+		
 	   } 
+
 	}
 
 	/**
@@ -173,8 +185,8 @@ include 'PUWI_LaunchBrowser.php';
 		else if (!isset($result) || $result->errorCount() > 0) {
 		    $ret = PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT;
 		}
-
-		$this->getFolder($_SERVER['argv'][1]);
+		$this->pathProject = $_SERVER['argv'][1];
+		$this->getFolder($this->pathProject);
 		echo "\n----------FOLDERS-------------\n";
 		print_r($this->arrayFolders);
 
