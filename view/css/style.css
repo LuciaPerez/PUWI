@@ -50,7 +50,7 @@
 }
 
 #content p{
-	padding-left:20px;
+	padding: 0 20px 0 20px;
 }
 
 #projectName p{
@@ -88,15 +88,20 @@
 }
 
 
-#totalTests{
+.totalTests{
 	margin:0px;
 	border-color:#949486;
 	background:#D4D4BF;
 	font-size:1.0em;
 }
 
+.testInfo{
+	display:none;
+	margin:10px;
+	font-family:courier-new;
+}
 
-#totalTests button{
+.totalTests button{
 	margin-right:20px;
 	float:right;		
 }
@@ -114,6 +119,7 @@
 	border-color: red; 
 	background:#FF8080;
 }
+
 
 #footer{
 	width:100%;
@@ -147,10 +153,15 @@
 .black{
 	font-weight:normal;
 	color:black;
+	
 }
 
 .red{
 	font-weight:bold;
 	color:red;
+	text-align:right;
 }
-
+.left{
+	float:left;
+	font-weight:bold;
+}
