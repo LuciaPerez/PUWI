@@ -1,10 +1,10 @@
 #background {
 	width:100%;
-	background: -ms-linear-gradient(#63D13E 0%, #EAEADF 20%) ;
-	background: -moz-linear-gradient(#63D13E 0%, #EAEADF 20%) ;
-	background: -webkit-gradient(#63D13E 0%, #EAEADF 20%);
-	background: -webkit-linear-gradient(#63D13E 0%, #EAEADF 20%);
-  	background: -o-linear-gradient(#63D13E 0%, #EAEADF 20%);
+	background: -ms-linear-gradient(#757570 0%, #EAEADF 20%) ;
+	background: -moz-linear-gradient(#757570 0%, #EAEADF 20%) ;
+	background: -webkit-gradient(#757570 0%, #EAEADF 20%);
+	background: -webkit-linear-gradient(#757570 0%, #EAEADF 20%);
+  	background: -o-linear-gradient(#757570 0%, #EAEADF 20%);
 	background: linear-gradient( #757570 0%, #EAEADF 20%); 
 	margin:0px;
 }
@@ -37,13 +37,11 @@
 #title{
 	width:690px;
 	float:left;
-
-	margin-top:15px;
-}
-.text_center{
+	margin-top: 30px;
+	text-align: center;
 	color:#F9F9F5;
-	margin:30px 0 0 80px;
 }
+
 #content{
 	margin-top:0px;
 	clear:both;
@@ -52,7 +50,7 @@
 }
 
 #content p{
-	padding-left:20px;
+	padding: 0 20px 0 20px;
 }
 
 #projectName p{
@@ -68,31 +66,41 @@
 	border-width:2.0px;
 	border-style:solid;
 }
-
-.classGroup {
-	background:#D4D4BF;
-	
-	font-weight:bold;
+.groupName p{
+	font-weight:bold;  
+}
+.groupContent {
+	margin-bottom:10px;
+	border-width:2.0px;
+	border-style:solid;
+	border-color: #949486;
+	background:white;
 }
 
 .classFolder{
-	background:#FFFF99;
+
+	font-weight:bold;
 }
-.classTest p{
-	margin:30px 0px 0px 20px;
-	font-weight:bold;    
+
+.classTest{
+	margin:30px 0px 0px 20px; 
+
 }
 
 
-#totalTests{
+.totalTests{
 	margin:0px;
 	border-color:#949486;
 	background:#D4D4BF;
 	font-size:1.0em;
 }
 
+.testInfo{
+	display:none;
+	margin:10px;
+}
 
-#totalTests button{
+.totalTests button{
 	margin-right:20px;
 	float:right;		
 }
@@ -110,6 +118,7 @@
 	border-color: red; 
 	background:#FF8080;
 }
+
 
 #footer{
 	width:100%;
@@ -135,3 +144,23 @@
 	color:#66cc33;
 }
 
+.grey{
+	font-weight:bold;
+	color:#949486;
+}
+
+.black{
+	font-weight:normal;
+	color:black;
+	
+}
+
+.red{
+	font-weight:bold;
+	color:red;
+	text-align:right;
+}
+.left{
+	float:left;
+	font-weight:bold;
+}

@@ -4,13 +4,13 @@
 			<p>{$smarty.get.projectName}</p>
 		</div>
 
-		<div id="totalTests" class="box">
+		<div class="totalTests box">
 			{if  ($smarty.get.totalTests) == 0}
 				<p>No tests executed!</p>
 			{else}
 				<p>{$smarty.get.totalTests} test passing 
-				   <button type="button" onclick="descargaArchivo()">Run All Tests</button>
-				   <button type="button" onclick="hideTestOK()">Hide/Show Passed Tests</button>
+				   <button type="button" id="runAllTests" >Run All Tests</button>
+				   <button type="button" id="hideTestsOK">Hide/Show Passed Tests</button>
 				</p>
 			{/if}
 			

@@ -68,8 +68,8 @@ class index{
 
 		}
 		
-		
 	}
+	
 	
 	public static function main($exit = TRUE)
 	{       
@@ -108,6 +108,21 @@ class index{
 					$line=trim(substr(strstr($infoFail["data"], ':'),1));
 					$message = trim($infoFail["message"]);
 					$smarty->assign(array("file" => $file, "line" => $line, "message" => $message));
+
+
+					$file_to_open = fopen ($file, "r");
+					$text = "";
+					/*$number_line=1;
+					while ($aux = fgets($file_to_open, 1024)){
+						if ($line==$number_line){
+							$text .= $aux;
+						}
+						$number_line++;
+					}*/
+					$text = 'probando envío datos...';
+					//print "--".trim($text)."--";
+					$smarty->assign("code",trim($text));
+					system("mkdir /home/lucia/CARPETA");
 				}
 
 				$folder = $index->getFolder($folders,$class);
@@ -125,7 +140,7 @@ class index{
 				
 				$smarty->display("tests.tpl");
 				
-				$smarty->clear_assign(array('group','class','classNameTest', 'test','folder','file','line'));
+				$smarty->clear_assign(array('group','class','classNameTest', 'test','folder','file','line','message','code'));
 				$smarty->clear_cache('tests.tpl');
 				$count++; 	
 			}//end foreach values

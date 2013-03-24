@@ -19,7 +19,7 @@
 
 	<div id="header">
 		<div id="logo">
-			<img src="images/puwi_logo_green.png" alt="Logo" height="80";/>
+			<img src="images/puwi_logo_green.png" alt="Logo" height="80"/>
 		</div>
 		<div id="title">
 			<h1>PhpUnit Web Interface</h1>

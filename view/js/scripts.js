@@ -1,19 +1,74 @@
 $(document).ready(function(){
 
-	hideTestOK = function(){
+	
+	$("#hideTestsOK").click(function(){
 		$(".testOK").slideToggle();
 
-	}
-
-	hideCode = function(){
+	});
+	
+	
+	$( "#codeTest0" ).click(function(){
 		$(".testInfo").slideToggle();
 
+	});
+
+	$("#codeTest0").click(function(){
+		procesar();
+	});
+
+	procesar = function (){
+		$.ajax({
+			url:  'http://localhost/view/lucia.php',
+			type: 'POST',
+		    async: true,	
+			data: 'parametro=AQUI',
+				
+			success: function(request){
+				
+				$('.testInfo').html('ese: '+request);
+			},
+			
+			error: function(){
+				
+				alert("falla");
+			}
+		});
+	}
+	
+	
+	$("#runAllTests").click(function(){
+		runAllTests();
+	});
+
+	runAllTests = function (){
+		$.ajax({
+			url:  'http://localhost/view/lucia.php',
+			type: 'POST',
+		    async: true,	
+			data: 'parametro=RUN',
+				
+			success: function(request){
+				
+				$('#title').html('ese: '+request);
+			},
+			
+			error: function(){
+				
+				alert("falla");
+			}
+		});
 	}
 	
 	
 });
-
-	function createDivFailedTest(contentDiv,className,divParent,divName,file,line,message) { 
+	var divFailedTest='esto deberia cambiar';
+	var count = 0;
+	var idButton = "codeTest";
+	
+	function createDivFailedTest(contentDiv,className,divParent,divName,file,line,message,code) { 
+		divFailedTest = divName;
+		idButton = "codeTest"+count;
+		
 		var div = document.createElement('div');
 		div.id = divName;
 		div.className  = className;
@@ -22,10 +77,12 @@ $(document).ready(function(){
 				+'<p class="red">+'+line+'</p>'
 				+'<p>'+file+'</p>'
 				+'<p>'+message+'</p>'
-				+'<button type="button" onclick="hideCode()">Hide/Show test code</button>';
+				+'<button type="button" id='+idButton+'  >Hide/Show test code</button>';
 		content.appendChild(div);
-
-		createDiv("code","testInfo totalTests box",divName);
+		
+		createDiv(code,"testInfo totalTests box",divName);
+		count = count + 1;
+		
 	}
 
 	function createDiv(contentDiv,className,divParent,divName) { 
