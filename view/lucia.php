@@ -1,15 +1,22 @@
-<?php
-	include 'prueba.php';
+<?php	
+	include_once "../PUWI_LaunchBrowser.php";
+	include "../PUWI_Runner.php";
 	
-	$pr = new prueba();
 	
 	$operador = $_POST['parametro'];
+
+	//exec("bash prueba.bash");
+
+
+	switch($_POST["action"]){
+
+		case 'getCode2':
+			$pr = new PUWI_Runner();
+			echo $pr->aux("probando <-----");
+			break;
+	}
 	
-	echo $pr->getprueba();
-
-	//exec("php prueba.php hola lucia");
-
-
+	
 	header("Status: 200 OK", true, 200); 
 
 	echo $operador;
