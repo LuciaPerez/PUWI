@@ -97,7 +97,7 @@ class index{
 			$values = array_values($groups[$group]);
 			foreach($values as $value){
 				$smarty->assign("count",$count);
-
+				
 				$class=strstr($value, ':', true);
 				$test=substr(strrchr($value, ":"), 1);
 				$classNameTest = $index->getClassNameTest($value, $passed, $incomplete, $skipped, $errors);
@@ -111,18 +111,32 @@ class index{
 
 
 					$file_to_open = fopen ($file, "r");
-					$text = "";
-					/*$number_line=1;
+					$code = "";
+					$number_line=1;
+					$search = "/.".$test."./";
+					$in_function='no';
+					$end_function = "/.test_setUpJob./";
+					
 					while ($aux = fgets($file_to_open, 1024)){
-						if ($line==$number_line){
-							$text .= $aux;
+						if (preg_match($search,$aux)){ 
+							$in_function='yes';
+						}else{
+							if (preg_match($end_function,$aux)){		
+								$in_function='no';
+							}
+						}
+						if ($in_function=='yes'){
+							$code .= $aux."--";
 						}
 						$number_line++;
-					}*/
-					$text = 'probando envío datos...';
-					//print "--".trim($text)."--";
+					}
+					$in_function='no';
+					fclose($file_to_open);
+					print ">--".trim($code)."--<";
+					$text = ') {$this->fail("Here an error!!!");';
+					
 					$smarty->assign("code",trim($text));
-					system("mkdir /home/lucia/CARPETA");
+
 				}
 
 				$folder = $index->getFolder($folders,$class);
