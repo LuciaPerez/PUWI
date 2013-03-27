@@ -99,6 +99,7 @@
 	display:none;
 	margin:10px;
 	font-family:courier-new;
+	
 }
 
 .totalTests button{
@@ -120,6 +121,10 @@
 	background:#FF8080;
 }
 
+input.classButton{
+	
+	
+}
 
 #footer{
 	width:100%;
@@ -164,4 +169,5 @@
 .left{
 	float:left;
 	font-weight:bold;
+	width:89%;
 }

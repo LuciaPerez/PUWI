@@ -1,25 +1,23 @@
 var count = 0;
-var idButton = "codeTest";
 var idTest = "idTest";
 function createDivFailedTest(contentDiv,className,divParent,divName,file,line,message,code) { 
-	divFailedTest = divName;
-	idButton = "codeTest"+count;
 	idTest = "idTest"+count;
 	
 	var div = document.createElement('div');
 	div.id = divName;
 	div.className  = className;
 	var content = document.getElementById(divParent);
+
 	
 	div.innerHTML = '<p class="left">'+contentDiv+'</p>'
 			+'<p class="red">+'+line+'</p>'
 			+'<p>'+file+'</p>'
-			+'<p>'+message+'</p>'
-			+'<button type="button" id='+idButton+' >Hide/Show test code</button>';
+			+'<p class="left">'+message+'</p>'
+			+'<input type="image" src="images/bullet_arrow_down1.png" class="classButton" data-idtest='+"#"+idTest+' >';
 	
 	content.appendChild(div);
-	
-	createDiv(code,"testInfo totalTests box",divName);
+
+	createDiv(code,"testInfo totalTests box",divName,idTest);
 	count = count + 1;
 	
 }
@@ -42,9 +40,10 @@ $(document).ready(function(){
 	});
 	
 	
-	$( "#codeTest0" ).click(function(){
-		$(".testInfo").slideToggle();
-
+	$( ".classButton" ).click(function(){
+		var idTest = $(this).data('idtest');
+		$(idTest).slideToggle();
+		
 	});
 	
 	
