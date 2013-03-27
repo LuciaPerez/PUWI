@@ -13,7 +13,7 @@ function createDivFailedTest(contentDiv,className,divParent,divName,file,line,me
 			+'<p class="red">+'+line+'</p>'
 			+'<p>'+file+'</p>'
 			+'<p class="left">'+message+'</p>'
-			+'<input type="image" src="images/bullet_arrow_down1.png" class="classButton" data-idtest='+"#"+idTest+' >';
+			+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" class="classButton" data-idtest='+"#"+idTest+' >';
 	
 	content.appendChild(div);
 
