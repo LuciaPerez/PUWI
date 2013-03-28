@@ -9,11 +9,10 @@ function createDivFailedTest(contentDiv,className,divParent,divName,file,line,me
 	var content = document.getElementById(divParent);
 
 	
-	div.innerHTML = '<p class="left">'+contentDiv+'</p>'
-			+'<p class="red">+'+line+'</p>'
-			+'<p>'+file+'</p>'
-			+'<p class="left">'+message+'</p>'
-			+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" class="classButton" data-idtest='+"#"+idTest+' >';
+	div.innerHTML = '<p class="nameFT left bold">'+contentDiv+'</p>'
+			+'<p class="red bold">+'+line+'</p>'
+			+'<p class="fileFT">'+file+'</p>'
+			+'<p class="italic">'+message+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" class="classButton" data-idtest='+"#"+idTest+'></p>';
 	
 	content.appendChild(div);
 

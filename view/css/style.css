@@ -99,7 +99,7 @@
 	display:none;
 	margin:10px;
 	font-family:courier-new;
-	
+	clear:right;
 }
 
 .totalTests button{
@@ -157,12 +157,32 @@
 }
 
 .red{
-	font-weight:bold;
 	color:red;
 	text-align:right;
 }
+
+.bold{
+		font-weight:bold;
+}
+
+.italic{
+	font-style:italic;
+}
+
 .left{
 	float:left;
-	font-weight:bold;
-	width:89%;
+
+}
+.classButton{
+	
+	float:right;
+}
+
+
+.nameFT{
+	width:80%;
+	
+}
+.fileFT{
+	clear:left;
 }
