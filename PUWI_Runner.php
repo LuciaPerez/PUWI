@@ -10,10 +10,11 @@
 	} else {
 		require '@php_dir@' . DIRECTORY_SEPARATOR . 'PHPUnit' . DIRECTORY_SEPARATOR . 'Autoload.php';
 	}
+	
+	include 'PUWI_LaunchBrowser.php';
+	
+    class PUWI_Runner{
 
-include 'PUWI_LaunchBrowser.php';
-     class PUWI_Runner{
-     	
      	private $folder='';
      	private $pathProject='';
      	private $arrayFolders = array();
@@ -81,6 +82,9 @@ include 'PUWI_LaunchBrowser.php';
 	public static function main($exit = TRUE)
 	{
 		$puwi = new PUWI_Runner;
+		echo "~~~~~~~~~~argv~~~~~~~~~~";
+		
+		print_r($_SERVER['argv']);
 		return $puwi->run($_SERVER['argv'],$exit);
 
 	}
@@ -185,19 +189,26 @@ include 'PUWI_LaunchBrowser.php';
 		else if (!isset($result) || $result->errorCount() > 0) {
 		    $ret = PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT;
 		}
-		$this->pathProject = $_SERVER['argv'][1];
+		$this->pathProject = $argv[1];
 		$this->getFolder($this->pathProject);
 		echo "\n----------FOLDERS-------------\n";
 		print_r($this->arrayFolders);
-
+	
+		$new = (count($argv)==2)?TRUE:FALSE;
 		$launch = new PUWI_LaunchBrowser();
-		$launch->getResults($argv[1],$result,$this->arrayFolders);
-
-		if ($exit) {
-		    exit($ret);
-		} else {
-		    return $ret;
+		$rdo_launch = $launch->getResults($argv[1],$result,$this->arrayFolders,$new);
+		
+		if ($new == TRUE){
+			if ($exit) {
+			    exit($ret);
+			} else {
+			    return $ret;
+			}
+		}else{
+			//echo a json de rdo_launch	ç
+			return $rdo_launch;
 		}
+		//}
 	}
 
     /**
@@ -907,7 +918,8 @@ EOT;
     }
 	}
 
-
-	PUWI_Runner::main();
+	if (isset($_SERVER['argv'])){
+		PUWI_Runner::main();
+	}
 
 ?>
