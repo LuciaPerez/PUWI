@@ -1,9 +1,21 @@
 <?php
 
 class PUWI_LaunchBrowser{
-	private $prueba='PROBANDO......';
-	private $infoFailedTests=array();
+
+	private $prueba = 'PROBANDO......';
+	private $infoFailedTests = array(); 
+	private $data;
 	
+	
+	public function getData(){
+		echo "LAUNCH en BASH<--------------- ";
+	}
+	
+	public function setData($params){
+		$this->data = $params;
+	}
+	
+
 	/*
 	*@param integer $totalTests
 	*@param string  $projectName
@@ -19,8 +31,9 @@ class PUWI_LaunchBrowser{
 		$groups = $this->send_array($groups);	
 		$folders = $this->send_array($folders);
 		$infoFailedTests = $this->send_array($this->infoFailedTests);
-
-		$url="http://localhost/view/index.php".
+		//print "==============FAILED TESTS===================<br/>";
+		//print_r($this->infoFailedTests);
+		$url="http://localhost/PUWI/view/index.php".
 		     "?projectName=".$projectName.
 		     "\&totalTests=".$totalTests.
 		     "\&passed=".$passed.
@@ -34,10 +47,12 @@ class PUWI_LaunchBrowser{
 
 		$command="x-www-browser ".$url." &";
 		system($command);
+		echo "launch: ";
+		echo exec ('whoami');
 
 	}
 
-	function getResults($projectName,$result,$folders){
+	public function getResults($projectName,$result,$folders,$new){
 		$totalTests = $result->count();
 		$projectName = $this->getProjectName($projectName);
 	
@@ -49,9 +64,17 @@ class PUWI_LaunchBrowser{
 		$groups = $this->getGroups($result);
 
 		echo "\n----------GROUPS-------------\n";
-		//print_r($groups);
-	
-		$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders);
+		print_r($groups);
+		
+		$params = array("projectName" => $projectName, 
+						"totalTests" => $totalTests);
+		$this->setData($params);
+		
+		if ($new == TRUE){
+			$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders);
+		}else{
+			return array($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$this->infoFailedTests);
+		}
 
 	}
 
@@ -141,18 +164,18 @@ class PUWI_LaunchBrowser{
 			$message = $f->getExceptionAsString();
 
 			$infoEachTest['testName'] = $testName;
+			
 			$infoEachTest['data'] = $data;
 			$infoEachTest['message'] = $message;
 
 			array_push($this->infoFailedTests,$infoEachTest);
 
 		}
-	}
-
-	function pruebaVisibilidad(){
-		return $this->prueba;
 
 	}
+
+	
+
 	
 }
 ?>
