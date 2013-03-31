@@ -2,19 +2,8 @@
 
 class PUWI_LaunchBrowser{
 
-	private $prueba = 'PROBANDO......';
 	private $infoFailedTests = array(); 
-	private $data;
-	
-	
-	public function getData(){
-		echo "LAUNCH en BASH<--------------- ";
-	}
-	
-	public function setData($params){
-		$this->data = $params;
-	}
-	
+
 
 	/*
 	*@param integer $totalTests
@@ -63,17 +52,22 @@ class PUWI_LaunchBrowser{
 		$skipped = $this->getTestsSkipped($result);
 		$groups = $this->getGroups($result);
 
-		echo "\n----------GROUPS-------------\n";
-		print_r($groups);
-		
-		$params = array("projectName" => $projectName, 
-						"totalTests" => $totalTests);
-		$this->setData($params);
+		//echo "\n----------GROUPS-------------\n";
+		//print_r($groups);
 		
 		if ($new == TRUE){
 			$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders);
 		}else{
-			return array($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$this->infoFailedTests);
+			return array("totalTests" => $totalTests,
+						 "projectName" => $projectName,
+						 "passed" => $passed,
+						 "failures"=> $failures,
+						 "errors" => $errors,
+						 "incomplete" => $incomplete,
+						 "skipped" => $skipped,
+						 "groups" => $groups,
+						 "folders" => $folders,
+						 "failedTests" => $this->infoFailedTests);
 		}
 
 	}
@@ -169,13 +163,8 @@ class PUWI_LaunchBrowser{
 			$infoEachTest['message'] = $message;
 
 			array_push($this->infoFailedTests,$infoEachTest);
-
 		}
-
 	}
 
-	
-
-	
 }
 ?>
