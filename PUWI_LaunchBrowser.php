@@ -10,7 +10,7 @@ class PUWI_LaunchBrowser{
 	*@param string  $projectName
 	*/
 
-	public function launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders){
+	public function launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$argv){
 				
 		$passed = $this->send_array($passed); 
 		$failures = $this->send_array($failures);
@@ -20,6 +20,7 @@ class PUWI_LaunchBrowser{
 		$groups = $this->send_array($groups);	
 		$folders = $this->send_array($folders);
 		$infoFailedTests = $this->send_array($this->infoFailedTests);
+		$argv = $this->send_array($argv);
 		//print "==============FAILED TESTS===================<br/>";
 		//print_r($this->infoFailedTests);
 		$url="http://localhost/PUWI/view/index.php".
@@ -32,16 +33,15 @@ class PUWI_LaunchBrowser{
 		     "\&skipped=".$skipped.
 		     "\&groups=".$groups.
 		     "\&folders=".$folders.
-		     "\&infoFailedTests=".$infoFailedTests;
+		     "\&infoFailedTests=".$infoFailedTests.
+		     "\&argv=".$argv;
 
 		$command="x-www-browser ".$url." &";
 		system($command);
-		echo "launch: ";
-		echo exec ('whoami');
 
 	}
 
-	public function getResults($projectName,$result,$folders,$new){
+	public function getResults($projectName,$result,$folders,$new,$argv){
 		$totalTests = $result->count();
 		$projectName = $this->getProjectName($projectName);
 	
@@ -56,7 +56,7 @@ class PUWI_LaunchBrowser{
 		//print_r($groups);
 		
 		if ($new == TRUE){
-			$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders);
+			$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$argv);
 		}else{
 			return array("totalTests" => $totalTests,
 						 "projectName" => $projectName,

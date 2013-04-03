@@ -12,6 +12,7 @@
 	}
 	
 	include 'PUWI_LaunchBrowser.php';
+	include 'PUWI_Prueba.php';
 	
     class PUWI_Runner{
 
@@ -82,10 +83,10 @@
 	public static function main($exit = TRUE)
 	{
 		$puwi = new PUWI_Runner;
-		echo "~~~~~~~~~~argv~~~~~~~~~~";
-		
+		echo "~~~~~~~~~~ARGV~~~~~~~~~~";
 		print_r($_SERVER['argv']);
-		return $puwi->run($_SERVER['argv'],$exit);
+		
+		return $puwi->run($_SERVER['argv'],$new=TRUE, $exit);
 
 	}
 	
@@ -129,7 +130,7 @@
 	* @param array   $argv
 	* @param boolean $exit
 	*/
-	public function run(array $argv, $exit = TRUE)
+	public function run(array $argv, $new, $exit = TRUE)
 	{
 		$this->handleArguments($argv);
 
@@ -147,7 +148,7 @@
 		}
 
 		if ($this->arguments['listGroups']) {
-		    PHPUnit_TextUI_TestRunner::printVersionString();
+		    PUWI_Prueba::printVersionString();
 
 		    print "Available test group(s):\n";
 
@@ -159,9 +160,9 @@
 		    }
 
 		    if ($exit) {
-			exit(PHPUnit_TextUI_TestRunner::SUCCESS_EXIT);
+			exit(PUWI_Prueba::SUCCESS_EXIT);
 		    } else {
-			return PHPUnit_TextUI_TestRunner::SUCCESS_EXIT;
+			return PUWI_Prueba::SUCCESS_EXIT;
 		    }
 		}
 
@@ -180,23 +181,24 @@
 
 
 
-		$ret = PHPUnit_TextUI_TestRunner::FAILURE_EXIT;
+		$ret = PUWI_Prueba::FAILURE_EXIT;
 
 		if (isset($result) && $result->wasSuccessful()) {
-		    $ret = PHPUnit_TextUI_TestRunner::SUCCESS_EXIT;
+		    $ret = PUWI_Prueba::SUCCESS_EXIT;
 		}
 
 		else if (!isset($result) || $result->errorCount() > 0) {
-		    $ret = PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT;
+		    $ret = PUWI_Prueba::EXCEPTION_EXIT;
 		}
+		
 		$this->pathProject = $argv[1];
 		$this->getFolder($this->pathProject);
-		echo "\n----------FOLDERS-------------\n";
-		print_r($this->arrayFolders);
+		//echo "\n----------FOLDERS-------------\n";
+		//print_r($this->arrayFolders);
 	
-		$new = (count($argv)==2)?TRUE:FALSE;
+		//$new = (count($argv)==2)?TRUE:FALSE;
 		$launch = new PUWI_LaunchBrowser();
-		$rdo_launch = $launch->getResults($argv[1],$result,$this->arrayFolders,$new);
+		$rdo_launch = $launch->getResults($argv[1],$result,$this->arrayFolders,$new,$argv);
 		
 		if ($new == TRUE){
 			if ($exit) {
@@ -205,21 +207,23 @@
 			    return $ret;
 			}
 		}else{
-			//echo a json de rdo_launch	ç
+			print_r($rdo_launch);
+			//echo a json de rdo_launch	
 			return $rdo_launch;
 		}
-		//}
+	
 	}
 
     /**
-     * Create a PHPUnit_TextUI_TestRunner, override in subclasses.
+     * Create a PUWI_Prueba, override in subclasses.
      *
-     * @return PHPUnit_TextUI_PHPUnit_TextUI_TestRunner
+     * @return PHPUnit_TextUI_PUWI_Prueba
      * @since  Method available since Release 3.6.0
      */
     protected function createRunner()
     {
-        return new PHPUnit_TextUI_TestRunner($this->arguments['loader']);
+        //return new PHPUnit_TextUI_TestRunner($this->arguments['loader']);
+    	return new PUWI_Prueba($this->arguments['loader']);
     }
 
     /**
@@ -258,7 +262,7 @@
         }
 
         catch (PHPUnit_Framework_Exception $e) {
-            PHPUnit_TextUI_TestRunner::showError($e->getMessage());
+            PUWI_Prueba::showError($e->getMessage());
         }
 
         foreach ($this->options[0] as $option) {
@@ -352,7 +356,7 @@
                 case 'h':
                 case '--help': {
                     $this->showHelp();
-                    exit(PHPUnit_TextUI_TestRunner::SUCCESS_EXIT);
+                    exit(PUWI_Prueba::SUCCESS_EXIT);
                 }
                 break;
 
@@ -497,8 +501,8 @@
                 break;
 
                 case '--version': {
-                    PHPUnit_TextUI_TestRunner::printVersionString();
-                    exit(PHPUnit_TextUI_TestRunner::SUCCESS_EXIT);
+                    PUWI_Prueba::printVersionString();
+                    exit(PUWI_Prueba::SUCCESS_EXIT);
                 }
                 break;
 
@@ -610,7 +614,7 @@
 
             catch (Exception $e) {
                 print $e->getMessage() . "\n";
-                exit(PHPUnit_TextUI_PHPUnit_TextUI_TestRunner::FAILURE_EXIT);
+                exit(PHPUnit_TextUI_PUWI_Prueba::FAILURE_EXIT);
             }
 
             $phpunit = $configuration->getPHPUnitConfiguration();
@@ -690,7 +694,7 @@
         if (!isset($this->arguments['test']) ||
             (isset($this->arguments['testDatabaseLogRevision']) && !isset($this->arguments['testDatabaseDSN']))) {
             $this->showHelp();
-            exit(PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT);
+            exit(PUWI_Prueba::EXCEPTION_EXIT);
         }
     }
 
@@ -727,7 +731,7 @@
         }
 
         if (!isset($loader)) {
-            PHPUnit_TextUI_TestRunner::showError(
+            PUWI_Prueba::showError(
               sprintf(
                 'Could not use "%s" as loader.',
 
@@ -777,7 +781,7 @@
         }
 
         if (!isset($printer)) {
-            PHPUnit_TextUI_TestRunner::showError(
+            PUWI_Prueba::showError(
               sprintf(
                 'Could not use "%s" as printer.',
 
@@ -801,7 +805,7 @@
         }
 
         catch (PHPUnit_Framework_Exception $e) {
-            PHPUnit_TextUI_TestRunner::showError($e->getMessage());
+            PUWI_Prueba::showError($e->getMessage());
         }
     }
 
@@ -835,11 +839,11 @@
      */
     protected function showMessage($message, $exit = TRUE)
     {
-        PHPUnit_TextUI_TestRunner::printVersionString();
+        PUWI_Prueba::printVersionString();
         print $message . "\n";
 
         if ($exit) {
-            exit(PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT);
+            exit(PUWI_Prueba::EXCEPTION_EXIT);
         } else {
             print "\n";
         }
@@ -850,7 +854,7 @@
      */
     protected function showHelp()
     {
-        PHPUnit_TextUI_TestRunner::printVersionString();
+        PUWI_Prueba::printVersionString();
 
         print <<<EOT
 Usage: phpunit [switches] UnitTest [UnitTest.php]
