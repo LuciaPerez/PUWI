@@ -1,14 +1,13 @@
 <?php	
-	include 'PUWI_Runner.php';
+	include 'PUWI_Command.php';
 	
-	$runner = new PUWI_Runner();
+	$runner = new PUWI_Command();
 	
 	$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Runner.php","/opt/lampp/htdocs/workspace-eclipse/Calculadora/","no_new");
 
-	$res = $runner->run($argv,FALSE);
+	$results = $runner->run($argv,FALSE);
 
-	$who = array ("hola","adios");
-	$array = array('whoami' => $who[0],'runner' => $res['projectName']);
+	$array = array('results' => $results);
 	
 
 	echo  json_encode($array);

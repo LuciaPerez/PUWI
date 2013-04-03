@@ -4,9 +4,11 @@ phpDir=`pear config-show 2> /dev/null | grep php_dir | awk '{print $NF}'`
 
 . $scriptDir/functions.bash
 
+
 function main {
 	parseConfig
-	$theCommand:$phpDir $scriptDir/PUWI_Runner.php $*
+	$theCommand:$phpDir $scriptDir/PUWI_Command.php $*
+	
 }
 
 function parseConfig {
