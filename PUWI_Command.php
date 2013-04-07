@@ -11,8 +11,9 @@
 		require '@php_dir@' . DIRECTORY_SEPARATOR . 'PHPUnit' . DIRECTORY_SEPARATOR . 'Autoload.php';
 	}
 	
-	include 'PUWI_LaunchBrowser.php';
 	include 'PUWI_Runner.php';
+	include 'PUWI_LaunchBrowser.php';
+
 	
     class PUWI_Command{
 
@@ -84,8 +85,10 @@
 	{
 		$puwi = new PUWI_Command;
 		echo "~~~~~~~~~~ARGV~~~~~~~~~~";
-		print_r($_SERVER['argv']);
-		
+		foreach ($_SERVER['argv'] as $aux){
+			print "--".$aux."--";
+			
+		}
 		return $puwi->run($_SERVER['argv'],$new=TRUE, $exit);
 
 	}
@@ -132,6 +135,7 @@
 	*/
 	public function run(array $argv, $new, $exit = TRUE)
 	{
+		
 		$this->handleArguments($argv);
 
 		$runner = $this->createRunner();
@@ -148,7 +152,7 @@
 		}
 
 		if ($this->arguments['listGroups']) {
-		    PUWI_Runner::printVersionString();
+		    PHPUnit_TextUI_TestRunner::printVersionString();
 
 		    print "Available test group(s):\n";
 
@@ -160,9 +164,9 @@
 		    }
 
 		    if ($exit) {
-			exit(PUWI_Runner::SUCCESS_EXIT);
+			exit(PHPUnit_TextUI_TestRunner::SUCCESS_EXIT);
 		    } else {
-			return PUWI_Runner::SUCCESS_EXIT;
+			return PHPUnit_TextUI_TestRunner::SUCCESS_EXIT;
 		    }
 		}
 
@@ -171,7 +175,6 @@
 
 
 		try {
-		    $runner->setPrinter(new PHPUnit_TextUI_ResultPrinter($out = NULL, $verbose = FALSE, $colors = FALSE, $debug = FALSE));
 		    $result = $runner->doRun($suite, $this->arguments);
 		}
 
@@ -179,16 +182,14 @@
 		    print $e->getMessage() . "\n";
 		}
 
-
-
-		$ret = PUWI_Runner::FAILURE_EXIT;
+		$ret = PHPUnit_TextUI_TestRunner::FAILURE_EXIT;
 
 		if (isset($result) && $result->wasSuccessful()) {
-		    $ret = PUWI_Runner::SUCCESS_EXIT;
+		    $ret = PHPUnit_TextUI_TestRunner::SUCCESS_EXIT;
 		}
 
 		else if (!isset($result) || $result->errorCount() > 0) {
-		    $ret = PUWI_Runner::EXCEPTION_EXIT;
+		    $ret = PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT;
 		}
 		
 		$this->pathProject = $argv[1];
@@ -199,6 +200,12 @@
 		//$new = (count($argv)==2)?TRUE:FALSE;
 		$launch = new PUWI_LaunchBrowser();
 		$rdo_launch = $launch->getResults($argv[1],$result,$this->arrayFolders,$new,$argv);
+		//TRAZA DEL ERROR!:
+	       /* echo "Num errors launch: ".$result->failureCount();
+	        foreach ($result->failures() as $error) {
+	        	echo "ERROR:";
+	        	echo $error->thrownException();
+	        }*/
 		
 		if ($new == TRUE){
 			if ($exit) {
@@ -214,9 +221,9 @@
 	}
 
     /**
-     * Create a PUWI_Runner, override in subclasses.
+     * Create a PHPUnit_TextUI_TestRunner, override in subclasses.
      *
-     * @return PHPUnit_TextUI_PUWI_Runner
+     * @return PHPUnit_TextUI_PHPUnit_TextUI_TestRunner
      * @since  Method available since Release 3.6.0
      */
     protected function createRunner()
@@ -261,7 +268,7 @@
         }
 
         catch (PHPUnit_Framework_Exception $e) {
-            PUWI_Runner::showError($e->getMessage());
+            PHPUnit_TextUI_TestRunner::showError($e->getMessage());
         }
 
         foreach ($this->options[0] as $option) {
@@ -355,7 +362,7 @@
                 case 'h':
                 case '--help': {
                     $this->showHelp();
-                    exit(PUWI_Runner::SUCCESS_EXIT);
+                    exit(PHPUnit_TextUI_TestRunner::SUCCESS_EXIT);
                 }
                 break;
 
@@ -500,8 +507,8 @@
                 break;
 
                 case '--version': {
-                    PUWI_Runner::printVersionString();
-                    exit(PUWI_Runner::SUCCESS_EXIT);
+                    PHPUnit_TextUI_TestRunner::printVersionString();
+                    exit(PHPUnit_TextUI_TestRunner::SUCCESS_EXIT);
                 }
                 break;
 
@@ -613,7 +620,7 @@
 
             catch (Exception $e) {
                 print $e->getMessage() . "\n";
-                exit(PHPUnit_TextUI_PUWI_Runner::FAILURE_EXIT);
+                exit(PHPUnit_TextUI_PHPUnit_TextUI_TestRunner::FAILURE_EXIT);
             }
 
             $phpunit = $configuration->getPHPUnitConfiguration();
@@ -693,7 +700,7 @@
         if (!isset($this->arguments['test']) ||
             (isset($this->arguments['testDatabaseLogRevision']) && !isset($this->arguments['testDatabaseDSN']))) {
             $this->showHelp();
-            exit(PUWI_Runner::EXCEPTION_EXIT);
+            exit(PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT);
         }
     }
 
@@ -730,7 +737,7 @@
         }
 
         if (!isset($loader)) {
-            PUWI_Runner::showError(
+            PHPUnit_TextUI_TestRunner::showError(
               sprintf(
                 'Could not use "%s" as loader.',
 
@@ -780,7 +787,7 @@
         }
 
         if (!isset($printer)) {
-            PUWI_Runner::showError(
+            PHPUnit_TextUI_TestRunner::showError(
               sprintf(
                 'Could not use "%s" as printer.',
 
@@ -804,7 +811,7 @@
         }
 
         catch (PHPUnit_Framework_Exception $e) {
-            PUWI_Runner::showError($e->getMessage());
+            PHPUnit_TextUI_TestRunner::showError($e->getMessage());
         }
     }
 
@@ -838,11 +845,11 @@
      */
     protected function showMessage($message, $exit = TRUE)
     {
-        PUWI_Runner::printVersionString();
+        PHPUnit_TextUI_TestRunner::printVersionString();
         print $message . "\n";
 
         if ($exit) {
-            exit(PUWI_Runner::EXCEPTION_EXIT);
+            exit(PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT);
         } else {
             print "\n";
         }
@@ -853,7 +860,7 @@
      */
     protected function showHelp()
     {
-        PUWI_Runner::printVersionString();
+        PHPUnit_TextUI_TestRunner::printVersionString();
 
         print <<<EOT
 Usage: phpunit [switches] UnitTest [UnitTest.php]

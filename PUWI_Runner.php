@@ -108,7 +108,7 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
         }
 
         if ($test instanceof PHPUnit_Framework_Test) {
-            $aTestRunner = new PHPUnit_TextUI_TestRunner;
+            $aTestRunner = new PUWI_Runner;
 
             return $aTestRunner->doRun(
               $test,
@@ -225,56 +225,11 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
             $result->stopOnSkipped(TRUE);
         }
 
-       /* if ($this->printer === NULL) {
-            if (isset($arguments['printer']) &&
-                $arguments['printer'] instanceof PHPUnit_Util_Printer) {
-                $this->printer = $arguments['printer'];
-            } else {
-                $printerClass = 'PHPUnit_TextUI_ResultPrinter';
-                if (isset($arguments['printer']) &&
-                    is_string($arguments['printer']) &&
-                    class_exists($arguments['printer'], FALSE)) {
-                    $class = new ReflectionClass($arguments['printer']);
-
-                    if ($class->isSubclassOf('PHPUnit_TextUI_ResultPrinter')) {
-                        $printerClass = $arguments['printer'];
-                    }
-                }
-
-                $this->printer = new $printerClass(
-                  isset($arguments['stderr']) ? 'php://stderr' : NULL,
-                  $arguments['verbose'],
-                  $arguments['colors'],
-                  $arguments['debug']
-                );
-            }
-        }
-
-        if (!$this->printer instanceof PHPUnit_Util_Log_TAP &&
-            !self::$versionStringPrinted) {
-            $this->printer->write(
-              PHPUnit_Runner_Version::getVersionString() . "\n\n"
-            );
-
-            if (isset($arguments['configuration'])) {
-                $this->printer->write(
-                  sprintf(
-                    "Configuration read from %s\n\n",
-                    $arguments['configuration']->getFilename()
-                  )
-                );
-            }
-        }*/
-
+   
         foreach ($arguments['listeners'] as $listener) {
             $result->addListener($listener);
         }
 
-       // $result->addListener($this->printer);
-
-        if ($this->printer instanceof PHPUnit_TextUI_ResultPrinter) {
-            $result->addListener(new PHPUnit_Util_DeprecatedFeature_Logger);
-        }
 
         if (isset($arguments['testdoxHTMLFile'])) {
             $result->addListener(
@@ -389,15 +344,12 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
         if ($suite instanceof PHPUnit_Framework_TestSuite) {
             $suite->setRunTestInSeparateProcess($arguments['processIsolation']);
         }
-
+        
         $suite->run($result);
 
         unset($suite);
         $result->flushListeners();
 
-      /*  if ($this->printer instanceof PHPUnit_TextUI_ResultPrinter) {
-            $this->printer->printResult($result);
-        }*/
 
         if (isset($codeCoverage)) {
             if (isset($arguments['coverageClover'])) {

@@ -1,5 +1,5 @@
 <?php
-
+include_once 'PUWI_UtilFilter.php';
 class PUWI_LaunchBrowser{
 
 	private $infoFailedTests = array(); 
@@ -21,8 +21,10 @@ class PUWI_LaunchBrowser{
 		$folders = $this->send_array($folders);
 		$infoFailedTests = $this->send_array($this->infoFailedTests);
 		$argv = $this->send_array($argv);
+		
 		//print "==============FAILED TESTS===================<br/>";
 		//print_r($this->infoFailedTests);
+		
 		$url="http://localhost/PUWI/view/index.php".
 		     "?projectName=".$projectName.
 		     "\&totalTests=".$totalTests.
@@ -150,10 +152,10 @@ class PUWI_LaunchBrowser{
 		$infoEachTest = array();
 
 		foreach ($fail as $f){
-			$data=PHPUnit_Util_Filter::getFilteredStacktrace(
+			$data = PUWI_UtilFilter::getFilteredStacktrace(
 			    $f->thrownException()
 			);
-			
+
 			$testName = $f->failedTest()->toString();
 			$message = $f->getExceptionAsString();
 
