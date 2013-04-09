@@ -70,35 +70,7 @@ class index{
 		
 	}
 	
-	function getCode($file,$test){
-		$file_to_open = fopen ($file, "r");
-		$code = "";
-		$number_line=1;
-		$search = "/.".$test."./";
-		$in_function='no';
-		$end_function = "/.test_setUpJob./";
-			
-		while ($aux = fgets($file_to_open, 1024)){
-			if (preg_match($search,$aux)){
-				$in_function='yes';
-			}else{
-				if (preg_match($end_function,$aux)){
-					$in_function='no';
-				}
-			}
-			if ($in_function=='yes'){
-				$code .= $aux."--";
-			}
-			$number_line++;
-		}
-		$in_function='no';
-		fclose($file_to_open);
-		//print trim($code);
-		//return $code;
-		return 'test code';
-		
-	}
-	
+
 	public static function main($exit = TRUE)
 	{      
 		
@@ -139,11 +111,6 @@ class index{
 					$message = trim($infoFail["message"]);
 					$smarty->assign(array("file" => $file, "line" => $line, "message" => $message));
 
-
-					$text = $index->getCode($file,$test);
-					
-					$smarty->assign("code",trim($text));
-
 				}
 
 				$folder = $index->getFolder($folders,$class);
@@ -161,7 +128,7 @@ class index{
 				
 				$smarty->display("tests.tpl");
 				
-				$smarty->clear_assign(array('group','class','classNameTest', 'test','folder','file','line','message','code'));
+				$smarty->clear_assign(array('group','class','classNameTest', 'test','folder','file','line','message'));
 				$smarty->clear_cache('tests.tpl');
 				$count++; 	
 			}//end foreach values

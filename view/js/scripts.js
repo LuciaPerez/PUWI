@@ -9,9 +9,9 @@ function createDivFailedTest(contentDiv,className,divParent,divName,file,line,me
 	var content = document.getElementById(divParent);
 
 	div.innerHTML = '<p class="nameFT left bold">'+contentDiv+'</p>'
-			+'<p class="red bold">+'+line+'</p>'
+			+'<p class="red textRight bold">+'+line+'</p>'
 			+'<p class="fileFT">'+file+'</p>'
-			+'<p class="italic">'+message+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" class="classButton" data-idtest='+"#"+idTest+'></p>';
+			+'<p class="italic">'+message+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" class="classButton" data-idtest='+"#"+idTest+' data-file='+file+' data-line='+line+' data-test='+contentDiv+'></p>';
 	
 	content.appendChild(div);
 
@@ -39,6 +39,22 @@ $(document).ready(function(){
 	});
 	
 	
+	var myClasses=new Array('testOK', 'testIncomplete', 'testFailed');
+	
+	updateChanges = function(arrayResults,classToChange,del){
+		for (i=0; i<arrayResults.length; i++){
+			var id = "#"+ arrayResults[i].replace(/:/g,'\\:'); 
+			$(id).addClass(classToChange);
+			
+			var posBorrar=myClasses.indexOf(classToChange);
+			myClasses.splice(posBorrar, 1);
+
+			//for (i=0; i<myClasses.length; i++){
+				$(id).removeClass(del);
+			//}
+		}
+	}
+	
 	$("#runAllTests").click(function(){
 		runAllTests();
 	});
@@ -49,7 +65,7 @@ $(document).ready(function(){
 			dataType: "json",
 			type: 'POST',
 		    async: true,	
-			data: {parametro:'RUN'},
+			data: {action:'rerun'},
 				
 			success: function(request){
 				$passed = request["passed"];
@@ -98,6 +114,8 @@ $(document).ready(function(){
 					}
 					
 				}
+				/*updateChanges($passed,'testOK','testIncomplete');
+				updateChanges($skipped,'testIncomplete','testOK');*/
 				
 			},
 			
@@ -111,7 +129,25 @@ $(document).ready(function(){
 	
 	$( ".classButton" ).click(function(){
 		var idTest = $(this).data('idtest');
+		var file = $(this).data('file');
+		var line = $(this).data('line');
+		var testName = $(this).data('test');
+		
 		$(idTest).slideToggle();
+		$.ajax({
+			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
+			dataType: "json",
+			type: 'POST',
+		    async: true,	
+			data: {action:'displayCode',file:file,line:line,testName:testName},
+			success:function(request){
+				$(idTest).html('<p>'+request['code']+'</p>');
+			},
+		
+			error: function(request){
+				alert("an error ocurred in ajax request");
+			}
+		});
 		
 	});
 

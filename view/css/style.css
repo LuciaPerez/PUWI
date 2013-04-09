@@ -158,7 +158,6 @@
 
 .red{
 	color:red;
-	text-align:right;
 }
 
 .bold{
@@ -167,6 +166,10 @@
 
 .italic{
 	font-style:italic;
+}
+
+.textRight{
+	text-align:right;
 }
 
 .left{
