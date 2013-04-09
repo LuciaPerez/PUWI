@@ -31,19 +31,21 @@
 	 {assign var="countClass" value=$count} 
 {/if}
 
-
+{* createDivFailedTest(contentDiv,className,divParent,divName,file,line,message,code) *}
 {if ($classNameTest) == 'testFailed box'}
 	<script type="text/javascript">
 	{literal}
 		  createDivFailedTest('{/literal}{$test}{literal}','{/literal}{$classNameTest}{literal}','fileName{/literal}{$countClass}{literal}',
-		 					 'testName{/literal}{$count}{literal}','{/literal}{$file}{literal}','{/literal}{$line}{literal}',
+		 					 '{/literal}{$class}{literal}::{/literal}{$test}{literal}','{/literal}{$file}{literal}','{/literal}{$line}{literal}',
 		 					 '{/literal}{$message}{literal}','{/literal}{$code}{literal}');
 	{/literal}
 	</script>
 {else}
+{* createDiv(contentDiv,className,divParent,divName) *}
 	<script type="text/javascript">
 	{literal}
-		  createDiv('{/literal}{$test}{literal}','{/literal}{$classNameTest}{literal}','fileName{/literal}{$countClass}{literal}');
+		  createDiv('{/literal}{$test}{literal}','{/literal}{$classNameTest}{literal}','fileName{/literal}{$countClass}{literal}',
+		  '{/literal}{$class}{literal}::{/literal}{$test}{literal}');
 	{/literal}
 	</script>
 {/if}
