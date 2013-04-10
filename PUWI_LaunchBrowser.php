@@ -11,7 +11,9 @@ class PUWI_LaunchBrowser{
 	*/
 
 	public function launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$argv){
-				
+		print "-------------------FAILURES---------------------------<br/>";
+		print_r($failures);
+		
 		$passed = $this->send_array($passed); 
 		$failures = $this->send_array($failures);
 		$errors = $this->send_array($errors);
@@ -22,8 +24,8 @@ class PUWI_LaunchBrowser{
 		$infoFailedTests = $this->send_array($this->infoFailedTests);
 		$argv = $this->send_array($argv);
 		
-		//print "==============FAILED TESTS===================<br/>";
-		//print_r($this->infoFailedTests);
+		print "<br/>==============FAILED TESTS===================<br/>";
+		print_r($this->infoFailedTests);
 		
 		$url="http://localhost/PUWI/view/index.php".
 		     "?projectName=".$projectName.
@@ -147,6 +149,38 @@ class PUWI_LaunchBrowser{
 		}
 		return($result);
 	}
+	
+/*	function getCode($data){
+		$file=strstr($data, ':', true);
+		$line=trim(substr(strstr($data, ':'),1));
+		
+		$file_to_open = fopen ($file, "r");
+		$code = "";
+		$number_line=1;
+		$search = "/.".$test."./";
+		$in_function='no';
+		$end_function = "/. function ./";
+		$end_function2 = "/.\/\\*\\*./";
+			
+		while ($aux = fgets($file_to_open, 1024)){
+			if (preg_match($search,$aux)){
+				$in_function='yes';
+			}else{
+				if ((preg_match($end_function,$aux)) || (preg_match($end_function2,$aux))){
+					$in_function='no';
+				}
+			}
+			if ($in_function=='yes'){
+				$code .= $aux."</br>";
+			}
+			$number_line++;
+		}
+		$in_function='no';
+		fclose($file_to_open);
+		//print trim($code);
+		//return $code;
+		return 'public function PRUEBAtest_setUpWorks( ) { //$this->markTestSkipped("This test is skipped") ;} ';
+	}*/
 
 	function getFails(array $fail){
 		$infoEachTest = array();
@@ -159,11 +193,16 @@ class PUWI_LaunchBrowser{
 			$testName = $f->failedTest()->toString();
 			$message = $f->getExceptionAsString();
 
+			$file=strstr($data, ':', true);
+			$line=trim(substr(strstr($data, ':'),1));
+			
+			
 			$infoEachTest['testName'] = $testName;
 			
-			$infoEachTest['data'] = $data;
+			$infoEachTest['file'] = $file;
+			$infoEachTest['line'] = $line;
 			$infoEachTest['message'] = $message;
-
+			
 			array_push($this->infoFailedTests,$infoEachTest);
 		}
 	}

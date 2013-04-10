@@ -15,7 +15,7 @@ function createDivFailedTest(contentDiv,className,divParent,divName,file,line,me
 	
 	content.appendChild(div);
 
-	createDiv(code,"testInfo totalTests box",divName,idTest);
+	createDiv("","testInfo totalTests box",divName,idTest);
 	count = count + 1;
 	
 }
@@ -28,6 +28,7 @@ function createDiv(contentDiv,className,divParent,divName) {
 	var content = document.getElementById(divParent);
 	div.innerHTML = '<p >'+contentDiv+"</p>";
 	content.appendChild(div);
+	alert(contentDiv);
 }
 
 
@@ -38,22 +39,6 @@ $(document).ready(function(){
 
 	});
 	
-	
-	var myClasses=new Array('testOK', 'testIncomplete', 'testFailed');
-	
-	updateChanges = function(arrayResults,classToChange,del){
-		for (i=0; i<arrayResults.length; i++){
-			var id = "#"+ arrayResults[i].replace(/:/g,'\\:'); 
-			$(id).addClass(classToChange);
-			
-			var posBorrar=myClasses.indexOf(classToChange);
-			myClasses.splice(posBorrar, 1);
-
-			//for (i=0; i<myClasses.length; i++){
-				$(id).removeClass(del);
-			//}
-		}
-	}
 	
 	$("#runAllTests").click(function(){
 		runAllTests();
@@ -68,17 +53,17 @@ $(document).ready(function(){
 			data: {action:'rerun'},
 				
 			success: function(request){
-				$passed = request["passed"];
-				$failures = request["failures"];
-				$errors = request["errors"];
-				$skipped = request["skipped"];
-				$incomplete = request["incomplete"];
-				$info = request["infoFailedTests"];
+				passed = request["passed"];
+				failures = request["failures"];
+				errors = request["errors"];
+				skipped = request["skipped"];
+				incomplete = request["incomplete"];
+				info = request["infoFailedTests"];
 				
-				$('#title').html('passed: '+$passed+' failures: '+$failures+' skipped: '+$skipped+ ' infoFailedTests: '+$info[0]['data']);
+				$('#title').html('passed: '+passed+' failures: '+failures+' skipped: '+skipped+ ' infoFailedTests: '+info[0]['file']);
 				
-				for (i=0; i<$passed.length; i++){
-					var id = "#"+ $passed[i].replace(/:/g,'\\:'); 
+				for (i=0; i<passed.length; i++){
+					var id = "#"+ passed[i].replace(/:/g,'\\:'); 
 					if($(id).hasClass('testFailed')){
 						$(id).removeClass('testFailed').addClass('testOK');
 						id = id+' p.fileFT,'+id+' p.red,'+id+' p.italic';
@@ -88,8 +73,8 @@ $(document).ready(function(){
 					}
 				}
 				
-				for (i=0; i<$skipped.length; i++){
-					var id = "#"+ $skipped[i].replace(/:/g,'\\:'); 
+				for (i=0; i<skipped.length; i++){
+					var id = "#"+ skipped[i].replace(/:/g,'\\:'); 
 					if($(id).hasClass('testFailed')){
 						$(id).removeClass('testFailed').addClass('testIncomplete');
 						id = id+' p.fileFT,'+id+' p.red,'+id+' p.italic';
@@ -99,23 +84,31 @@ $(document).ready(function(){
 					}
 				}
 				
-				for (i=0; i<$failures.length; i++){
+				for (i=0; i<failures.length; i++){
 					idTest = "idTest"+count;
-					var pr ="MENSAJE PRUEBA";
-					var id = "#"+ $failures[i].replace(/:/g,'\\:'); 
-					if($(id).hasClass('testFailed')){
-						
-					}else{
-						$(id).removeClass('testOK').
-						addClass('testFailed').
-						append('<p class="red bold"> holaaa</p><p class="fileFT">file/file</p><p class="italic">MENSAJE<input type="image" src="images/bullet_arrow_down1.png" title="Show code" class="classButton" data-idtest='+"#"+idTest+'></p>');
-						createDiv("codigo","testInfo totalTests box",$failures[i],idTest);
-						count = count + 1;
-					}
+					var pr ="probando variable";
+					var file = info[i]["file"];
+					var line = info[i]["line"];
+					var id = "#"+ failures[i].replace(/:/g,'\\:'); 
+			
+					var p = $(id).hasClass('testOK') ? $(id).removeClass('testOK') : 
+						    $(id).hasClass('testIncomplete') ? $(id).removeClass('testIncomplete') : 'failed test';
 					
+					if ($(id).hasClass('testFailed')){ 
+						$(id).removeClass('testFailed');
+						remove_content = id+' p.fileFT,'+id+' p.red,'+id+' p.italic';
+						$(remove_content).empty();
+						$("div.testInfo").remove();
+					}
+			
+					$(id).addClass('testFailed').
+					append('<p class="red textRight bold">'+line+'</p>').
+					append('<p class="fileFT">'+idTest+'</p>').
+					append('<p class="italic">'+info[i]["message"]+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code2" class="classButton" data-idtest='+"#"+idTest+' data-file='+file+' data-line='+line+' data-test='+"test_setUpWorks"+'></p>');
+					createDiv(idTest,"testInfo totalTests box",failures[i],idTest);
+					count = count + 1;
+
 				}
-				/*updateChanges($passed,'testOK','testIncomplete');
-				updateChanges($skipped,'testIncomplete','testOK');*/
 				
 			},
 			
@@ -132,7 +125,6 @@ $(document).ready(function(){
 		var file = $(this).data('file');
 		var line = $(this).data('line');
 		var testName = $(this).data('test');
-		
 		$(idTest).slideToggle();
 		$.ajax({
 			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
@@ -141,7 +133,7 @@ $(document).ready(function(){
 		    async: true,	
 			data: {action:'displayCode',file:file,line:line,testName:testName},
 			success:function(request){
-				$(idTest).html('<p>'+request['code']+'</p>');
+				$(idTest).html('<p>'+idTest+request['code']+'</p>');
 			},
 		
 			error: function(request){

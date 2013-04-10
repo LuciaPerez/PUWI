@@ -106,10 +106,8 @@ class index{
 				
 				if ($classNameTest == 'testFailed box'){
 					$infoFail = $index->getInfoFailedTests($value,$infoFailedTests);
-					$file=strstr($infoFail["data"], ':', true);
-					$line=trim(substr(strstr($infoFail["data"], ':'),1));
 					$message = trim($infoFail["message"]);
-					$smarty->assign(array("file" => $file, "line" => $line, "message" => $message));
+					$smarty->assign(array("file" => $infoFail["file"], "line" => $infoFail["line"], "message" => $message));
 
 				}
 
