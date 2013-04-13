@@ -1,6 +1,6 @@
 <?php	
 	include_once 'PUWI_Command.php';
-	
+
 	$action = $_POST['action'];
 	switch($action)
 	{
@@ -10,8 +10,10 @@
 			$results = $runner->run($argv,FALSE);
 			
 	
-			$array = array('passed' => $results['passed'],'failures' => $results['failures'],'errors' => $results['errors'],
-					'incomplete' => $results['incomplete'],'skipped' => $results['skipped'],'infoFailedTests' => $results['failedTests']);
+			$array = array('projectName' => $results['projectName'], 'totalTests' =>$results['totalTests'], 'passed' => $results['passed'],
+					'failures' => $results['failures'],'errors' => $results['errors'], 'incomplete' => $results['incomplete'],
+					'skipped' => $results['skipped'], 'groups' => $results['groups'], 'folders' => $results['folders'],
+					'infoFailedTests' => $results['failedTests']);
 			
 			echo  json_encode($array);
 		break;
