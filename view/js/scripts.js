@@ -9,28 +9,27 @@ $(document).on('ready',function(){
 	var count = 0;
 	var idTest = "";
 	createDiv = function (contentDiv,className,divParent,divName) { 
-		var div = document.createElement('div');
-		div.id = divName;
-		div.className  = className;
-		var content = document.getElementById(divParent);
-		div.innerHTML = '<p>'+contentDiv+'</p>';
-		content.appendChild(div);
 
+		divParent="#"+divParent.replace(/:/g,'\\:');;
+			$('<div/>', {
+		    id: divName,
+		    class: className,
+		    html: '<p>'+contentDiv+'</p>'
+		}).appendTo(divParent);
 	}
+	
 	createDivFailedTest = function (contentDiv,className,divParent,divName,file,line,message,code) { 
 		var idButton = "showcode"+count;
-		idTest = "idTest"+count;
-		var div = document.createElement('div');
-		div.id = divName;
-		div.className  = className;
-		var content = document.getElementById(divParent);
-
-		div.innerHTML = '<p class="nameFT left bold">'+contentDiv+'</p>'
-				+'<p class="red textRight bold">+'+line+'</p>'
-				+'<p class="fileFT">'+file+'</p>'
-				+'<p class="italic">'+message+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" id='+idButton+' class="classButton" data-idtest='+"#"+idTest+' data-file='+file+' data-line='+line+' data-test='+contentDiv+'><button type="button" class="classButton" >Trace</button></p>';
-		content.appendChild(div);
-
+		idTest = "idTest"+count;		
+		
+		divParent="#"+divParent;
+			$('<div/>', {
+		    id: divName,
+		    class: className,
+		    html: '<p class="nameFT left bold">'+contentDiv+'</p>'+'<p class="red textRight bold">+'+line+'</p>'
+		          +'<p class="italic">'+message+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" id='+idButton+' class="classButton" data-idtest='+"#"+idTest+' data-file='+file+' data-line='+line+' data-test='+contentDiv+'><button type="button" class="classButton" >Trace</button></p>'
+		}).appendTo(divParent);
+		
 		createDiv("","testInfo totalTests box",divName,idTest);
 		count = count + 1;
 		
@@ -72,13 +71,13 @@ $(document).on('ready',function(){
 		info = request["infoFailedTests"];
 	
 		//createDiv(contentDiv,className,divParent,divName)
-		$('#projectName p').html(request["projectName"]);
+		createDiv(request["projectName"],"","content","projectName")
 		if (request["totalTests"] == 0){
-			$('.totalTests p').html("<p>No tests executed!</p>");
+			createDiv(request["projectName"],"","content","projectName");
 		}else{
-			$('.totalTests p').append(request["totalTests"]+' test passing'
-									+'<button type="button" id="runAllTests">Run All Tests</button>'
-									+'<button type="button" id="hideTestsOK" class= "button">Hide/Show Passed Tests</button>');
+			createDiv(request["totalTests"]+" test pasing","totalTests box","content","");
+			$('.totalTests p').append('<button type="button" id="runAllTests" >Run All Tests</button>'
+					+'<button type="button" id="hideTestsOK" class= "button">Hide/Show Passed Tests</button>');
 		}
 		var array_keys = new Array();
 		var array_values = new Array();
@@ -193,7 +192,6 @@ $(document).on('ready',function(){
 
 	
 	$( "p.italic" ).on('click',"#showcode"+count, function(){
-		
 		var idTest = $(this).data('idtest');
 		var file = $(this).data('file');
 		var line = $(this).data('line');
