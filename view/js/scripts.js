@@ -1,8 +1,3 @@
-
-
-
-
-
 $(document).on('ready',function(){
 	
 	var countDivs = 0;
@@ -78,21 +73,13 @@ $(document).on('ready',function(){
 	
 		//createDiv(contentDiv,className,divParent,divName)
 		$('#projectName p').html(request["projectName"]);
-		//createDiv(request["projectName"],"","content","projectName")
 		if (request["totalTests"] == 0){
 			$('.totalTests p').html("<p>No tests executed!</p>");
-			//createDiv(request["projectName"],"","content","projectName");
 		}else{
-			/*createDiv(request["totalTests"]+" test pasing","totalTests box","content","");
-			$('.totalTests p').append('<button type="button" id="runAllTests"  class="caca">Run All Tests</button>'
-					+'<button type="button" id="hideTestsOK" class= "button">Hide/Show Passed Tests</button>');*/
 			$('.totalTests p').append(request["totalTests"]+' test passing'
-									+'<button type="button" id="runAllTests"  class="caca">Run All Tests</button>'
+									+'<button type="button" id="runAllTests">Run All Tests</button>'
 									+'<button type="button" id="hideTestsOK" class= "button">Hide/Show Passed Tests</button>');
 		}
-		/*$.each(groups, function(key, value) {
-		      alert(key)
-		});*/
 		var array_keys = new Array();
 		var array_values = new Array();
 		for (var group_name in groups) {
@@ -206,8 +193,8 @@ $(document).on('ready',function(){
 
 	
 	$( "p.italic" ).on('click',"#showcode"+count, function(){
-		alert("POR FIINNN");
-		/*var idTest = $(this).data('idtest');
+		
+		var idTest = $(this).data('idtest');
 		var file = $(this).data('file');
 		var line = $(this).data('line');
 		var testName = $(this).data('test');
@@ -227,7 +214,7 @@ $(document).on('ready',function(){
 				alert("an error ocurred in ajax request");
 			}
 		});
-		*/
+		
 	});
 	
 
