@@ -1,3 +1,8 @@
+
+
+
+
+
 $(document).on('ready',function(){
 	
 	var countDivs = 0;
@@ -26,7 +31,7 @@ $(document).on('ready',function(){
 			$('<div/>', {
 		    id: divName,
 		    class: className,
-		    html: '<p class="nameFT left bold">'+contentDiv+'</p>'+'<p class="red textRight bold">+'+line+'</p>'
+		    html: '<p class="nameFT left bold">'+contentDiv+'</p>'+'<p class="red textRight bold">+'+line+'</p>'+'<p class="fileFT">'+file+'</p>'
 		          +'<p class="italic">'+message+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" id='+idButton+' class="classButton" data-idtest='+"#"+idTest+' data-file='+file+' data-line='+line+' data-test='+contentDiv+'><button type="button" class="classButton" >Trace</button></p>'
 		}).appendTo(divParent);
 		
@@ -71,14 +76,17 @@ $(document).on('ready',function(){
 		info = request["infoFailedTests"];
 	
 		//createDiv(contentDiv,className,divParent,divName)
+	
 		createDiv(request["projectName"],"","content","projectName")
 		if (request["totalTests"] == 0){
+		
 			createDiv(request["projectName"],"","content","projectName");
 		}else{
 			createDiv(request["totalTests"]+" test pasing","totalTests box","content","");
 			$('.totalTests p').append('<button type="button" id="runAllTests" >Run All Tests</button>'
-					+'<button type="button" id="hideTestsOK" class= "button">Hide/Show Passed Tests</button>');
+					+'<button type="button" id="hideTestsOK">Hide/Show Passed Tests</button>');
 		}
+
 		var array_keys = new Array();
 		var array_values = new Array();
 		for (var group_name in groups) {
@@ -100,7 +108,7 @@ $(document).on('ready',function(){
 			    	  createDiv(folder,'grey','groupName'+countGroup,'folderName'+countFolder);
 			    	  var selector = "#"+'folderName'+countFolder+" > p";
 			    	  var idButton = "idButton"+countFolder;
-			    	  $(selector).append('<button type="button" id='+idButton+' class= "classButton">Run folder</button>');
+			    	  $(selector).append('<button type="button" id='+idButton+' class= "buttonFolder classButton">Run folder</button>');
 			      }
 			      
 			      if (!is_showedClass(className)){
@@ -176,22 +184,20 @@ $(document).on('ready',function(){
 		return result;
 	}
 	
-	$(".totalTests").on('click','#runAllTests', function() {
+	$("#content").on('click','.totalTest p #hideTestsOK', function() {
+		$(".testOK").slideToggle(); 
+	});
+	
+	$("#content").on('click','.totalTests p #runAllTests', function() {
 		alert("Ejecutar todos...");
 		//runAllTests();
 	});
 	
-	$(".grey").on('click',"#idButton0", function() {
-		alert("foldeer");
+	$("#content").on('click',".groupContent .grey p .buttonFolder", function() {
+		alert("Run folder");
 	});
-	
 
-		$(".totalTests").on('click','#hideTestsOK', function() {
-			$(".testOK").slideToggle(); 
-		});
-
-	
-	$( "p.italic" ).on('click',"#showcode"+count, function(){
+	$( "#content" ).on('click',".groupContent .grey .black .testFailed .italic .classButton", function(){
 		var idTest = $(this).data('idtest');
 		var file = $(this).data('file');
 		var line = $(this).data('line');
@@ -205,7 +211,7 @@ $(document).on('ready',function(){
 		    async: true,	
 			data: {action:'displayCode',file:file,line:line,testName:testName},
 			success:function(request){
-				$(idTest).html('<p>'+idTest+request['code']+'</p>');
+				$(idTest).html('<p>'+request['code']+'</p>');
 			},
 		
 			error: function(request){

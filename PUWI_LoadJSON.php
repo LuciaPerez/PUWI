@@ -14,7 +14,7 @@
 					'failures' => $results['failures'],'errors' => $results['errors'], 'incomplete' => $results['incomplete'],
 					'skipped' => $results['skipped'], 'groups' => $results['groups'], 'folders' => $results['folders'],
 					'infoFailedTests' => $results['failedTests']);
-			
+
 			echo  json_encode($array);
 		break;
 		
