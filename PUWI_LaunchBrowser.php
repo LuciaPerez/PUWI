@@ -11,6 +11,8 @@ class PUWI_LaunchBrowser{
 	*/
 
 	public function launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$argv){
+		print "-------------------FAILURES---------------------------<br/>";
+		print_r($failures);
 		
 		$passed = $this->send_array($passed); 
 		$failures = $this->send_array($failures);
@@ -21,6 +23,9 @@ class PUWI_LaunchBrowser{
 		$folders = $this->send_array($folders);
 		$infoFailedTests = $this->send_array($this->infoFailedTests);
 		$argv = $this->send_array($argv);
+		
+		print "<br/>==============FAILED TESTS===================<br/>";
+		print_r($this->infoFailedTests);
 		
 		$url="http://localhost/PUWI/view/index.php".
 		     "?projectName=".$projectName.
@@ -51,11 +56,14 @@ class PUWI_LaunchBrowser{
 		$skipped = $this->getTestsSkipped($result);
 		$groups = $this->getGroups($result);
 
+		//echo "\n----------GROUPS-------------\n";
+		//print_r($groups);
 		
 		if ($new == TRUE){
 			$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$argv);
 		}else{
-			return array("totalTests" => $totalTests,
+			return array("projectName" => $projectName,
+						 "totalTests" => $totalTests,
 						 "projectName" => $projectName,
 						 "passed" => $passed,
 						 "failures"=> $failures,
@@ -142,7 +150,7 @@ class PUWI_LaunchBrowser{
 		}
 		return($result);
 	}
-	
+
 	function getFails(array $fail){
 		$infoEachTest = array();
 
@@ -150,10 +158,11 @@ class PUWI_LaunchBrowser{
 			$data = PUWI_UtilFilter::getFilteredStacktrace(
 			    $f->thrownException()
 			);
-
+			
 			$testName = $f->failedTest()->toString();
 			$message = $f->getExceptionAsString();
-
+			
+	
 			$file=strstr($data, ':', true);
 			$line=trim(substr(strstr($data, ':'),1));
 			
@@ -163,6 +172,7 @@ class PUWI_LaunchBrowser{
 			$infoEachTest['file'] = $file;
 			$infoEachTest['line'] = $line;
 			$infoEachTest['message'] = $message;
+			$infoEachTest['trace'] = (string)$f->thrownException();
 			
 			array_push($this->infoFailedTests,$infoEachTest);
 		}

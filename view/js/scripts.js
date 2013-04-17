@@ -1,8 +1,4 @@
 
-
-
-
-
 $(document).on('ready',function(){
 	
 	var countDivs = 0;
@@ -12,7 +8,8 @@ $(document).on('ready',function(){
 	var showedFolder = '';
 	
 	var count = 0;
-	var idTest = "";
+	var idCode = "";
+	var idTrace = "";
 	createDiv = function (contentDiv,className,divParent,divName) { 
 
 		divParent="#"+divParent.replace(/:/g,'\\:');;
@@ -23,19 +20,23 @@ $(document).on('ready',function(){
 		}).appendTo(divParent);
 	}
 	
-	createDivFailedTest = function (contentDiv,className,divParent,divName,file,line,message,code) { 
+	createDivFailedTest = function (contentDiv,className,divParent,divName,file,line,message,trace) { 
 		var idButton = "showcode"+count;
-		idTest = "idTest"+count;		
+		idCode = "idCode"+count;		
+		idTrace = "idTrace"+count;
 		
 		divParent="#"+divParent;
 			$('<div/>', {
 		    id: divName,
 		    class: className,
 		    html: '<p class="nameFT left bold">'+contentDiv+'</p>'+'<p class="red textRight bold">+'+line+'</p>'+'<p class="fileFT">'+file+'</p>'
-		          +'<p class="italic">'+message+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" id='+idButton+' class="classButton" data-idtest='+"#"+idTest+' data-file='+file+' data-line='+line+' data-test='+contentDiv+'><button type="button" class="classButton" >Trace</button></p>'
+		          +'<p class="italic">'+message
+		          +'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" id='+idButton+' class="code classButton" data-idcode='+"#"+idCode+' data-file='+file+' data-line='+line+' data-test='+contentDiv+'>'
+		          +'<button type="button" class="trace classButton" data-idtrace='+"#"+idTrace+'>Trace</button></p>'
 		}).appendTo(divParent);
 		
-		createDiv("","testInfo totalTests box",divName,idTest);
+		createDiv("","testInfo totalTests box",divName,idCode);
+		createDiv(trace,"testInfo totalTests box",divName,idTrace);
 		count = count + 1;
 		
 	}
@@ -48,8 +49,7 @@ $(document).on('ready',function(){
 		    async: true,	
 			data: {action:'rerun'},
 				
-			success: function(request){	
-				
+			success: function(request){
 				showResults(request);
 			},
 			error: function(request){
@@ -60,12 +60,13 @@ $(document).on('ready',function(){
 	}
 	
 	runAllTests = function(){
-		$("#content").remove();
+		$("#content").empty();
 		runFirstTime();
 	}
 
 
 	showResults = function (request){
+		
 		passed = request["passed"];
 		failures = request["failures"];
 		errors = request["errors"];
@@ -77,7 +78,7 @@ $(document).on('ready',function(){
 	
 		//createDiv(contentDiv,className,divParent,divName)
 	
-		createDiv(request["projectName"],"","content","projectName")
+		createDiv(request["projectName"],"","content","projectName");
 		if (request["totalTests"] == 0){
 		
 			createDiv(request["projectName"],"","content","projectName");
@@ -115,10 +116,11 @@ $(document).on('ready',function(){
 			    	  countClass = countDivs;
 			    	  createDiv(className,'black','folderName'+countFolder, 'fileName'+countClass);
 			      }
+			      
 			      if (classNameTest == "testFailed box"){
 			    	  var failedTest = getInfoFailedTests(value,info);
 			    	  createDivFailedTest(test,classNameTest,'fileName'+countClass,className+'::'+test,failedTest['file'],failedTest['line'],
-			    			  failedTest['message']);
+			    			  failedTest['message'],failedTest['trace']);
 			      }else{
 			    	  createDiv(test,classNameTest,'fileName'+countClass,className+'::'+test);
 			      }
@@ -189,21 +191,20 @@ $(document).on('ready',function(){
 	});
 	
 	$("#content").on('click','.totalTests p #runAllTests', function() {
-		alert("Ejecutar todos...");
-		//runAllTests();
+		runAllTests();
 	});
 	
 	$("#content").on('click',".groupContent .grey p .buttonFolder", function() {
 		alert("Run folder");
 	});
 
-	$( "#content" ).on('click',".groupContent .grey .black .testFailed .italic .classButton", function(){
-		var idTest = $(this).data('idtest');
+	$( "#content" ).on('click',".groupContent .grey .black .testFailed .italic .code", function(){
+		var idCode = $(this).data('idcode');
 		var file = $(this).data('file');
 		var line = $(this).data('line');
 		var testName = $(this).data('test');
-		
-		$(idTest).slideToggle();
+
+		$(idCode).slideToggle();
 		$.ajax({
 			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
 			dataType: "json",
@@ -211,7 +212,7 @@ $(document).on('ready',function(){
 		    async: true,	
 			data: {action:'displayCode',file:file,line:line,testName:testName},
 			success:function(request){
-				$(idTest).html('<p>'+request['code']+'</p>');
+				$(idCode).html('<p>'+request['code']+'</p>');
 			},
 		
 			error: function(request){
@@ -221,6 +222,10 @@ $(document).on('ready',function(){
 		
 	});
 	
+	$( "#content" ).on('click',".groupContent .grey .black .testFailed .italic .trace", function(){
+		var idTrace = $(this).data('idtrace');
+		$(idTrace).slideToggle();
+	});
 
 	runFirstTime();
 	
