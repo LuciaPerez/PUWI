@@ -1,6 +1,6 @@
 
 $(document).on('ready',function(){
-	
+
 	var countDivs = 0;
 	var countFolder = 0;
 	var countClass = 0;
@@ -10,10 +10,21 @@ $(document).on('ready',function(){
 	var count = 0;
 	var idCode = "";
 	var idTrace = "";
+	
+	getURLParams = function(){
+		var pageURL = window.location.toString().split('?');
+		var URLVariables = pageURL[1].split('&');
+		
+		var puwiParam = URLVariables[0].split('=');
+		var projectParam = URLVariables[1].split('=');
+		return [puwiParam[1], projectParam[1]];
+		
+	}
+
 	createDiv = function (contentDiv,className,divParent,divName) { 
 
-		divParent="#"+divParent.replace(/:/g,'\\:');;
-			$('<div/>', {
+		divParent="#"+divParent.replace(/:/g,'\\:');
+		$('<div/>', {
 		    id: divName,
 		    class: className,
 		    html: '<p>'+contentDiv+'</p>'
@@ -41,13 +52,14 @@ $(document).on('ready',function(){
 		
 	}
 	
-	runFirstTime = function (){
+	runFirstTime = function (URLParams){
+
 		$.ajax({
 			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
 			dataType: "json",
 			type: 'POST',
 		    async: true,	
-			data: {action:'rerun'},
+			data: {action:'rerun',argv:URLParams},
 				
 			success: function(request){
 				showResults(request);
@@ -61,7 +73,7 @@ $(document).on('ready',function(){
 	
 	runAllTests = function(){
 		$("#content").empty();
-		runFirstTime();
+		runFirstTime(getURLParams());
 	}
 
 
@@ -120,7 +132,7 @@ $(document).on('ready',function(){
 			      if (classNameTest == "testFailed box"){
 			    	  var failedTest = getInfoFailedTests(value,info);
 			    	  createDivFailedTest(test,classNameTest,'fileName'+countClass,className+'::'+test,failedTest['file'],failedTest['line'],
-			    			  failedTest['message'],failedTest['trace']);
+			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'));
 			      }else{
 			    	  createDiv(test,classNameTest,'fileName'+countClass,className+'::'+test);
 			      }
@@ -226,9 +238,8 @@ $(document).on('ready',function(){
 		var idTrace = $(this).data('idtrace');
 		$(idTrace).slideToggle();
 	});
-
-	runFirstTime();
 	
+	runFirstTime(getURLParams());
 	
 	
 });

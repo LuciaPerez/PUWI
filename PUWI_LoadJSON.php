@@ -2,11 +2,16 @@
 	include_once 'PUWI_Command.php';
 
 	$action = $_POST['action'];
+	
 	switch($action)
 	{
 		case 'rerun':
+			$URLParams = $_POST['argv'];
+			$URLParams[0] = $URLParams[0]."/PUWI_Command.php";
+			$URLParams[1] = $URLParams[1]."/";
+			
 			$runner = new PUWI_Command;
-			$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/workspace-eclipse/Calculadora/");
+			$argv=array($URLParams[0],$URLParams[1]);
 			$results = $runner->run($argv,FALSE);
 			
 	
