@@ -1,8 +1,7 @@
 <?php	
 	include_once 'PUWI_Command.php';
-
 	$action = $_POST['action'];
-	
+	//$action = 'runTest';
 	switch($action)
 	{
 		case 'rerun':
@@ -23,6 +22,7 @@
 			echo  json_encode($array);
 		break;
 		
+		
 		case 'displayCode':
 			$file = $_POST['file'];
 			$line = $_POST['line'];
@@ -32,6 +32,26 @@
 			$array = array ('code' => $code);
 			echo json_encode($array);
 		break;
+		
+		case 'runTest':
+			$testName = $_POST['testName'];
+			$URLParams = $_POST['argv'];
+			$URLParams[0] = $URLParams[0]."/PUWI_Command.php";
+			$URLParams[1] = $URLParams[1]."/";
+				
+			$runner = new PUWI_Command;
+			$argv=array($URLParams[0],$URLParams[1],$testName);
+			//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/workspace-eclipse/Calculadora/","AddTest::test_setUpWorks");
+			$results = $runner->run($argv,FALSE);
+
+			if ($results == "testOK" || $results == "testIncomplete"){
+				$array = array ('result' => $results);
+			}else{
+				$array = array ('result' => $results['result'],'testName' => $results['testName'],'file' => $results['file'],
+						    	'line' => $results['line'],'message' => $results['message'],'trace' => $results['trace']);
+			}
+
+			echo json_encode($array);
 		
 	}
 	

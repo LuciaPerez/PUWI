@@ -161,6 +161,30 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
         $suite->injectFilter($filterFactory);
     }
 
+    public function doRunSingleTest($suite,$argv){
+    	$launch = new PUWI_LaunchBrowser();
+    	$arrayTests = $suite->tests();
+    	foreach ($arrayTests as $test){
+    		$singleTests=$test->tests();
+    		foreach ($singleTests as $st){
+    			if (($test->getName()."::".$st->getName()) == $argv[2]){
+    				$result = $st->run();
+    					
+    				if (count($result->passed())!=0){ $result = "testOK";
+    				}else{
+    					if ((count($result->notImplemented())!=0) || count($result->skipped())!=0){$result = "testIncomplete";
+    					}else{
+    						if ((count($result->failures())!=0) || count($result->error())!=0){
+    							$result = $launch->getFails($result->failures(),true);
+    						}
+    					}
+    				}
+    					
+    			}
+    		}
+    	}
+    	return $result;
+    }
     /**
      * @param  PHPUnit_Framework_Test $suite
      * @param  array                  $arguments
@@ -225,11 +249,56 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
             $result->stopOnSkipped(TRUE);
         }
 
-   
+       /* if ($this->printer === NULL) {
+            if (isset($arguments['printer']) &&
+                $arguments['printer'] instanceof PHPUnit_Util_Printer) {
+                $this->printer = $arguments['printer'];
+            } else {
+                $printerClass = 'PHPUnit_TextUI_ResultPrinter';
+                if (isset($arguments['printer']) &&
+                    is_string($arguments['printer']) &&
+                    class_exists($arguments['printer'], FALSE)) {
+                    $class = new ReflectionClass($arguments['printer']);
+
+                    if ($class->isSubclassOf('PHPUnit_TextUI_ResultPrinter')) {
+                        $printerClass = $arguments['printer'];
+                    }
+                }
+
+                $this->printer = new $printerClass(
+                  isset($arguments['stderr']) ? 'php://stderr' : NULL,
+                  $arguments['verbose'],
+                  $arguments['colors'],
+                  $arguments['debug']
+                );
+            }
+        }
+
+        if (!$this->printer instanceof PHPUnit_Util_Log_TAP &&
+            !self::$versionStringPrinted) {
+            $this->printer->write(
+              PHPUnit_Runner_Version::getVersionString() . "\n\n"
+            );
+
+            if (isset($arguments['configuration'])) {
+                $this->printer->write(
+                  sprintf(
+                    "Configuration read from %s\n\n",
+                    $arguments['configuration']->getFilename()
+                  )
+                );
+            }
+        }*/
+
         foreach ($arguments['listeners'] as $listener) {
             $result->addListener($listener);
         }
 
+       // $result->addListener($this->printer);
+
+        /*if ($this->printer instanceof PHPUnit_TextUI_ResultPrinter) {
+            $result->addListener(new PHPUnit_Util_DeprecatedFeature_Logger);
+        }*/
 
         if (isset($arguments['testdoxHTMLFile'])) {
             $result->addListener(
@@ -350,6 +419,9 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
         unset($suite);
         $result->flushListeners();
 
+      /*  if ($this->printer instanceof PHPUnit_TextUI_ResultPrinter) {
+            $this->printer->printResult($result);
+        }*/
 
         if (isset($codeCoverage)) {
             if (isset($arguments['coverageClover'])) {

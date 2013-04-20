@@ -84,11 +84,6 @@
 	public static function main($exit = TRUE)
 	{
 		$puwi = new PUWI_Command;
-		echo "~~~~~~~~~~ARGV~~~~~~~~~~";
-		foreach ($_SERVER['argv'] as $aux){
-			print "--".$aux."--";
-			
-		}
 		return $puwi->run($_SERVER['argv'],$new=TRUE, $exit);
 
 	}
@@ -135,7 +130,6 @@
 	*/
 	public function run(array $argv, $new, $exit = TRUE)
 	{
-		
 		$this->handleArguments($argv);
 
 		$runner = $this->createRunner();
@@ -173,40 +167,50 @@
 		unset($this->arguments['test']);
 		unset($this->arguments['testFile']);
 
-
 		try {
-		    $result = $runner->doRun($suite, $this->arguments);
+			if (count($argv) == 3){
+				$result = $runner->doRunSingleTest($suite,$argv);
+			}else{
+		    	$result = $runner->doRun($suite, $this->arguments);
+			}
 		}
 
 		catch (PHPUnit_Framework_Exception $e) {
 		    print $e->getMessage() . "\n";
 		}
-
-		$ret = PHPUnit_TextUI_TestRunner::FAILURE_EXIT;
-
-		if (isset($result) && $result->wasSuccessful()) {
-		    $ret = PHPUnit_TextUI_TestRunner::SUCCESS_EXIT;
-		}
-
-		else if (!isset($result) || $result->errorCount() > 0) {
-		    $ret = PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT;
-		}
-		
-		$this->pathProject = $argv[1];
-		$this->getFolder($this->pathProject);
-		//echo "\n----------FOLDERS-------------\n";
-		//print_r($this->arrayFolders);
+		if (count($argv) != 3){
+			$ret = PHPUnit_TextUI_TestRunner::FAILURE_EXIT;
 	
-		//$new = (count($argv)==2)?TRUE:FALSE;
-		$launch = new PUWI_LaunchBrowser();
-		$rdo_launch = $launch->getResults($argv[1],$result,$this->arrayFolders,$new,$argv);
+			if (isset($result) && $result->wasSuccessful()) {
+			    $ret = PHPUnit_TextUI_TestRunner::SUCCESS_EXIT;
+			}
+	
+			else if (!isset($result) || $result->errorCount() > 0) {
+			    $ret = PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT;
+			}
+		
+		
+			$this->pathProject = $argv[1];
+			$this->getFolder($this->pathProject);
+			//echo "\n----------FOLDERS-------------\n";
+			//print_r($this->arrayFolders);
+			
+			
+			//$new = (count($argv)==2)?TRUE:FALSE;
+		
+			$launch = new PUWI_LaunchBrowser();
+			$rdo_launch = $launch->getResults($argv[1],$result,$this->arrayFolders,$new,$argv);
+		}else{
+			$rdo_launch=$result;
+		}
 		//TRAZA DEL ERROR!:
-	       /* echo "Num errors launch: ".$result->failureCount();
+	        /*echo "TRAZA ERROR: ".$result->failureCount();
 	        foreach ($result->failures() as $error) {
-	        	echo "ERROR:";
+	        	echo "ERROR:";	        	
 	        	echo $error->thrownException();
 	        }*/
-		
+
+			
 		if ($new == TRUE){
 			if ($exit) {
 			    exit($ret);

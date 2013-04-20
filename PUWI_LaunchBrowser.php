@@ -62,7 +62,8 @@ class PUWI_LaunchBrowser{
 		if ($new == TRUE){
 			$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$argv);
 		}else{
-			return array("projectName" => $projectName,
+			return array("argv" => $argv,
+						"projectName" => $projectName,
 						 "totalTests" => $totalTests,
 						 "projectName" => $projectName,
 						 "passed" => $passed,
@@ -123,7 +124,7 @@ class PUWI_LaunchBrowser{
 
 	function getTestsFailed(PHPUnit_Framework_TestResult $result){
 		$fail=$result->failures();
-		$this->getFails($fail);
+		$this->getFails($fail,false);
 		return($this->getClassAndNameTest($fail));
 	}
 
@@ -151,7 +152,7 @@ class PUWI_LaunchBrowser{
 		return($result);
 	}
 
-	function getFails(array $fail){
+	function getFails(array $fail, $singleTest){
 		$infoEachTest = array();
 
 		foreach ($fail as $f){
@@ -173,8 +174,12 @@ class PUWI_LaunchBrowser{
 			$infoEachTest['line'] = $line;
 			$infoEachTest['message'] = $message;
 			$infoEachTest['trace'] = (string)$f->thrownException();
-			
-			array_push($this->infoFailedTests,$infoEachTest);
+			if ($singleTest == false){
+				array_push($this->infoFailedTests,$infoEachTest);
+			}else{
+				$infoEachTest['result'] = "testFailed";
+				return $infoEachTest;
+			}
 		}
 	}
 

@@ -166,10 +166,12 @@
 
 .italic{
 	font-style:italic;
+	clear:right;
 }
 
 .textRight{
 	text-align:right;
+	float:right;
 }
 
 .left{
@@ -179,13 +181,17 @@
 .classButton{
 	
 	float:right;
+	/*border: rgb(128,128,128) 1px solid;*/ 
+	font-size: 8pt; 
+	font-family: Verdana; 
+    background: rgb(233,233,233)"
 }
 
 
 .nameFT{
-	width:80%;
+	width:auto;
 	
 }
 .fileFT{
-	clear:left;
+	float:left;
 }
