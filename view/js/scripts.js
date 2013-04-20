@@ -205,6 +205,18 @@ $(document).on('ready',function(){
 				      }
 			      }
 			      
+			      /*if (!is_showedClass(className)){
+			    	  countClass = countDivs;
+			    	  createDiv(className,'black','folderName'+countFolder, 'fileName'+countClass);
+			      }
+			      
+			      if (classNameTest == "testFailed box"){
+			    	  var failedTest = getInfoFailedTests(value,info);
+			    	  createDivFailedTest(test,classNameTest,'fileName'+countClass,className+'::'+test,failedTest['file'],failedTest['line'],
+			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'));
+			      }else{
+			    	  createDiv(test,classNameTest,'fileName'+countClass,className+'::'+test);
+			      }*/
 			      countDivs++;
 			});
 		   
@@ -282,14 +294,13 @@ $(document).on('ready',function(){
 		}
 		if ($(selector).hasClass('testFailed')){
 			$(selector).removeClass('testFailed').addClass(request['result']);
-			remove_content = selector+' p.fileFT,'+selector+' p.red,'+selector+' p.italic';
+			remove_content = selector+' p.fileFT,'+selector+' p.red,'+selector+' p.italic,'+selector+' .testInfo';
 			$(remove_content).remove();
-			$("div.testInfo").remove();
 		}
 		if (request['result'] == 'testFailed'){
 			idCode = "idCode"+count;
 			idTrace = "idTrace"+count;
-			$(selector).append('<p class="fileFT">'+request['file']+'</p>').append('<p class="red textRight bold">'+request['line']+'</p>').
+			$(selector).append('<p class="fileFT">'+request['file']+'</p>').append('<p class="red textRight bold">'+"++"+request['line']+'</p>').
 						append('<p class="italic">'+request['message']+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" class="code classButton" data-idcode='+"#"+idCode+' data-file='+request['file']+' data-line='+request['line']+' data-test='+testName[1]+'><button type="button" class="trace classButton" data-idtrace='+"#"+idTrace+'>Trace</button></p>');
 			
 			createDiv("","testInfo totalTests box",test,idCode);
@@ -315,9 +326,9 @@ $(document).on('ready',function(){
 			dataType: "json",
 			type: 'POST',
 		    async: true,	
-			data: {action:'rerun',folderName:folderName,argv:getURLParams()},
+			data: {action:'runFolder',folderName:folderName,argv:getURLParams()},
 			success:function(request){
-
+				//$(idFolder).empty();
 				updateResults(request,folderName);
 			},
 		
@@ -373,8 +384,7 @@ $(document).on('ready',function(){
 	
 	$( "#content" ).on('click',".groupContent .grey .black .testFailed .italic .trace", function(){
 		var idTrace = $(this).data('idtrace');
-		alert("aqui "+idTrace);
-		$("#idTrace1").slideToggle();
+		$(idTrace).slideToggle();
 	});
 	
 	runFirstTime();
