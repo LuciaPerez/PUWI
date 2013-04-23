@@ -168,7 +168,7 @@
 		unset($this->arguments['testFile']);
 
 		try {
-			if (count($argv) == 3){
+			if (count($argv) >= 3){
 				$result = $runner->doRunSingleTest($suite,$argv);
 			}else{
 		    	$result = $runner->doRun($suite, $this->arguments);
@@ -178,7 +178,7 @@
 		catch (PHPUnit_Framework_Exception $e) {
 		    print $e->getMessage() . "\n";
 		}
-		if (count($argv) != 3){
+		if (count($argv) < 3){
 			$ret = PHPUnit_TextUI_TestRunner::FAILURE_EXIT;
 	
 			if (isset($result) && $result->wasSuccessful()) {

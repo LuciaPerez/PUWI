@@ -118,14 +118,17 @@ $(document).on('ready',function(){
 			    	  countFolder = countDivs;
 			    	  var fName = folder.split("/")[0];
 			    	  createDiv(folder,fName+' grey','groupName'+countGroup,'folderName'+countFolder);
+			    	  
 			    	  var selector = "#"+"folderName"+countFolder+" > p";
-
 			    	  $(selector).append('<button type="button" class="buttonFolder classButton" data-folder='+folder+' data-idfolder='+"."+fName+'>Run folder</button>');
 			      }
 			      
 			      if (!is_showedClass(className)){
 			    	  countClass = countDivs;
 			    	  createDiv(className,'black','folderName'+countFolder, 'fileName'+countClass);
+			    	  
+			    	  var selector = "#"+"fileName"+countClass+" > p";
+			    	  $(selector).append('<button type="button" class="buttonFile classButton" data-file='+className+'>Run file</button>');
 			      }
 			      var divName = className+'::'+test;
 			      if (classNameTest == "testFailed box"){
@@ -172,11 +175,8 @@ $(document).on('ready',function(){
 		    $(".groupName p").each(function(){
 		    	alert($.type($(".groupName p").contents()));
 		    	var existingGroup = $(".groupName p").html();
-		    	//var existingGroup = $(".groupName").text();
-		    	//alert(existingGroup+" => "+group_name);
 		    	
 			    if (existingGroup!= group_name) {
-			    	//alert(selector+"--" +$(selector).length);
 				    createDiv(group_name,"groupName","content","group"+countGroup);
 				    createDiv('','groupContent', 'content', 'groupName'+countGroup);
 				    is_newFolder = true;
@@ -205,18 +205,6 @@ $(document).on('ready',function(){
 				      }
 			      }
 			      
-			      /*if (!is_showedClass(className)){
-			    	  countClass = countDivs;
-			    	  createDiv(className,'black','folderName'+countFolder, 'fileName'+countClass);
-			      }
-			      
-			      if (classNameTest == "testFailed box"){
-			    	  var failedTest = getInfoFailedTests(value,info);
-			    	  createDivFailedTest(test,classNameTest,'fileName'+countClass,className+'::'+test,failedTest['file'],failedTest['line'],
-			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'));
-			      }else{
-			    	  createDiv(test,classNameTest,'fileName'+countClass,className+'::'+test);
-			      }*/
 			      countDivs++;
 			});
 		   
@@ -300,7 +288,7 @@ $(document).on('ready',function(){
 		if (request['result'] == 'testFailed'){
 			idCode = "idCode"+count;
 			idTrace = "idTrace"+count;
-			$(selector).append('<p class="fileFT">'+request['file']+'</p>').append('<p class="red textRight bold">'+"++"+request['line']+'</p>').
+			$(selector).append('<p class="fileFT">'+request['file']+'</p>').append('<p class="red textRight bold">'+"+"+request['line']+'</p>').
 						append('<p class="italic">'+request['message']+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" class="code classButton" data-idcode='+"#"+idCode+' data-file='+request['file']+' data-line='+request['line']+' data-test='+testName[1]+'><button type="button" class="trace classButton" data-idtrace='+"#"+idTrace+'>Trace</button></p>');
 			
 			createDiv("","testInfo totalTests box",test,idCode);
@@ -337,7 +325,26 @@ $(document).on('ready',function(){
 			}
 		});
 	});
-	
+	$("#content").on('click',".groupContent .black .buttonFile", function() {
+		var file = $(this).data('file');
+		$.ajax({
+			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
+			dataType: "json",
+			type: 'POST',
+		    async: true,	
+			data: {action:'runFile',name:file,argv:getURLParams(),type:"file"},
+			success:function(request){
+				$.each(request['result'], function(key, value){
+					runSingleTest(value,value['testName']);
+				});
+
+			},
+		
+			error: function(request){
+				alert("an error ocurred in ajax request");
+			}
+		});
+	});
 	$("#content").on('click',".groupContent .grey .black .box p .buttonTest", function() {
 		var test = $(this).data('test');
 		$.ajax({
@@ -345,10 +352,8 @@ $(document).on('ready',function(){
 			dataType: "json",
 			type: 'POST',
 		    async: true,	
-			data: {action:'runTest',testName:test,argv:getURLParams()},
+			data: {action:'runTest',name:test,argv:getURLParams(),type:"test"},
 			success:function(request){
-				//$(idFolder).empty();
-				//updateResults(request,folderName);
 				runSingleTest(request,test);
 			},
 		

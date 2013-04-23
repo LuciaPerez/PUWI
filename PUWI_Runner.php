@@ -162,24 +162,43 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
     }
 
     public function doRunSingleTest($suite,$argv){
-    	$launch = new PUWI_LaunchBrowser();
     	$arrayTests = $suite->tests();
+    	$result = array();
     	foreach ($arrayTests as $test){
     		$singleTests=$test->tests();
     		foreach ($singleTests as $st){
-    			if (($test->getName()."::".$st->getName()) == $argv[2]){
-    				$result = $st->run();
-    					
-    				if (count($result->passed())!=0){ $result = "testOK";
-    				}else{
-    					if ((count($result->notImplemented())!=0) || count($result->skipped())!=0){$result = "testIncomplete";
-    					}else{
-    						if ((count($result->failures())!=0) || count($result->error())!=0){
-    							$result = $launch->getFails($result->failures(),true);
-    						}
-    					}
+    			if($argv[3]=='test'){
+	    			if (($test->getName()."::".$st->getName()) == $argv[2]){
+	    				$result = $this->runSingleTest($st,$argv[2]);	
+	    				return $result;
+	    			}
+    			}else{
+    				if ($test->getName() == $argv[2]){
+    					$result_singleTest = $this->runSingleTest($st,$argv[2]);
+    					array_push($result,$result_singleTest);
     				}
-    					
+    			}
+    		}
+    		
+    	}
+
+    	return $result;
+    }
+    
+    protected function runSingleTest($single_test,$class_name){
+    	$launch = new PUWI_LaunchBrowser();
+    	
+    	$resultRun = $single_test->run();
+    	if (count($resultRun->passed())!=0){ 
+    		$result['result'] = "testOK";
+    		$result['testName'] = $class_name."::".$single_test->getName();
+    	}else{
+    		if ((count($resultRun->notImplemented())!=0) || count($resultRun->skipped())!=0){
+    			$result['result'] = "testIncomplete";
+    			$result['testName'] = $class_name."::".$single_test->getName();
+    		}else{
+    			if ((count($resultRun->failures())!=0) || count($resultRun->error())!=0){
+    				$result = $launch->getFails($resultRun->failures(),true);
     			}
     		}
     	}
