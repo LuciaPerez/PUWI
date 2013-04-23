@@ -128,7 +128,7 @@ $(document).on('ready',function(){
 			    	  createDiv(className,'black','folderName'+countFolder, 'fileName'+countClass);
 			    	  
 			    	  var selector = "#"+"fileName"+countClass+" > p";
-			    	  $(selector).append('<button type="button" class="buttonFile classButton" data-file='+className+'>Run file</button>');
+			    	  $(selector).append('<button type="button" class="buttonFile classButton" data-name='+className+' data-type="file" data-action="runFile">Run file</button>');
 			      }
 			      var divName = className+'::'+test;
 			      if (classNameTest == "testFailed box"){
@@ -137,11 +137,11 @@ $(document).on('ready',function(){
 			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'));
 			    	  
 			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p.nameFT";
-			    	 $(selector).append('<button type="button" class="buttonTest classButton" data-test='+divName+'>Run test</button>');
+			    	 $(selector).append('<button type="button" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTest">Run test</button>');
 			      }else{
 			    	  createDiv(test,classNameTest,'fileName'+countClass,divName);
 			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p";
-			    	  $(selector).append('<button type="button" class="buttonTest classButton" data-test='+divName+'>Run test</button>');
+			    	  $(selector).append('<button type="button" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTest">Run test</button>');
 			      }
 			      countDivs++;
 
@@ -175,8 +175,11 @@ $(document).on('ready',function(){
 		    $(".groupName p").each(function(){
 		    	alert($.type($(".groupName p").contents()));
 		    	var existingGroup = $(".groupName p").html();
+		    	//var existingGroup = $(".groupName").text();
+		    	//alert(existingGroup+" => "+group_name);
 		    	
 			    if (existingGroup!= group_name) {
+			    	//alert(selector+"--" +$(selector).length);
 				    createDiv(group_name,"groupName","content","group"+countGroup);
 				    createDiv('','groupContent', 'content', 'groupName'+countGroup);
 				    is_newFolder = true;
@@ -205,6 +208,18 @@ $(document).on('ready',function(){
 				      }
 			      }
 			      
+			      /*if (!is_showedClass(className)){
+			    	  countClass = countDivs;
+			    	  createDiv(className,'black','folderName'+countFolder, 'fileName'+countClass);
+			      }
+			      
+			      if (classNameTest == "testFailed box"){
+			    	  var failedTest = getInfoFailedTests(value,info);
+			    	  createDivFailedTest(test,classNameTest,'fileName'+countClass,className+'::'+test,failedTest['file'],failedTest['line'],
+			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'));
+			      }else{
+			    	  createDiv(test,classNameTest,'fileName'+countClass,className+'::'+test);
+			      }*/
 			      countDivs++;
 			});
 		   
@@ -297,6 +312,33 @@ $(document).on('ready',function(){
 		}
 	}
 	
+	requestRunTests = function(element){
+		var nameRun = $(element).data('name');
+		var typeRun = $(element).data('type');
+		var action = $(element).data('action');
+
+		$.ajax({
+			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
+			dataType: "json",
+			type: 'POST',
+		    async: true,	
+			data: {action:action,name:nameRun,argv:getURLParams(),type:typeRun},
+			success:function(request){
+				if (typeRun == "file"){
+					$.each(request['result'], function(key, value){
+						runSingleTest(value,value['testName']);
+					});
+				}else{
+					runSingleTest(request,nameRun);
+				}
+			},
+		
+			error: function(request){
+				alert("an error ocurred in ajax request");
+			}
+		});
+	}
+	
 	$("#content").on('click','.totalTest p #hideTestsOK', function() {
 		$(".testOK").slideToggle(); 
 	});
@@ -326,7 +368,7 @@ $(document).on('ready',function(){
 		});
 	});
 	$("#content").on('click',".groupContent .black .buttonFile", function() {
-		var file = $(this).data('file');
+		/*var file = $(this).data('file');
 		$.ajax({
 			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
 			dataType: "json",
@@ -343,25 +385,13 @@ $(document).on('ready',function(){
 			error: function(request){
 				alert("an error ocurred in ajax request");
 			}
-		});
+		});*/
+		requestRunTests(this);
 	});
 	$("#content").on('click',".groupContent .grey .black .box p .buttonTest", function() {
-		var test = $(this).data('test');
-		$.ajax({
-			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
-			dataType: "json",
-			type: 'POST',
-		    async: true,	
-			data: {action:'runTest',name:test,argv:getURLParams(),type:"test"},
-			success:function(request){
-				runSingleTest(request,test);
-			},
-		
-			error: function(request){
-				alert("an error ocurred in ajax request");
-			}
-		});
+		requestRunTests(this);
 	});
+	
 
 	$( "#content" ).on('click',".groupContent .grey .black .testFailed .italic .code", function(){
 		var idCode = $(this).data('idcode');
