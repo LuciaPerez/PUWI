@@ -26,7 +26,7 @@ $(document).on('ready',function(){
 		$('<div/>', {
 		    id: divName,
 		    class: className,
-		    html: '<p>'+contentDiv+'</p>'
+		    html: '<p class="nameNFT">'+contentDiv+'</p>'
 		}).appendTo(divParent);
 	}
 	
@@ -103,9 +103,11 @@ $(document).on('ready',function(){
 		for (var group_name in groups) {
 		    array_keys.push(group_name);
 		    var countGroup = countDivs;
+		    var selector = "#group"+countGroup+" > p";
 		    createDiv(group_name,"groupName","content","group"+countGroup);
 		    createDiv('','groupContent', 'content', 'groupName'+countGroup);
-		    		    
+		    $(selector).append('<button type="button" class="buttonGroup classButton" data-group='+group_name+' >Run group</button>');
+		    
 		    $.each(groups[group_name], function(key, value) {
 		    	
 			      var classNameTest = getClassNameTest(value, passed, incomplete, skipped, errors);
@@ -128,7 +130,7 @@ $(document).on('ready',function(){
 			    	  createDiv(className,'black','folderName'+countFolder, 'fileName'+countClass);
 			    	  
 			    	  var selector = "#"+"fileName"+countClass+" > p";
-			    	  $(selector).append('<button type="button" class="buttonFile classButton" data-name='+className+' data-type="file" data-action="runFile">Run file</button>');
+			    	  $(selector).append('<button type="button" class="buttonFile classButton" data-idfile='+"fileName"+countClass+' data-name='+className+' data-type="file" data-action="runFile">Run file</button>');
 			      }
 			      var divName = className+'::'+test;
 			      if (classNameTest == "testFailed box"){
@@ -137,17 +139,22 @@ $(document).on('ready',function(){
 			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'));
 			    	  
 			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p.nameFT";
-			    	 $(selector).append('<button type="button" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTest">Run test</button>');
+			    	  createRunTestButton(selector,divName);
+			    	
 			      }else{
 			    	  createDiv(test,classNameTest,'fileName'+countClass,divName);
 			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p";
-			    	  $(selector).append('<button type="button" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTest">Run test</button>');
+			    	  createRunTestButton(selector,divName);
 			      }
 			      countDivs++;
 
 			});
 		   
 		}
+	}
+	
+	createRunTestButton = function (selector,divName){
+		$(selector).append('<button type="button" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTest">Run test</button>');
 	}
 	
 	updateResults = function(request,folderName){
@@ -175,11 +182,8 @@ $(document).on('ready',function(){
 		    $(".groupName p").each(function(){
 		    	alert($.type($(".groupName p").contents()));
 		    	var existingGroup = $(".groupName p").html();
-		    	//var existingGroup = $(".groupName").text();
-		    	//alert(existingGroup+" => "+group_name);
-		    	
+		    
 			    if (existingGroup!= group_name) {
-			    	//alert(selector+"--" +$(selector).length);
 				    createDiv(group_name,"groupName","content","group"+countGroup);
 				    createDiv('','groupContent', 'content', 'groupName'+countGroup);
 				    is_newFolder = true;
@@ -207,20 +211,8 @@ $(document).on('ready',function(){
 				    	  $(selector).append('<button type="button" class="buttonFolder classButton" data-folder='+folder+' data-idfolder='+"."+fName+'>Run folder</button>');
 				      }
 			      }
-			      
-			      /*if (!is_showedClass(className)){
-			    	  countClass = countDivs;
-			    	  createDiv(className,'black','folderName'+countFolder, 'fileName'+countClass);
-			      }
-			      
-			      if (classNameTest == "testFailed box"){
-			    	  var failedTest = getInfoFailedTests(value,info);
-			    	  createDivFailedTest(test,classNameTest,'fileName'+countClass,className+'::'+test,failedTest['file'],failedTest['line'],
-			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'));
-			      }else{
-			    	  createDiv(test,classNameTest,'fileName'+countClass,className+'::'+test);
-			      }*/
-			      countDivs++;
+
+		      countDivs++;
 			});
 		   
 		}		
@@ -285,24 +277,33 @@ $(document).on('ready',function(){
 		return result;
 	}
 	
-	runSingleTest = function(request,test){
+	runSingleTest = function(request,test,idFile){
 		var selector = "#"+test.replace(/:/g,'\\:');
 		var testName = test.split('::');
 
 		if ($(selector).hasClass('testOK')){
 			$(selector).removeClass('testOK').addClass(request['result']);
+		}else{
+			if ($(selector).hasClass('testIncomplete')){
+				$(selector).removeClass('testIncomplete').addClass(request['result']);
+			}else{
+				if ($(selector).hasClass('testFailed')){
+					$(selector).removeClass('testFailed').addClass(request['result']);
+					remove_content = selector+' p.fileFT,'+selector+' p.red,'+selector+' p.italic,'+selector+' .testInfo';
+					$(remove_content).remove();
+				}else{
+					createDiv(testName[1],"box "+request['result'],idFile,test);
+					var selectorCreateButton = "#"+test.replace(/:/g,'\\:')+" > p.nameNFT";
+					createRunTestButton(selectorCreateButton,test);
+				}
+			}
 		}
-		if ($(selector).hasClass('testIncomplete')){
-			$(selector).removeClass('testIncomplete').addClass(request['result']);
-		}
-		if ($(selector).hasClass('testFailed')){
-			$(selector).removeClass('testFailed').addClass(request['result']);
-			remove_content = selector+' p.fileFT,'+selector+' p.red,'+selector+' p.italic,'+selector+' .testInfo';
-			$(remove_content).remove();
-		}
+		$(selector+" p").removeClass('nameFT bold').addClass('nameNFT');
 		if (request['result'] == 'testFailed'){
 			idCode = "idCode"+count;
 			idTrace = "idTrace"+count;
+
+			$(selector+" p").removeClass('nameNFT').addClass('nameFT bold');
 			$(selector).append('<p class="fileFT">'+request['file']+'</p>').append('<p class="red textRight bold">'+"+"+request['line']+'</p>').
 						append('<p class="italic">'+request['message']+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" class="code classButton" data-idcode='+"#"+idCode+' data-file='+request['file']+' data-line='+request['line']+' data-test='+testName[1]+'><button type="button" class="trace classButton" data-idtrace='+"#"+idTrace+'>Trace</button></p>');
 			
@@ -313,6 +314,7 @@ $(document).on('ready',function(){
 	}
 	
 	requestRunTests = function(element){
+		var idFile = $(element).data('idfile');
 		var nameRun = $(element).data('name');
 		var typeRun = $(element).data('type');
 		var action = $(element).data('action');
@@ -326,7 +328,7 @@ $(document).on('ready',function(){
 			success:function(request){
 				if (typeRun == "file"){
 					$.each(request['result'], function(key, value){
-						runSingleTest(value,value['testName']);
+						runSingleTest(value,value['testName'],idFile);
 					});
 				}else{
 					runSingleTest(request,nameRun);
@@ -345,6 +347,11 @@ $(document).on('ready',function(){
 	
 	$("#content").on('click','.totalTests p #runAllTests', function() {
 		runAllTests();
+	});
+	
+	$("#content").on('click',".groupName .buttonGroup", function() {
+		var group = $(this).data('group');
+		alert("entra: "+group);
 	});
 	
 	$("#content").on('click',".groupContent .grey p .buttonFolder", function() {
@@ -368,24 +375,6 @@ $(document).on('ready',function(){
 		});
 	});
 	$("#content").on('click',".groupContent .black .buttonFile", function() {
-		/*var file = $(this).data('file');
-		$.ajax({
-			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
-			dataType: "json",
-			type: 'POST',
-		    async: true,	
-			data: {action:'runFile',name:file,argv:getURLParams(),type:"file"},
-			success:function(request){
-				$.each(request['result'], function(key, value){
-					runSingleTest(value,value['testName']);
-				});
-
-			},
-		
-			error: function(request){
-				alert("an error ocurred in ajax request");
-			}
-		});*/
 		requestRunTests(this);
 	});
 	$("#content").on('click',".groupContent .grey .black .box p .buttonTest", function() {
