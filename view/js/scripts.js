@@ -106,7 +106,7 @@ $(document).on('ready',function(){
 		    var selector = "#group"+countGroup+" > p";
 		    createDiv(group_name,"groupName","content","group"+countGroup);
 		    createDiv('','groupContent', 'content', 'groupName'+countGroup);
-		    $(selector).append('<button type="button" class="buttonGroup classButton" data-group='+group_name+' >Run group</button>');
+		    $(selector).append('<button type="button" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runFile" >Run group</button>');
 		    
 		    $.each(groups[group_name], function(key, value) {
 		    	
@@ -211,8 +211,8 @@ $(document).on('ready',function(){
 				    	  $(selector).append('<button type="button" class="buttonFolder classButton" data-folder='+folder+' data-idfolder='+"."+fName+'>Run folder</button>');
 				      }
 			      }
-
-		      countDivs++;
+			      
+			      countDivs++;
 			});
 		   
 		}		
@@ -326,12 +326,16 @@ $(document).on('ready',function(){
 		    async: true,	
 			data: {action:action,name:nameRun,argv:getURLParams(),type:typeRun},
 			success:function(request){
-				if (typeRun == "file"){
-					$.each(request['result'], function(key, value){
-						runSingleTest(value,value['testName'],idFile);
-					});
-				}else{
-					runSingleTest(request,nameRun);
+				switch (typeRun){
+					case "file":
+					case "group":
+						$.each(request['result'], function(key, value){
+							runSingleTest(value,value['testName'],idFile);
+						});
+					break;
+					case "test":
+						runSingleTest(request,nameRun);
+					break;
 				}
 			},
 		
@@ -350,8 +354,7 @@ $(document).on('ready',function(){
 	});
 	
 	$("#content").on('click',".groupName .buttonGroup", function() {
-		var group = $(this).data('group');
-		alert("entra: "+group);
+		requestRunTests(this);
 	});
 	
 	$("#content").on('click',".groupContent .grey p .buttonFolder", function() {
@@ -365,7 +368,6 @@ $(document).on('ready',function(){
 		    async: true,	
 			data: {action:'runFolder',folderName:folderName,argv:getURLParams()},
 			success:function(request){
-				//$(idFolder).empty();
 				updateResults(request,folderName);
 			},
 		

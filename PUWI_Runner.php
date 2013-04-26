@@ -167,28 +167,53 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
     	foreach ($arrayTests as $test){
     		$singleTests=$test->tests();
     		foreach ($singleTests as $st){
-    			if($argv[3]=='test'){
-	    			if (($test->getName()."::".$st->getName()) == $argv[2]){
-	    				$result = $this->runSingleTest($st,$argv[2]);	
-	    				return $result;
-	    			}
-    			}else{
-    				if ($test->getName() == $argv[2]){
-    					$result_singleTest = $this->runSingleTest($st,$argv[2]);
-    					array_push($result,$result_singleTest);
-    				}
+    			switch ($argv[3]){
+    				case "test":
+    					if (($test->getName()."::".$st->getName()) == $argv[2]){
+    						$result = $this->runSingleTest($st,$argv[2]);
+    					}
+    				break;
+    				case "file":
+    					if ($test->getName() == $argv[2]){
+    						$result_singleTest = $this->runSingleTest($st,$argv[2]);
+    						array_push($result,$result_singleTest);
+    					}
+    				break;
+    				
+    				case 'group':		
+	    				$groups_info = $suite->getGroupDetails();
+
+	    				foreach($groups_info as $properties){
+	    					foreach (array_values($properties) as $test_suite){	
+	    						$groups_per_file = $test_suite->getGroupDetails();
+	    						if(in_array($argv[2], array_keys($groups_per_file)) == true){
+		    						$tests_per_group = $groups_per_file[$argv[2]];
+		    					
+		    						foreach($tests_per_group as $test){
+		    							$result_singleTest = $this->runSingleTest($test,$test_suite->getName());
+										
+		    							if (in_array($result_singleTest,$result) == false){
+		    								array_push($result,$result_singleTest);
+		    							}
+				    				}
+	    						}
+	    									
+	    					}
+	    				}
+    				break;
+    				
     			}
+
     		}
     		
     	}
-
     	return $result;
     }
     
     protected function runSingleTest($single_test,$class_name){
     	$launch = new PUWI_LaunchBrowser();
-    	
     	$resultRun = $single_test->run();
+    	
     	if (count($resultRun->passed())!=0){ 
     		$result['result'] = "testOK";
     		$result['testName'] = $class_name."::".$single_test->getName();
