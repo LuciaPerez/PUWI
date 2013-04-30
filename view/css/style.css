@@ -66,6 +66,7 @@
 	border-width:2.0px;
 	border-style:solid;
 }
+
 .groupName p{
 	font-weight:bold;  
 }
@@ -87,8 +88,10 @@
 
 }
 
-
-.totalTests{
+#hideTestsOK,#runAllTests{
+	float:right;
+}
+.greyBox{
 	margin:0px;
 	border-color:#949486;
 	background:#D4D4BF;
@@ -189,9 +192,14 @@
 
 
 .nameFT{
-	width:auto;
+	width:auto;	
+}
+
+.buttonGroup{
 	
 }
+
+
 .fileFT{
 	float:left;
 }
