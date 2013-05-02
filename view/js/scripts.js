@@ -4,8 +4,6 @@ $(document).on('ready',function(){
 	var countDivs = 0;
 	var countFolder = 0;
 	var countClass = 0;
-	var showedClass = '';
-	var showedFolder = '';
 	
 	var count = 0;
 	var idCode = "";
@@ -22,6 +20,7 @@ $(document).on('ready',function(){
 	}
 
 	createDiv = function (contentDiv,className,divParent,divName) {
+		alert(contentDiv);
 		divParent="#"+divParent.replace(/:/g,'\\:');
 		$('<div/>', {
 		    id: divName,
@@ -88,15 +87,8 @@ $(document).on('ready',function(){
 		//createDiv(contentDiv,className,divParent,divName)
 	
 		createDiv(request["projectName"],"","content","projectName");
-		if (request["greyBox"] == 0){
-		
-			createDiv(request["projectName"],"","content","projectName");
-		}else{
-			createDiv(request["totalTests"]+" test passing","totalTests greyBox box","content","");
-			$('.greyBox p').append('<button type="button" id="runAllTests" >Run All Tests</button>'
-					+'<button type="button" id="hideTestsOK">Hide/Show Passed Tests</button>');
-		}
 
+		createDiv(" ","totalTests greyBox box","content","");
 		for (var group_name in groups) {
 		    
 		    var selector = "#"+group_name;
@@ -114,15 +106,19 @@ $(document).on('ready',function(){
 			      var folder = getFolder(folders,className);
 			      var fName = folder.replace(/\//g,'');
 		    	  var idDivFolder =  group_name+fName;
+		    	  var selector = "#"+idDivFolder;
 		    	  
-			      if (!is_showedFolder(folder)){
+		    	  var existingFolder = $("#"+idDivFolder).html();
+				  if (typeof existingFolder ===  "undefined") {
+			    	  alert("FOLDER 2: "+folder);
 			    	  createDiv(folder,fName+' grey',group_name+"content",idDivFolder);
 			    	  
 			    	  var selector = "#"+idDivFolder+" > p";
 			    	  $(selector).append('<input type="image" src="images/run-folder.png" title="Run folder" class="buttonFolder classButton" data-name='+folder+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
 			      }
-			      
-			      if (!is_showedClass(className)){
+				  
+				  var existingClassName = $("#"+idDivFolder+className).html();
+				  if (typeof existingClassName ===  "undefined") {
 			    	  countClass = countDivs;
 			    	
 			    	  createDiv(className,'black',idDivFolder, idDivFolder+className);
@@ -153,6 +149,17 @@ $(document).on('ready',function(){
 			});
 		   
 		}
+		displayTotalTests();
+	}
+	
+	displayTotalTests = function(){
+		var total = $(".testFailed").size() + $(".testOK").size() + $(".testIncomplete").size();
+		var result = (total == 0) ? "No tests executed" : total+" test passing";
+		$(".totalTests p").html(result);
+	    if (total != 0){
+		    $('.totalTests p').append('<button type="button" id="runAllTests" >Run All Tests</button>'
+					+'<button type="button" id="hideTestsOK">Hide/Show Passed Tests</button>');
+	    }
 	}
 	
 	createRunTestButton = function (selector,divName){
@@ -160,7 +167,6 @@ $(document).on('ready',function(){
 	}
 	
 	updateResults = function(request,folderName){
-		var is_newFolder = false;
 		countDivs = 0;
 		passed = request["passed"];
 		failures = request["failures"];
@@ -181,10 +187,6 @@ $(document).on('ready',function(){
 		    if (typeof existingGroup ===  "undefined") {
 		    	createDiv(group_name,"groupName","content",group_name);
 			    createDiv('','groupContent', 'content', group_name+"content");
-		    	
-			    is_newFolder = true;
-		    }else{
-		    	//alert("entra en ELSE");
 		    }
 		 
 		    		    
@@ -194,19 +196,24 @@ $(document).on('ready',function(){
 			      var className = separated_values[0];
 			      var test = separated_values[1];
 			      
-			      var fName = folderName.replace(/\//g,''); 
+			      var folder = getFolder(folders,className);
+			      folder = (folder == 0) ? folderName : folder;
+			      
+			      var fName = folder.replace(/\//g,''); 
 			      var idDivFolder =  group_name+fName;
 		    	  var divFolderSelector = "#"+idDivFolder;
-			      if(is_newFolder == true){
-			    	  var folder_exists = $(divFolderSelector).html();
-			    	  
-			    	  if (typeof folder_exists ===  "undefined") {		    		  
-			    		  createDiv(folderName,fName+' grey',group_name+"content",idDivFolder);
-			    		  
-				    	  var selector = "#"+idDivFolder+" > p";
-				    	  $(selector).append('<input type="image" src="images/run-folder.png" title="Run folder" class="buttonFolder classButton" data-name='+folderName+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
-				      }
+			      
+		    	  var folder_exists = $(divFolderSelector).html();
+		    	  
+		    	  if (typeof folder_exists ===  "undefined") {		    		  
+		    		  createDiv(folder,fName+' grey',group_name+"content",idDivFolder);
+		    		  
+			    	  var selector = "#"+idDivFolder+" > p";
+			    	  $(selector).append('<input type="image" src="images/run-folder.png" title="Run folder" class="buttonFolder classButton" data-name='+folder+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
 			      }
+			     
+
+			     
 			      var divFileSelector = divFolderSelector+className;
 			      if(typeof $(divFileSelector).html() === "undefined"){
 						createDiv(className,'black',idDivFolder, idDivFolder+className);
@@ -217,11 +224,11 @@ $(document).on('ready',function(){
 			      var divName = className+'::'+test;
 			      var divParent = idDivFolder+className;
 			      var testSelector = "#"+divName.replace(/:/g,'\\:');
-			      alert(testSelector);
+
 			      $(testSelector).remove();
 			      if (classNameTest == "testFailed box"){
 			    	  var failedTest = getInfoFailedTests(value,info);
-			    	  alert(failedTest['trace']);
+
 			    	  createDivFailedTest(test,classNameTest,divParent,divName,failedTest['file'],failedTest['line'],
 			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'));
 			    	  
@@ -233,14 +240,21 @@ $(document).on('ready',function(){
 			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p";
 			    	  createRunTestButton(selector,divName);
 			      }
-
+			      
+			      
+			    /*  if ( $(divFileSelector).children().length == 0){
+			    	  alert(divFileSelector+" -BORRAR-> "+$(divFileSelector).children().length);
+						$(divFileSelector).remove();
+				  }else{
+					  alert(divFileSelector+" --> "+$(divFileSelector).children().length);
+				  }*/
 			});
 		  
 		}		
 		
-		var total = $(".testFailed").size() + $(".testOK").size() + $(".testIncomplete").size();
-	    $(".totalTests p").html(total+" test passing");
 		
+		
+		displayTotalTests();
 	}
 	getClassNameTest = function(value, passed, incomplete, skipped, errors){
 		var classNameTest = "";
@@ -268,24 +282,6 @@ $(document).on('ready',function(){
 			 });
 		});
 		return result;
-	}
-	
-	is_showedClass = function(className){
-		if(showedClass == className){ 
-			return true; 
-		} else { 
-			showedClass = className;
-			return false; 
-		} 
-	}
-	
-	is_showedFolder = function(folder){
-		if(showedFolder == folder){ 
-			return true; 
-		} else { 
-			showedFolder = folder;
-			return false; 
-		} 
 	}
 	
 	getInfoFailedTests = function(testName,infoFailedTests){
@@ -333,10 +329,7 @@ $(document).on('ready',function(){
 			count = count + 1;
 		}
 		
-		var total = $(".testFailed").size() + $(".testOK").size() + $(".testIncomplete").size();
-	    $(".totalTests p").empty().html(total+" test passing");
-	    $('.totalTests p').append('<button type="button" id="runAllTests" >Run All Tests</button>'
-				+'<button type="button" id="hideTestsOK">Hide/Show Passed Tests</button>');
+		displayTotalTests();
 	}
 	
 	requestRunTests = function(element){
