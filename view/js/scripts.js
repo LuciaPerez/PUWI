@@ -20,7 +20,6 @@ $(document).on('ready',function(){
 	}
 
 	createDiv = function (contentDiv,className,divParent,divName) {
-		alert(contentDiv);
 		divParent="#"+divParent.replace(/:/g,'\\:');
 		$('<div/>', {
 		    id: divName,
@@ -110,7 +109,6 @@ $(document).on('ready',function(){
 		    	  
 		    	  var existingFolder = $("#"+idDivFolder).html();
 				  if (typeof existingFolder ===  "undefined") {
-			    	  alert("FOLDER 2: "+folder);
 			    	  createDiv(folder,fName+' grey',group_name+"content",idDivFolder);
 			    	  
 			    	  var selector = "#"+idDivFolder+" > p";
@@ -181,12 +179,13 @@ $(document).on('ready',function(){
 		for (var group_name in groups) {
 		    var selector = "#"+group_name+" > p";
 		    var notSelector =  "#"+group_name+" > p > button";
-		  //  alert($(".groupName p").size());  <----------importante para ver si un elemento esta solo
+		
 	    	var existingGroup = $(selector).html();
 
 		    if (typeof existingGroup ===  "undefined") {
 		    	createDiv(group_name,"groupName","content",group_name);
 			    createDiv('','groupContent', 'content', group_name+"content");
+			    $(selector).prepend('<button type="button" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runFile" >Run group</button>');
 		    }
 		 
 		    		    
@@ -224,8 +223,10 @@ $(document).on('ready',function(){
 			      var divName = className+'::'+test;
 			      var divParent = idDivFolder+className;
 			      var testSelector = "#"+divName.replace(/:/g,'\\:');
-
+			      
 			      $(testSelector).remove();
+			     
+
 			      if (classNameTest == "testFailed box"){
 			    	  var failedTest = getInfoFailedTests(value,info);
 
@@ -241,21 +242,35 @@ $(document).on('ready',function(){
 			    	  createRunTestButton(selector,divName);
 			      }
 			      
-			      
-			    /*  if ( $(divFileSelector).children().length == 0){
-			    	  alert(divFileSelector+" -BORRAR-> "+$(divFileSelector).children().length);
-						$(divFileSelector).remove();
-				  }else{
-					  alert(divFileSelector+" --> "+$(divFileSelector).children().length);
-				  }*/
+			      removeSingleElements();
+
 			});
-		  
 		}		
-		
-		
-		
 		displayTotalTests();
 	}
+	
+	removeSingleElements = function (){
+	      $(".black").each(function(){
+	    	  if ($(this).children().size() == 1){
+	    		  $(this).remove();
+	    	  }
+	      });
+	      
+	      $(".grey").each(function(){
+	    	  if ($(this).children().size() == 1){
+	    		  $(this).remove();
+	    	  }
+	      });
+	      
+	      $(".groupContent").each(function(){
+	    	  if ($(this).children().size() == 1){
+	    		  $(this).prev().remove();
+	    		  $(this).remove();
+	    		  
+	    	  }
+	      });
+	}
+	
 	getClassNameTest = function(value, passed, incomplete, skipped, errors){
 		var classNameTest = "";
 		if($.inArray(value, passed) > -1){
