@@ -119,7 +119,7 @@ $(document).on('ready',function(){
 				  if (typeof existingClassName ===  "undefined") {
 			    	  countClass = countDivs;
 			    	
-			    	  createDiv(className,'black',idDivFolder, idDivFolder+className);
+			    	  createDiv(className,'black margin20',idDivFolder, idDivFolder+className);
 			    	  
 			    	  var selector = "#"+idDivFolder+className+" > p";
 			    	  $(selector).append('<input type="image" src="images/run-file.png" title="Run file" class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runFile">');
@@ -215,7 +215,7 @@ $(document).on('ready',function(){
 			     
 			      var divFileSelector = divFolderSelector+className;
 			      if(typeof $(divFileSelector).html() === "undefined"){
-						createDiv(className,'black',idDivFolder, idDivFolder+className);
+						createDiv(className,'black margin20',idDivFolder, idDivFolder+className);
 						var selector = "#"+idDivFolder+className+" > p";
 						$(selector).append('<input type="image" src="images/run-file.png" title="Run file" class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runFile">');
 			      }
@@ -229,7 +229,7 @@ $(document).on('ready',function(){
 
 			      if (classNameTest == "testFailed box"){
 			    	  var failedTest = getInfoFailedTests(value,info);
-
+			    	  	
 			    	  createDivFailedTest(test,classNameTest,divParent,divName,failedTest['file'],failedTest['line'],
 			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'));
 			    	  
@@ -237,6 +237,7 @@ $(document).on('ready',function(){
 			    	  createRunTestButton(selector,divName);
 			    	
 			      }else{
+			    	  
 			    	  createDiv(test,classNameTest,divParent,divName);
 			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p";
 			    	  createRunTestButton(selector,divName);
@@ -250,25 +251,53 @@ $(document).on('ready',function(){
 	}
 	
 	removeSingleElements = function (){
-	      $(".black").each(function(){
-	    	  if ($(this).children().size() == 1){
-	    		  $(this).remove();
-	    	  }
-	      });
-	      
-	      $(".grey").each(function(){
-	    	  if ($(this).children().size() == 1){
-	    		  $(this).remove();
-	    	  }
-	      });
-	      
-	      $(".groupContent").each(function(){
-	    	  if ($(this).children().size() == 1){
-	    		  $(this).prev().remove();
-	    		  $(this).remove();
-	    		  
-	    	  }
-	      });
+		elem = getSingleElement(".black");
+		$(elem).remove();
+		
+		elem = getSingleElement(".grey");
+		$(elem).remove();
+
+		elem = getSingleElement(".groupContent");
+		$(elem).prev().remove();
+		$(elem).remove();
+	    
+	}
+	
+	getSingleElement = function(selector){
+		var result;	
+		$(selector).each(function(){
+			if($(this).children().size() == 1){
+				result = this;
+			}
+		});
+		return result;
+	}
+	
+	hideClassName = function(){
+		$(".black").each(function(){
+			if(!$(this).children().hasClass('testFailed')){
+				$(this).slideToggle();
+			}
+		});
+	}
+	
+	
+	hideFolderName = function(){
+		$(".grey").each(function(){
+			if(!$(this).children().children().hasClass('testFailed')){
+				$(this).slideToggle();
+			}
+		});
+	}
+	
+	hideGroupName = function(){
+		$(".groupContent").each(function(){
+			if(!$(this).children().children().children().hasClass('testFailed')){
+				$(this).slideToggle();
+				$(this).prev().slideToggle();
+			}
+		});
+		
 	}
 	
 	getClassNameTest = function(value, passed, incomplete, skipped, errors){
@@ -380,8 +409,19 @@ $(document).on('ready',function(){
 	}
 	
 	$("#content").on('click','.greyBox p #hideTestsOK', function() {
+		hideGroupName();
+		hideFolderName();
+		hideClassName();
+		$(".testIncomplete").slideToggle(); 
 		$(".testOK").slideToggle(); 
+
+
+/*
+		elem = getSingleElement(".groupContent");
+		$(elem).prev().slideToggle();
+		$(elem).slideToggle();*/
 	});
+	
 	
 	$("#content").on('click','.greyBox p #runAllTests', function() {
 		runAllTests();
