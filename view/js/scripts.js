@@ -28,7 +28,7 @@ $(document).on('ready',function(){
 		}).appendTo(divParent);
 	}
 	
-	createDivFailedTest = function (contentDiv,className,divParent,divName,file,line,message,trace) { 
+	createDivFailedTest = function (contentDiv,className,divParent,divName,file,line,message,trace,code) { 
 		idCode = "idCode"+count;		
 		idTrace = "idTrace"+count;
 		divParent="#"+divParent;
@@ -41,7 +41,7 @@ $(document).on('ready',function(){
 		          +'<button type="button" class="trace classButton" data-idtrace='+"#"+idTrace+'>Trace</button></p>'
 		}).appendTo(divParent);
 
-		createDiv("","testInfo greyBox box",divName,idCode);
+		createDiv(code,"testInfo greyBox box",divName,idCode);
 		createDiv(trace,"testInfo greyBox box",divName,idTrace);
 		count = count + 1;
 		
@@ -112,7 +112,7 @@ $(document).on('ready',function(){
 			    	  createDiv(folder,fName+' grey',group_name+"content",idDivFolder);
 			    	  
 			    	  var selector = "#"+idDivFolder+" > p";
-			    	  $(selector).append('<input type="image" src="images/run-folder.png" title="Run folder" class="buttonFolder classButton" data-name='+folder+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
+			    	  $(selector).append('<input type="image" src="images/run-folder53.png" title="Run folder" class="buttonFolder classButton" data-name='+folder+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
 			      }
 				  
 				  var existingClassName = $("#"+idDivFolder+className).html();
@@ -122,7 +122,7 @@ $(document).on('ready',function(){
 			    	  createDiv(className,'black margin20',idDivFolder, idDivFolder+className);
 			    	  
 			    	  var selector = "#"+idDivFolder+className+" > p";
-			    	  $(selector).append('<input type="image" src="images/run-file.png" title="Run file" class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runFile">');
+			    	  $(selector).append('<input type="image" src="images/run-file50.png" title="Run file" class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runFile">');
 			      }
 			      var divName = className+'::'+test;
 			      var divParent = idDivFolder+className;
@@ -130,9 +130,8 @@ $(document).on('ready',function(){
 			      if (classNameTest == "testFailed box"){
 			    	  var failedTest = getInfoFailedTests(value,info);
 			    	  //createDivFailedTest = function (contentDiv,className,divParent,divName,file,line,message,trace)
-			    	  
 			    	  createDivFailedTest(test,classNameTest,divParent,divName,failedTest['file'],failedTest['line'],
-			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'));
+			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'),failedTest['code']);
 			    	  
 			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p.nameFT";
 			    	  createRunTestButton(selector,divName);
@@ -161,7 +160,7 @@ $(document).on('ready',function(){
 	}
 	
 	createRunTestButton = function (selector,divName){
-		$(selector).append('<input type="image" src="images/run.png" title="Run test" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTest">');
+		$(selector).append('<input type="image" src="images/run53.png" title="Run test" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTest">');
 	}
 	
 	updateResults = function(request,folderName){
@@ -178,7 +177,6 @@ $(document).on('ready',function(){
 
 		for (var group_name in groups) {
 		    var selector = "#"+group_name+" > p";
-		    var notSelector =  "#"+group_name+" > p > button";
 		
 	    	var existingGroup = $(selector).html();
 
@@ -196,7 +194,7 @@ $(document).on('ready',function(){
 			      var test = separated_values[1];
 			      
 			      var folder = getFolder(folders,className);
-			      folder = (folder == 0) ? folderName : folder;
+			      folder = (folder == 0) ? folderName : folderName+folder;
 			      
 			      var fName = folder.replace(/\//g,''); 
 			      var idDivFolder =  group_name+fName;
@@ -208,7 +206,7 @@ $(document).on('ready',function(){
 		    		  createDiv(folder,fName+' grey',group_name+"content",idDivFolder);
 		    		  
 			    	  var selector = "#"+idDivFolder+" > p";
-			    	  $(selector).append('<input type="image" src="images/run-folder.png" title="Run folder" class="buttonFolder classButton" data-name='+folder+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
+			    	  $(selector).append('<input type="image" src="images/run-folder53.png" title="Run folder" class="buttonFolder classButton" data-name='+folder+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
 			      }
 			     
 
@@ -217,7 +215,7 @@ $(document).on('ready',function(){
 			      if(typeof $(divFileSelector).html() === "undefined"){
 						createDiv(className,'black margin20',idDivFolder, idDivFolder+className);
 						var selector = "#"+idDivFolder+className+" > p";
-						$(selector).append('<input type="image" src="images/run-file.png" title="Run file" class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runFile">');
+						$(selector).append('<input type="image" src="images/run-file50.png" title="Run file" class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runFile">');
 			      }
 			      
 			      var divName = className+'::'+test;
@@ -415,11 +413,6 @@ $(document).on('ready',function(){
 		$(".testIncomplete").slideToggle(); 
 		$(".testOK").slideToggle(); 
 
-
-/*
-		elem = getSingleElement(".groupContent");
-		$(elem).prev().slideToggle();
-		$(elem).slideToggle();*/
 	});
 	
 	
@@ -461,25 +454,7 @@ $(document).on('ready',function(){
 
 	$( "#content" ).on('click',".groupContent .grey .black .testFailed .italic .code", function(){
 		var idCode = $(this).data('idcode');
-		var file = $(this).data('file');
-		var line = $(this).data('line');
-		var testName = $(this).data('test');
-
 		$(idCode).slideToggle();
-		$.ajax({
-			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
-			dataType: "json",
-			type: 'POST',
-		    async: true,	
-			data: {action:'displayCode',file:file,line:line,testName:testName},
-			success:function(request){
-				$(idCode).html('<p>'+request['code']+'</p>');
-			},
-		
-			error: function(request){
-				alert("an error ocurred in ajax request");
-			}
-		});
 		
 	});
 	

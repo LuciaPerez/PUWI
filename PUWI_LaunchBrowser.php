@@ -54,7 +54,10 @@ class PUWI_LaunchBrowser{
 		$errors = $this->getTestsError($result);
 		$incomplete = $this->getTestsIncompleted($result);
 		$skipped = $this->getTestsSkipped($result);
-		$groups = $this->getGroups($result);
+		
+		$groups_details = $result->topTestSuite()->getGroupDetails();
+		$groups = $result->topTestSuite()->getGroups();
+		$groups = $this->getGroups($groups_details,$groups);
 
 		//echo "\n----------GROUPS-------------\n";
 		//print_r($groups);
@@ -78,10 +81,8 @@ class PUWI_LaunchBrowser{
 
 	}
 
-	function getGroups($result){
-		$groups_details = $result->topTestSuite()->getGroupDetails();
-		$groups = $result->topTestSuite()->getGroups();
-		
+	function getGroups($groups_details,$groups){
+	
 		$index=0;
 		$arrayResult = array();
 		foreach ($groups_details as $group){
@@ -173,7 +174,9 @@ class PUWI_LaunchBrowser{
 			$infoEachTest['file'] = $file;
 			$infoEachTest['line'] = $line;
 			$infoEachTest['message'] = $message;
+			$infoEachTest['code'] = $this->getCode($file,$testName,$line);
 			$infoEachTest['trace'] = (string)$f->thrownException();
+			
 			if ($singleTest == false){
 				array_push($this->infoFailedTests,$infoEachTest);
 			}else{
@@ -181,6 +184,41 @@ class PUWI_LaunchBrowser{
 				return $infoEachTest;
 			}
 		}
+	}
+	
+	function getCode($file,$test,$line){
+		$file_to_open = fopen ($file, "r");
+		$testName = substr(strstr($test, ':'),2);
+		$code = "";
+		$number_line=1;
+		$search = "/.".$testName."./";
+		$in_function='no';
+	
+		$end_function = "/. function ./";
+		$end_function2 = "/.\/\\*\\*./";
+		
+		while ($aux = fgets($file_to_open, 1024)){
+			if (preg_match($search,$aux)){	
+				$in_function='yes';
+			}else{
+				if ((preg_match($end_function,$aux)) || (preg_match($end_function2,$aux))){
+					$in_function='no';
+				}
+			}
+			if ($in_function=='yes'){
+				if ($number_line == $line){
+					$code .= '<span class="red">'.$aux.'</span></br>';
+				}else{
+					$code .= $aux."</br>";
+				}
+			}
+			$number_line++;
+		}
+		$in_function='no';
+		fclose($file_to_open);
+		
+		return $code;
+	
 	}
 
 }
