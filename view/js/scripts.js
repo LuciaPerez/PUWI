@@ -57,7 +57,9 @@ $(document).on('ready',function(){
 			data: {action:'rerun',argv:getURLParams()},
 				
 			success: function(request){
-				showResults(request);
+				createDiv(request['result']["projectName"],"","content","projectName");
+				createDiv(" ","totalTests greyBox box","content","");
+				updateResults(request['result']);
 			},
 			error: function(request){
 				$('#title').html('request: '+request);
@@ -71,84 +73,6 @@ $(document).on('ready',function(){
 		runFirstTime();
 	}
 
-
-	showResults = function (request){
-		
-		passed = request["passed"];
-		failures = request["failures"];
-		errors = request["errors"];
-		skipped = request["skipped"];
-		incomplete = request["incomplete"];
-		groups = request["groups"];
-		folders = request["folders"];
-		info = request["infoFailedTests"];
-	
-		//createDiv(contentDiv,className,divParent,divName)
-	
-		createDiv(request["projectName"],"","content","projectName");
-
-		createDiv(" ","totalTests greyBox box","content","");
-		for (var group_name in groups) {
-		    
-		    var selector = "#"+group_name;
-		    createDiv(group_name,"groupName","content",group_name);
-		    createDiv('','groupContent', 'content', group_name+"content");
-		    $(selector).prepend('<button type="button" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runFile" >Run group</button>');
-		    
-		    $.each(groups[group_name], function(key, value) {
-		    	
-			      var classNameTest = getClassNameTest(value, passed, incomplete, skipped, errors);
-			      separated_values = value.split("::"); 
-			      var className = separated_values[0];
-			      var test = separated_values[1];
-
-			      var folder = getFolder(folders,className);
-			      var fName = folder.replace(/\//g,'');
-		    	  var idDivFolder =  group_name+fName;
-		    	  var selector = "#"+idDivFolder;
-		    	  
-		    	  var existingFolder = $("#"+idDivFolder).html();
-				  if (typeof existingFolder ===  "undefined") {
-			    	  createDiv(folder,fName+' grey',group_name+"content",idDivFolder);
-			    	  
-			    	  var selector = "#"+idDivFolder+" > p";
-			    	  $(selector).append('<input type="image" src="images/run-folder53.png" title="Run folder" class="buttonFolder classButton" data-name='+folder+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
-			      }
-				  
-				  var existingClassName = $("#"+idDivFolder+className).html();
-				  if (typeof existingClassName ===  "undefined") {
-			    	  countClass = countDivs;
-			    	
-			    	  createDiv(className,'black margin20',idDivFolder, idDivFolder+className);
-			    	  
-			    	  var selector = "#"+idDivFolder+className+" > p";
-			    	  $(selector).append('<input type="image" src="images/run-file50.png" title="Run file" class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runFile">');
-			      }
-			      var divName = className+'::'+test;
-			      var divParent = idDivFolder+className;
-			      
-			      if (classNameTest == "testFailed box"){
-			    	  var failedTest = getInfoFailedTests(value,info);
-			    	  //createDivFailedTest = function (contentDiv,className,divParent,divName,file,line,message,trace)
-			    	  createDivFailedTest(test,classNameTest,divParent,divName,failedTest['file'],failedTest['line'],
-			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'),failedTest['code']);
-			    	  
-			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p.nameFT";
-			    	  createRunTestButton(selector,divName);
-			    	
-			      }else{
-			    	  createDiv(test,classNameTest,divParent,divName);
-			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p";
-			    	  createRunTestButton(selector,divName);
-			      }
-			      countDivs++;
-
-			});
-		   
-		}
-		displayTotalTests();
-	}
-	
 	displayTotalTests = function(){
 		var total = $(".testFailed").size() + $(".testOK").size() + $(".testIncomplete").size();
 		var result = (total == 0) ? "No tests executed" : total+" test passing";
@@ -160,7 +84,7 @@ $(document).on('ready',function(){
 	}
 	
 	createRunTestButton = function (selector,divName){
-		$(selector).append('<input type="image" src="images/run53.png" title="Run test" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTest">');
+		$(selector).append('<input type="image" src="images/run53.png" title="Run test" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTests">');
 	}
 	
 	updateResults = function(request,folderName){
@@ -183,7 +107,7 @@ $(document).on('ready',function(){
 		    if (typeof existingGroup ===  "undefined") {
 		    	createDiv(group_name,"groupName","content",group_name);
 			    createDiv('','groupContent', 'content', group_name+"content");
-			    $(selector).prepend('<button type="button" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runFile" >Run group</button>');
+			    $(selector).prepend('<button type="button" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runTests" >Run group</button>');
 		    }
 		 
 		    		    
@@ -194,7 +118,10 @@ $(document).on('ready',function(){
 			      var test = separated_values[1];
 			      
 			      var folder = getFolder(folders,className);
-			      folder = (folder == 0) ? folderName : folderName+folder;
+			      
+			      if (typeof folderName !== "undefined"){
+			    	  folder = (folder == 0) ? folderName : folderName+folder;
+			      }
 			      
 			      var fName = folder.replace(/\//g,''); 
 			      var idDivFolder =  group_name+fName;
@@ -215,7 +142,7 @@ $(document).on('ready',function(){
 			      if(typeof $(divFileSelector).html() === "undefined"){
 						createDiv(className,'black margin20',idDivFolder, idDivFolder+className);
 						var selector = "#"+idDivFolder+className+" > p";
-						$(selector).append('<input type="image" src="images/run-file50.png" title="Run file" class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runFile">');
+						$(selector).append('<input type="image" src="images/run-file50.png" title="Run file" class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runTests">');
 			      }
 			      
 			      var divName = className+'::'+test;
@@ -229,7 +156,7 @@ $(document).on('ready',function(){
 			    	  var failedTest = getInfoFailedTests(value,info);
 			    	  	
 			    	  createDivFailedTest(test,classNameTest,divParent,divName,failedTest['file'],failedTest['line'],
-			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'));
+			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'),failedTest['code']);
 			    	  
 			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p.nameFT";
 			    	  createRunTestButton(selector,divName);
@@ -366,7 +293,7 @@ $(document).on('ready',function(){
 			$(selector).append('<p class="fileFT">'+request['file']+'</p>').append('<p class="red textRight bold">'+"+"+request['line']+'</p>').
 						append('<p class="italic">'+request['message']+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" class="code classButton" data-idcode='+"#"+idCode+' data-file='+request['file']+' data-line='+request['line']+' data-test='+testName[1]+'><button type="button" class="trace classButton" data-idtrace='+"#"+idTrace+'>Trace</button></p>');
 			
-			createDiv("","testInfo greyBox box",test,idCode);
+			createDiv(request['code'],"testInfo greyBox box",test,idCode);
 			createDiv(request['trace'].replace(/#/g,'</br>#'),"testInfo greyBox box",test,idTrace);
 			count = count + 1;
 		}
@@ -395,7 +322,7 @@ $(document).on('ready',function(){
 						});
 					break;
 					case "test":
-						runSingleTest(request,nameRun);
+						runSingleTest(request['result'],nameRun);
 					break;
 				}
 			},

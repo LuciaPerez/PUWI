@@ -1,7 +1,7 @@
 <?php	
 	include_once 'PUWI_Command.php';
 	$action = $_POST['action'];
-	//$action = 'rerun';
+	//$action = 'runTests';
 	switch($action)
 	{
 		case 'rerun':
@@ -13,14 +13,8 @@
 			$argv=array($URLParams[0],$URLParams[1]);
 			//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/workspace-eclipse/Calculadora/testsRepes/");
 			$results = $runner->run($argv,FALSE);
-			
-	
-			$array = array('projectName' => $results['projectName'], 'totalTests' =>$results['totalTests'], 'passed' => $results['passed'],
-					'failures' => $results['failures'],'errors' => $results['errors'], 'incomplete' => $results['incomplete'],
-					'skipped' => $results['skipped'], 'groups' => $results['groups'], 'folders' => $results['folders'],
-					'infoFailedTests' => $results['failedTests']);
-			//print_r($array);
-			echo  json_encode($array);
+
+			sendData($results);
 		break;
 		
 		case 'runFolder':
@@ -33,32 +27,20 @@
 			$argv=array($URLParams[0],$URLParams[1]);
 			//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/workspace-eclipse/Calculadora/testsRepes/");
 			$results = $runner->run($argv,FALSE);
-
-			$array = array('result' => $results);
-			//print_r($array);
-
-			echo  json_encode($array);
+			sendData($results);
 		break;
 		
-		case 'runTest':
+		case 'runTests':
 			$results = runCommand();
-			if ($results['result'] == "testOK" || $results['result'] == "testIncomplete"){
-				$array = array ('result' => $results['result']);
-			}else{
-				$array = array ('result' => $results['result'],'testName' => $results['testName'],'file' => $results['file'],
-						    	'line' => $results['line'],'message' => $results['message'],'trace' => $results['trace']);
-			}
-
-			echo json_encode($array);
+			sendData($results);
 		break;
 		
-		case 'runFile':
-			$results = runCommand();
-			$array = array('result' => $results);	
-			echo json_encode($array);
-		break;
-		
-		
+	}
+	
+	function sendData($results){
+		$array = array('result' => $results);
+		//print_r($array);
+		echo json_encode($array);
 	}
 	
 	function runCommand(){
@@ -70,7 +52,7 @@
 		
 		$runner = new PUWI_Command;
 		$argv=array($URLParams[0],$URLParams[1],$elementName,$type);
-		//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/workspace-eclipse/Calculadora/","grupo3","group");
+		//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/workspace-eclipse/Calculadora/","AddTest::test_setUpWorksAdd","test");
 		return $runner->run($argv,FALSE);
 	}
 	

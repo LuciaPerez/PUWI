@@ -162,6 +162,11 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
     }
 
     public function doRunSingleTest($suite,$argv){
+    	$launch = new PUWI_LaunchBrowser();
+    	
+    	$groups_info = $suite->getGroupDetails();
+    	$total_groups = $launch->getGroups($groups_info,$suite->getGroups());
+    	
     	$arrayTests = $suite->tests();
     	$result = array();
     	foreach ($arrayTests as $test){
@@ -169,64 +174,59 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
     		foreach ($singleTests as $st){
     			switch ($argv[3]){
     				case "test":
-    					if (($test->getName()."::".$st->getName()) == $argv[2]){
-    						$result = $this->runSingleTest($st,$argv[2]);
-    					}
+    					if ($this->checkSingleTest($test->getName()."::".$st->getName(),$argv[2])){
+    						$result = $this->runSingleTest($st,$argv[2],'');
+    					}	
     				break;
     				case "file":
     					if ($test->getName() == $argv[2]){
-    						$result_singleTest = $this->runSingleTest($st,$argv[2]);
+    						$result_singleTest = $this->runSingleTest($st,$argv[2],'');
     						array_push($result,$result_singleTest);
     					}
     				break;
     				
     				case 'group':		
-	    				$groups_info = $suite->getGroupDetails();
-
-	    				foreach($groups_info as $properties){
-	    					foreach (array_values($properties) as $test_suite){	
-	    						$groups_per_file = $test_suite->getGroupDetails();
-	    						if(in_array($argv[2], array_keys($groups_per_file)) == true){
-		    						$tests_per_group = $groups_per_file[$argv[2]];
-		    					
-		    						foreach($tests_per_group as $test){
-		    							$result_singleTest = $this->runSingleTest($test,$test_suite->getName());
-										
-		    							if (in_array($result_singleTest,$result) == false){
-		    								array_push($result,$result_singleTest);
-		    							}
-				    				}
-	    						}
-	    									
+	    				foreach($total_groups[$argv[2]] as $single_test){
+	    					$className = strstr($single_test, ':', true);
+	    					if ($this->checkSingleTest($test->getName()."::".$st->getName(), $single_test)){	
+		    					$result_singleTest = $this->runSingleTest($st,$className,$argv[2]);
+		    					array_push($result,$result_singleTest);
 	    					}
 	    				}
-    				break;
-    				
-    			}
 
+    				break;
+    			}
     		}
     		
     	}
     	return $result;
     }
     
-    protected function runSingleTest($single_test,$class_name){
+    protected function checkSingleTest($test, $required_test){
+    	$res = ($test == $required_test) ? true : false;
+    	return $res;
+    }
+    
+    protected function runSingleTest($single_test,$class_name, $group){
     	$launch = new PUWI_LaunchBrowser();
     	$resultRun = $single_test->run();
     	
     	if (count($resultRun->passed())!=0){ 
     		$result['result'] = "testOK";
     		$result['testName'] = $class_name."::".$single_test->getName();
+    		//$result['group'] = $group;
     	}else{
     		if ((count($resultRun->notImplemented())!=0) || count($resultRun->skipped())!=0){
     			$result['result'] = "testIncomplete";
     			$result['testName'] = $class_name."::".$single_test->getName();
+    			//$result['group'] = $group;
     		}else{
     			if ((count($resultRun->failures())!=0) || count($resultRun->error())!=0){
     				$result = $launch->getFails($resultRun->failures(),true);
     			}
     		}
     	}
+    	$result['group'] = $group;
     	return $result;
     }
     /**
