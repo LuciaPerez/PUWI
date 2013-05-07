@@ -48,7 +48,6 @@ $(document).on('ready',function(){
 	}
 	
 	runFirstTime = function (){
-
 		$.ajax({
 			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
 			dataType: "json",
@@ -59,7 +58,7 @@ $(document).on('ready',function(){
 			success: function(request){
 				createDiv(request['result']["projectName"],"","content","projectName");
 				createDiv(" ","totalTests greyBox box","content","");
-				updateResults(request['result']);
+				updateResults(request['result'],'');
 			},
 			error: function(request){
 				$('#title').html('request: '+request);
@@ -87,7 +86,7 @@ $(document).on('ready',function(){
 		$(selector).append('<input type="image" src="images/run53.png" title="Run test" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTests">');
 	}
 	
-	updateResults = function(request,folderName){
+	updateResults = function(request,folderName,runSingleTest){
 		countDivs = 0;
 		passed = request["passed"];
 		failures = request["failures"];
@@ -98,7 +97,7 @@ $(document).on('ready',function(){
 		folders = request["folders"];
 		info = request["failedTests"];
 		//createDiv(contentDiv,className,divParent,divName)
-
+		
 		for (var group_name in groups) {
 		    var selector = "#"+group_name+" > p";
 		
@@ -112,6 +111,7 @@ $(document).on('ready',function(){
 		 
 		    		    
 		    $.each(groups[group_name], function(key, value) {
+		       if (typeof runSingleTest ===  "undefined" || runSingleTest == value){
 			      var classNameTest = getClassNameTest(value, passed, incomplete, skipped, errors);
 			      separated_values = value.split("::"); 
 			      var className = separated_values[0];
@@ -119,7 +119,7 @@ $(document).on('ready',function(){
 			      
 			      var folder = getFolder(folders,className);
 			      
-			      if (typeof folderName !== "undefined"){
+			      if (folderName != ''){
 			    	  folder = (folder == 0) ? folderName : folderName+folder;
 			      }
 			      
@@ -135,9 +135,7 @@ $(document).on('ready',function(){
 			    	  var selector = "#"+idDivFolder+" > p";
 			    	  $(selector).append('<input type="image" src="images/run-folder53.png" title="Run folder" class="buttonFolder classButton" data-name='+folder+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
 			      }
-			     
 
-			     
 			      var divFileSelector = divFolderSelector+className;
 			      if(typeof $(divFileSelector).html() === "undefined"){
 						createDiv(className,'black margin20',idDivFolder, idDivFolder+className);
@@ -150,11 +148,11 @@ $(document).on('ready',function(){
 			      var testSelector = "#"+divName.replace(/:/g,'\\:');
 			      
 			      $(testSelector).remove();
-			     
-
+			      alert("name: "+test+" class: ---"+classNameTest+"---");
+			      
 			      if (classNameTest == "testFailed box"){
 			    	  var failedTest = getInfoFailedTests(value,info);
-			    	  	
+			    	  
 			    	  createDivFailedTest(test,classNameTest,divParent,divName,failedTest['file'],failedTest['line'],
 			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'),failedTest['code']);
 			    	  
@@ -169,7 +167,7 @@ $(document).on('ready',function(){
 			      }
 			      
 			      removeSingleElements();
-
+		       }
 			});
 		}		
 		displayTotalTests();
@@ -226,6 +224,7 @@ $(document).on('ready',function(){
 	}
 	
 	getClassNameTest = function(value, passed, incomplete, skipped, errors){
+		alert("Buscar en arrays: "+value);
 		var classNameTest = "";
 		if($.inArray(value, passed) > -1){
 			classNameTest = "testOK box";
@@ -255,8 +254,10 @@ $(document).on('ready',function(){
 	
 	getInfoFailedTests = function(testName,infoFailedTests){
 		var result;
+		
 		$.each(infoFailedTests, function(key, value) {
 		      if (value['testName'] == testName){
+		    	  alert("INFO: "+value['file']);
 		    	  result = value;
 		      }
 		});
@@ -322,7 +323,8 @@ $(document).on('ready',function(){
 						});
 					break;
 					case "test":
-						runSingleTest(request['result'],nameRun);
+						//runSingleTest(request['result'],nameRun);
+						updateResults(request['result'],'',nameRun);
 					break;
 				}
 			},

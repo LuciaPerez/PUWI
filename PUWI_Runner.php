@@ -163,6 +163,8 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
 
     public function doRunSingleTest($suite,$argv){
     	$launch = new PUWI_LaunchBrowser();
+    	$command = new PUWI_Command();
+    	$folders = $command->getArrayFolders($argv[1],$argv[1]);
     	
     	$groups_info = $suite->getGroupDetails();
     	$total_groups = $launch->getGroups($groups_info,$suite->getGroups());
@@ -199,6 +201,8 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
     		}
     		
     	}
+    	$result['groups'] = $total_groups;
+    	$result['folders'] = $folders;
     	return $result;
     }
     
@@ -212,21 +216,33 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
     	$resultRun = $single_test->run();
     	
     	if (count($resultRun->passed())!=0){ 
-    		$result['result'] = "testOK";
-    		$result['testName'] = $class_name."::".$single_test->getName();
+    		$result['passed'] = array($class_name);
+    		$result['testName'] = $class_name;
     		//$result['group'] = $group;
     	}else{
-    		if ((count($resultRun->notImplemented())!=0) || count($resultRun->skipped())!=0){
-    			$result['result'] = "testIncomplete";
-    			$result['testName'] = $class_name."::".$single_test->getName();
-    			//$result['group'] = $group;
+    		if (count($resultRun->notImplemented())!=0){
+    			$result['incomplete'] = array($class_name);
+    			$result['testName'] = $class_name;
+    			
     		}else{
-    			if ((count($resultRun->failures())!=0) || count($resultRun->error())!=0){
-    				$result = $launch->getFails($resultRun->failures(),true);
+    			if (count($resultRun->skipped())!=0){
+    				$result['skipped'] = array($class_name);
+    				$result['testName'] = $class_name;
+    			}else{
+    				if (count($resultRun->failures())!=0){
+    					$result['failures'] = array($class_name);
+    					$result['testName'] = $class_name;
+    					$result['failedTests'] = $launch->getFails($resultRun->failures(),true);
+    				}else{
+    					$result['errors'] = array($class_name);
+    					$result['testName'] = $class_name;
+    				}
     			}
     		}
+
+    		
     	}
-    	$result['group'] = $group;
+    	
     	return $result;
     }
     /**

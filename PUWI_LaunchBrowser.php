@@ -162,13 +162,11 @@ class PUWI_LaunchBrowser{
 			);
 			
 			$testName = $f->failedTest()->toString();
-			$message = $f->getExceptionAsString();
-			
+			$message = $f->getExceptionAsString();			
 	
 			$file=strstr($data, ':', true);
 			$line=trim(substr(strstr($data, ':'),1));
-			
-			
+
 			$infoEachTest['testName'] = $testName;
 			
 			$infoEachTest['file'] = $file;
@@ -180,8 +178,7 @@ class PUWI_LaunchBrowser{
 			if ($singleTest == false){
 				array_push($this->infoFailedTests,$infoEachTest);
 			}else{
-				$infoEachTest['result'] = "testFailed";
-				return $infoEachTest;
+				return array($infoEachTest);
 			}
 		}
 	}
