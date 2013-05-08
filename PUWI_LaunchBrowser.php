@@ -11,8 +11,6 @@ class PUWI_LaunchBrowser{
 	*/
 
 	public function launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$argv){
-		print "-------------------FAILURES---------------------------<br/>";
-		print_r($failures);
 		
 		$passed = $this->send_array($passed); 
 		$failures = $this->send_array($failures);
@@ -23,9 +21,6 @@ class PUWI_LaunchBrowser{
 		$folders = $this->send_array($folders);
 		$infoFailedTests = $this->send_array($this->infoFailedTests);
 		$argv = $this->send_array($argv);
-		
-		print "<br/>==============FAILED TESTS===================<br/>";
-		print_r($this->infoFailedTests);
 		
 		$url="http://localhost/PUWI/view/index.php".
 		     "?projectName=".$projectName.
@@ -58,9 +53,6 @@ class PUWI_LaunchBrowser{
 		$groups_details = $result->topTestSuite()->getGroupDetails();
 		$groups = $result->topTestSuite()->getGroups();
 		$groups = $this->getGroups($groups_details,$groups);
-
-		//echo "\n----------GROUPS-------------\n";
-		//print_r($groups);
 		
 		if ($new == TRUE){
 			$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$argv);
@@ -178,7 +170,7 @@ class PUWI_LaunchBrowser{
 			if ($singleTest == false){
 				array_push($this->infoFailedTests,$infoEachTest);
 			}else{
-				return array($infoEachTest);
+				return $infoEachTest;
 			}
 		}
 	}

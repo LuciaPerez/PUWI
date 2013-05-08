@@ -60,7 +60,12 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
     const SUCCESS_EXIT   = 0;
     const FAILURE_EXIT   = 1;
     const EXCEPTION_EXIT = 2;
-
+	protected $passed = array();
+	protected $failures = array();
+	protected $errors = array();
+	protected $skipped = array();
+	protected $incomplete = array();
+	protected $failedTests = array();
     /**
      * @var PHP_CodeCoverage_Filter
      */
@@ -171,19 +176,19 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
     	
     	$arrayTests = $suite->tests();
     	$result = array();
+    	$tests_passed = array();
     	foreach ($arrayTests as $test){
     		$singleTests=$test->tests();
     		foreach ($singleTests as $st){
     			switch ($argv[3]){
     				case "test":
     					if ($this->checkSingleTest($test->getName()."::".$st->getName(),$argv[2])){
-    						$result = $this->runSingleTest($st,$argv[2],'');
+    						$this->runSingleTest($st,$test->getName());
     					}	
     				break;
     				case "file":
     					if ($test->getName() == $argv[2]){
-    						$result_singleTest = $this->runSingleTest($st,$argv[2],'');
-    						array_push($result,$result_singleTest);
+    						$this->runSingleTest($st,$argv[2]);
     					}
     				break;
     				
@@ -191,8 +196,7 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
 	    				foreach($total_groups[$argv[2]] as $single_test){
 	    					$className = strstr($single_test, ':', true);
 	    					if ($this->checkSingleTest($test->getName()."::".$st->getName(), $single_test)){	
-		    					$result_singleTest = $this->runSingleTest($st,$className,$argv[2]);
-		    					array_push($result,$result_singleTest);
+	    						$this->runSingleTest($st,$className);
 	    					}
 	    				}
 
@@ -201,6 +205,13 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
     		}
     		
     	}
+    	$result['passed'] = $this->passed;
+    	$result['failures'] = $this->failures;
+    	$result['errors'] = $this->errors;
+    	$result['incomplete'] = $this->incomplete;
+    	$result['skipped'] = $this->skipped;
+    	$result['failedTests'] = $this->failedTests;
+    	
     	$result['groups'] = $total_groups;
     	$result['folders'] = $folders;
     	return $result;
@@ -211,39 +222,31 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
     	return $res;
     }
     
-    protected function runSingleTest($single_test,$class_name, $group){
+    protected function runSingleTest($single_test,$class_name){
     	$launch = new PUWI_LaunchBrowser();
     	$resultRun = $single_test->run();
     	
     	if (count($resultRun->passed())!=0){ 
-    		$result['passed'] = array($class_name);
-    		$result['testName'] = $class_name;
-    		//$result['group'] = $group;
+    		array_push($this->passed,$class_name."::".$single_test->getName());
     	}else{
     		if (count($resultRun->notImplemented())!=0){
-    			$result['incomplete'] = array($class_name);
-    			$result['testName'] = $class_name;
-    			
+    			array_push($this->incomplete,$class_name."::".$single_test->getName());
     		}else{
     			if (count($resultRun->skipped())!=0){
-    				$result['skipped'] = array($class_name);
-    				$result['testName'] = $class_name;
+    				array_push($this->skipped,$class_name."::".$single_test->getName());
     			}else{
     				if (count($resultRun->failures())!=0){
-    					$result['failures'] = array($class_name);
-    					$result['testName'] = $class_name;
-    					$result['failedTests'] = $launch->getFails($resultRun->failures(),true);
+    					array_push($this->failures,$class_name."::".$single_test->getName());
+    					$info = $launch->getFails($resultRun->failures(),true);
+    					array_push($this->failedTests,$info); 
     				}else{
-    					$result['errors'] = array($class_name);
-    					$result['testName'] = $class_name;
+    					array_push($this->errors,$class_name."::".$single_test->getName());
     				}
     			}
     		}
 
-    		
     	}
-    	
-    	return $result;
+
     }
     /**
      * @param  PHPUnit_Framework_Test $suite

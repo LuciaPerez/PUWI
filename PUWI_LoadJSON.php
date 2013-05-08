@@ -1,7 +1,6 @@
 <?php	
 	include_once 'PUWI_Command.php';
 	$action = $_POST['action'];
-	//$action = 'runTests';
 	switch($action)
 	{
 		case 'rerun':
@@ -11,7 +10,6 @@
 			
 			$runner = new PUWI_Command;
 			$argv=array($URLParams[0],$URLParams[1]);
-			//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/workspace-eclipse/Calculadora/testsRepes/");
 			$results = $runner->run($argv,FALSE);
 
 			sendData($results);
@@ -25,7 +23,6 @@
 				
 			$runner = new PUWI_Command;
 			$argv=array($URLParams[0],$URLParams[1]);
-			//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/workspace-eclipse/Calculadora/testsRepes/");
 			$results = $runner->run($argv,FALSE);
 			sendData($results);
 		break;
@@ -39,7 +36,6 @@
 	
 	function sendData($results){
 		$array = array('result' => $results);
-		//print_r($array);
 		echo json_encode($array);
 	}
 	
@@ -52,7 +48,6 @@
 		
 		$runner = new PUWI_Command;
 		$argv=array($URLParams[0],$URLParams[1],$elementName,$type);
-		//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/workspace-eclipse/Calculadora/","AddTest::test_setUpWorksAdd","test");
 		return $runner->run($argv,FALSE);
 	}
 	

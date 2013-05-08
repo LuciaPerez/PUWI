@@ -72,21 +72,7 @@ $(document).on('ready',function(){
 		runFirstTime();
 	}
 
-	displayTotalTests = function(){
-		var total = $(".testFailed").size() + $(".testOK").size() + $(".testIncomplete").size();
-		var result = (total == 0) ? "No tests executed" : total+" test passing";
-		$(".totalTests p").html(result);
-	    if (total != 0){
-		    $('.totalTests p').append('<button type="button" id="runAllTests" >Run All Tests</button>'
-					+'<button type="button" id="hideTestsOK">Hide/Show Passed Tests</button>');
-	    }
-	}
-	
-	createRunTestButton = function (selector,divName){
-		$(selector).append('<input type="image" src="images/run53.png" title="Run test" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTests">');
-	}
-	
-	updateResults = function(request,folderName,runSingleTest){
+	updateResults = function(request,folderName,runSingleTest, typeUpdate){
 		countDivs = 0;
 		passed = request["passed"];
 		failures = request["failures"];
@@ -97,7 +83,7 @@ $(document).on('ready',function(){
 		folders = request["folders"];
 		info = request["failedTests"];
 		//createDiv(contentDiv,className,divParent,divName)
-		
+
 		for (var group_name in groups) {
 		    var selector = "#"+group_name+" > p";
 		
@@ -111,11 +97,12 @@ $(document).on('ready',function(){
 		 
 		    		    
 		    $.each(groups[group_name], function(key, value) {
-		       if (typeof runSingleTest ===  "undefined" || runSingleTest == value){
+				separated_values = value.split("::"); 
+				var className = separated_values[0];
+				var test = separated_values[1];
+		       if (typeof runSingleTest ===  "undefined" || (runSingleTest == value && typeUpdate == 'test') || (runSingleTest == group_name && typeUpdate == 'group') || (runSingleTest == className && typeUpdate == 'file')){
 			      var classNameTest = getClassNameTest(value, passed, incomplete, skipped, errors);
-			      separated_values = value.split("::"); 
-			      var className = separated_values[0];
-			      var test = separated_values[1];
+			      
 			      
 			      var folder = getFolder(folders,className);
 			      
@@ -148,9 +135,9 @@ $(document).on('ready',function(){
 			      var testSelector = "#"+divName.replace(/:/g,'\\:');
 			      
 			      $(testSelector).remove();
-			      alert("name: "+test+" class: ---"+classNameTest+"---");
-			      
+
 			      if (classNameTest == "testFailed box"){
+			    	 
 			    	  var failedTest = getInfoFailedTests(value,info);
 			    	  
 			    	  createDivFailedTest(test,classNameTest,divParent,divName,failedTest['file'],failedTest['line'],
@@ -173,6 +160,20 @@ $(document).on('ready',function(){
 		displayTotalTests();
 	}
 	
+	displayTotalTests = function(){
+		var total = $(".testFailed").size() + $(".testOK").size() + $(".testIncomplete").size();
+		var result = (total == 0) ? "No tests executed" : total+" test passing";
+		$(".totalTests p").html(result);
+	    if (total != 0){
+		    $('.totalTests p').append('<button type="button" id="runAllTests" >Run All Tests</button>'
+					+'<button type="button" id="hideTestsOK">Hide/Show Passed Tests</button>');
+	    }
+	}
+	
+	createRunTestButton = function (selector,divName){
+		$(selector).append('<input type="image" src="images/run53.png" title="Run test" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTests">');
+	}
+
 	removeSingleElements = function (){
 		elem = getSingleElement(".black");
 		$(elem).remove();
@@ -224,7 +225,6 @@ $(document).on('ready',function(){
 	}
 	
 	getClassNameTest = function(value, passed, incomplete, skipped, errors){
-		alert("Buscar en arrays: "+value);
 		var classNameTest = "";
 		if($.inArray(value, passed) > -1){
 			classNameTest = "testOK box";
@@ -257,50 +257,12 @@ $(document).on('ready',function(){
 		
 		$.each(infoFailedTests, function(key, value) {
 		      if (value['testName'] == testName){
-		    	  alert("INFO: "+value['file']);
 		    	  result = value;
 		      }
 		});
 		return result;
 	}
 	
-	runSingleTest = function(request,test,idFile){
-		var selector = "#"+test.replace(/:/g,'\\:');
-		var testName = test.split('::');
-
-		if ($(selector).hasClass('testOK')){
-			$(selector).removeClass('testOK').addClass(request['result']);
-		}else{
-			if ($(selector).hasClass('testIncomplete')){
-				$(selector).removeClass('testIncomplete').addClass(request['result']);
-			}else{
-				if ($(selector).hasClass('testFailed')){
-					$(selector).removeClass('testFailed').addClass(request['result']);
-					remove_content = selector+' p.fileFT,'+selector+' p.red,'+selector+' p.italic,'+selector+' .testInfo';
-					$(remove_content).remove();
-				}else{
-					createDiv(testName[1],"box "+request['result'],idFile,test);
-					var selectorCreateButton = "#"+test.replace(/:/g,'\\:')+" > p.nameNFT";
-					createRunTestButton(selectorCreateButton,test);
-				}
-			}
-		}
-		$(selector+" p").removeClass('nameFT bold').addClass('nameNFT');
-		if (request['result'] == 'testFailed'){
-			idCode = "idCode"+count;
-			idTrace = "idTrace"+count;
-
-			$(selector+" p").removeClass('nameNFT').addClass('nameFT bold');
-			$(selector).append('<p class="fileFT">'+request['file']+'</p>').append('<p class="red textRight bold">'+"+"+request['line']+'</p>').
-						append('<p class="italic">'+request['message']+'<input type="image" src="images/bullet_arrow_down1.png" title="Show code" class="code classButton" data-idcode='+"#"+idCode+' data-file='+request['file']+' data-line='+request['line']+' data-test='+testName[1]+'><button type="button" class="trace classButton" data-idtrace='+"#"+idTrace+'>Trace</button></p>');
-			
-			createDiv(request['code'],"testInfo greyBox box",test,idCode);
-			createDiv(request['trace'].replace(/#/g,'</br>#'),"testInfo greyBox box",test,idTrace);
-			count = count + 1;
-		}
-		
-		displayTotalTests();
-	}
 	
 	requestRunTests = function(element){
 		var idFile = $(element).data('idfile');
@@ -317,14 +279,17 @@ $(document).on('ready',function(){
 			success:function(request){
 				switch (typeRun){
 					case "file":
+						$.each(request['result'], function(key, value){
+							updateResults(request['result'],'',nameRun,'file');
+						});
+					break;
 					case "group":
 						$.each(request['result'], function(key, value){
-							runSingleTest(value,value['testName'],idFile);
+							updateResults(request['result'],'',nameRun,'group');
 						});
 					break;
 					case "test":
-						//runSingleTest(request['result'],nameRun);
-						updateResults(request['result'],'',nameRun);
+						updateResults(request['result'],'',nameRun,'test');
 					break;
 				}
 			},
@@ -371,11 +336,12 @@ $(document).on('ready',function(){
 				alert("an error ocurred in ajax request");
 			}
 		});
-		//requestRunTests(this);
 	});
+	
 	$("#content").on('click',".groupContent .black .buttonFile", function() {
 		requestRunTests(this);
 	});
+	
 	$("#content").on('click',".groupContent .grey .black .box p .buttonTest", function() {
 		requestRunTests(this);
 	});
