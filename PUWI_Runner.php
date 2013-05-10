@@ -192,14 +192,15 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
     					}
     				break;
     				
-    				case 'group':		
-	    				foreach($total_groups[$argv[2]] as $single_test){
-	    					$className = strstr($single_test, ':', true);
-	    					if ($this->checkSingleTest($test->getName()."::".$st->getName(), $single_test)){	
-	    						$this->runSingleTest($st,$className);
-	    					}
-	    				}
-
+    				case 'group':	
+    					if(in_array($argv[2],array_keys($total_groups))){
+		    				foreach($total_groups[$argv[2]] as $single_test){
+		    					$className = strstr($single_test, ':', true);
+		    					if ($this->checkSingleTest($test->getName()."::".$st->getName(), $single_test)){	
+		    						$this->runSingleTest($st,$className);
+		    					}
+		    				}
+    					}
     				break;
     			}
     		}
