@@ -61,7 +61,7 @@
 }
 
 .box{
-	margin:10px 40px 10px 40px;
+	margin:10px 20px 10px 20px;
 	font-size:0.8em;
 	border-width:2.0px;
 	border-style:solid;
@@ -96,6 +96,20 @@
 	border-color:#949486;
 	background:#D4D4BF;
 	font-size:1.0em;
+}
+
+.darkBox{
+	
+	margin:0px;
+	border-color:#949486;
+	background:#2A2A26;
+	font-size:1.0em;
+	color: #EEEEE5;
+}
+
+.buttonFile{
+	width:2.0em;
+	height:2.0em;
 }
 
 .testInfo{
@@ -193,10 +207,16 @@
 
 .nameFT{
 	width:auto;	
+	font-size:1.1em;
 }
 
-.buttonGroup{
-	
+.margin20{
+	margin: 0 20px 0 20px;
+}
+
+.buttonTest{
+	width: 1.5em;
+	height: 1.5em;
 }
 
 

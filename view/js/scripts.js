@@ -45,7 +45,7 @@ $(document).on('ready',function(){
 		}).appendTo(divParent);
 
 		createDiv(code,"testInfo greyBox box",divName,idCode);
-		createDiv(trace,"testInfo greyBox box",divName,idTrace);
+		createDiv(trace,"testInfo darkBox box",divName,idTrace);
 		count = count + 1;
 		
 	}
@@ -290,9 +290,9 @@ $(document).on('ready',function(){
 		    async: true,	
 			data: {action:action,name:nameRun,argv:getURLParams(),type:typeRun},
 			success:function(request){
+				is_empty = checkEmptyResults(request['result']);
 				switch (typeRun){
 					case "file":
-						is_empty = checkEmptyResults(request['result']);
 						if (is_empty == true){
 							$('.black').each(function(){
 								if($(this).children("p.nameNFT").text() == nameRun){
@@ -305,7 +305,6 @@ $(document).on('ready',function(){
 						}
 					break;
 					case "group":
-						is_empty = checkEmptyResults(request['result']);
 						if (is_empty == true){
 							$("#"+nameRun.replace(/:/g,'\\:')).next().remove();
 							$("#"+nameRun.replace(/:/g,'\\:')).remove();
@@ -317,7 +316,6 @@ $(document).on('ready',function(){
 
 					break;
 					case "test":
-						is_empty = checkEmptyResults(request['result']);
 						if (is_empty == true){
 							$("#"+nameRun.replace(/:/g,'\\:')).remove();
 							removeSingleElements();	
