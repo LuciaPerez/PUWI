@@ -61,7 +61,7 @@ $(document).on('ready',function(){
 			success: function(request){
 				createDiv(request['result']["projectName"],"","content","projectName");
 				createDiv(" ","totalTests greyBox box","content","");
-				updateResults(request['result'],'');
+				updateResults(request['result'],'','');
 			},
 			error: function(request){
 				$('#title').html('request: '+request);
@@ -76,7 +76,6 @@ $(document).on('ready',function(){
 	}
 
 	updateResults = function(request,folderName,runSingleTest, typeUpdate){
-		
 		countDivs = 0;
 		passed = request["passed"];
 		failures = request["failures"];
@@ -87,7 +86,6 @@ $(document).on('ready',function(){
 		folders = request["folders"];
 		info = request["failedTests"];
 
-		
 		//createDiv(contentDiv,className,divParent,divName)
 
 		for (var group_name in groups) {
@@ -106,10 +104,10 @@ $(document).on('ready',function(){
 				separated_values = value.split("::"); 
 				var className = separated_values[0];
 				var test = separated_values[1];
-
-		       if (typeof runSingleTest ===  "undefined" || (runSingleTest == value && typeUpdate == 'test') || (runSingleTest == group_name && typeUpdate == 'group') || (runSingleTest == className && typeUpdate == 'file')){
+				
+		       if (runSingleTest ==  '' || (runSingleTest == value && typeUpdate == 'test') || (runSingleTest == group_name && typeUpdate == 'group') || (runSingleTest == className && typeUpdate == 'file')){
 			      var classNameTest = getClassNameTest(value, passed, incomplete, skipped, errors);
-
+			      
 			      var folder = getFolder(folders,className);
 			      
 			      if (folderName != ''){
@@ -165,7 +163,47 @@ $(document).on('ready',function(){
 		       }
 			});
 		}		
+		/*if ($.inArray("AddTest::test_setUpWorksAdd",folders) >= 0){
+			alert("funciona");
+		}else{
+			alert("NON funciona");
+		}*/
+		var ids;
+		switch (typeUpdate){
+			case "file":
+				ids = getFileIds(".black",runSingleTest);
+				$.each(ids, function(key,value){
+					selector = "#"+value+" .box";
+					removeDissapearedTest(selector,request);
+				});
+			break;
+			
+			case "folder":
+				ids = getFileIds(".grey",folderName);
+				$.each(ids, function(key,value){
+					selector = "#"+value+" .black .box";
+					removeDissapearedTest(selector,request);
+				});
+			break;
+			
+			case "group":
+				ids = runSingleTest+"content";
+				selector = "#"+ids+" .grey .black .box";
+				removeDissapearedTest(selector,request);
+			break;
+		}
+
 		displayTotalTests();
+	}
+	
+	removeDissapearedTest = function(selector,request){
+		$(selector).each(function(){
+			if (!$(this).hasClass('testInfo')){
+				var testName = $(this).attr('id');
+				res = checkIfTestExists(testName,request);
+				if(!res){ $("#"+testName.replace(/:/g,'\\:')).remove(); }
+			}
+		});
 	}
 	
 	displayTotalTests = function(){
@@ -176,6 +214,18 @@ $(document).on('ready',function(){
 		    $('.totalTests p').append('<input type="image" src="images/run_hover.png" title="Run All Tests" id="runAllTests" class="classButton">'
 					+'<button type="button" id="hideTestsOK">Hide/Show Passed Tests</button>');
 	    }
+	}
+	
+	checkIfTestExists = function(nameTest, arrayData){
+		var exists = false;
+		$.each(arrayData,function(key,value){
+			if((key == 'passed' || key == 'failures' || key == 'errors' || key == 'skipped' || key == 'incomplete') && !exists){
+				if ($.inArray(nameTest,value) >= 0){
+					exists = true;
+				}
+			}
+		});
+		return exists;
 	}
 	
 	createRunTestButton = function (selector,divName){
@@ -296,12 +346,10 @@ $(document).on('ready',function(){
 				is_empty = checkEmptyResults(request['result']);
 				switch (typeRun){
 					case "file":
-						alert(is_empty);
 						if (is_empty == true){
-							$('.black').each(function(){
-								if($(this).children("p.nameNFT").text() == nameRun){
-									$("#"+$(this).attr("id")).remove();
-								}
+							var idsFile = getFileIds(".black",nameRun);
+							$.each(idsFile,function(key,value){
+								$("#"+value).remove();
 							});
 							removeSingleElements();	
 						}else{
@@ -334,6 +382,16 @@ $(document).on('ready',function(){
 				alert("an error ocurred in ajax request");
 			}
 		});
+	}
+	
+	getFileIds = function(selector,nameRun){
+		var ids = new Array();
+		$(selector).each(function(){
+			if($(this).children("p.nameNFT").text() == nameRun){
+				ids.push($(this).attr("id"));
+			}
+		});
+		return ids;
 	}
 	
 	checkEmptyResults = function($array_data){
@@ -373,7 +431,7 @@ $(document).on('ready',function(){
 		    async: true,	
 			data: {action:'runFolder',folderName:folderName,argv:getURLParams()},
 			success:function(request){	
-				updateResults(request['result'],folderName);
+				updateResults(request['result'],folderName,'',"folder");
 			},
 		
 			error: function(request){
