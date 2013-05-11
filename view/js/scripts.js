@@ -76,6 +76,7 @@ $(document).on('ready',function(){
 	}
 
 	updateResults = function(request,folderName,runSingleTest, typeUpdate){
+		
 		countDivs = 0;
 		passed = request["passed"];
 		failures = request["failures"];
@@ -85,17 +86,19 @@ $(document).on('ready',function(){
 		groups = request["groups"];
 		folders = request["folders"];
 		info = request["failedTests"];
+
+		
 		//createDiv(contentDiv,className,divParent,divName)
 
 		for (var group_name in groups) {
 		    var selector = "#"+group_name+" > p";
-		
+
 	    	var existingGroup = $(selector).html();
 
 		    if (typeof existingGroup ===  "undefined") {
 		    	createDiv(group_name,"groupName","content",group_name);
 			    createDiv('','groupContent', 'content', group_name+"content");
-			    $(selector).prepend('<button type="button" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runTests" >Run group</button>');
+			    $(selector).prepend('<input type="image" src="images/run.png" title="Run group" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runTests">');
 		    }
 		 
 		    		    
@@ -103,6 +106,7 @@ $(document).on('ready',function(){
 				separated_values = value.split("::"); 
 				var className = separated_values[0];
 				var test = separated_values[1];
+
 		       if (typeof runSingleTest ===  "undefined" || (runSingleTest == value && typeUpdate == 'test') || (runSingleTest == group_name && typeUpdate == 'group') || (runSingleTest == className && typeUpdate == 'file')){
 			      var classNameTest = getClassNameTest(value, passed, incomplete, skipped, errors);
 
@@ -115,7 +119,7 @@ $(document).on('ready',function(){
 			      var fName = folder.replace(/\//g,''); 
 			      var idDivFolder =  group_name+fName;
 		    	  var divFolderSelector = "#"+idDivFolder;
-			      
+		    	  
 		    	  var folder_exists = $(divFolderSelector).html();
 		    	  
 		    	  if (typeof folder_exists ===  "undefined") {		    		  
@@ -153,7 +157,6 @@ $(document).on('ready',function(){
 			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p";
 			    	  createRunTestButton(selector,divName);
 			    	  if(is_hidden){
-			    		  
 			    		  $("#"+divName.replace(/:/g,'\\:')).slideToggle(); 
 			    	  }
 			      }
@@ -170,13 +173,13 @@ $(document).on('ready',function(){
 		var result = (total == 0) ? "No tests executed" : total+" test passing";
 		$(".totalTests p").html(result);
 	    if (total != 0){
-		    $('.totalTests p').append('<input type="image" src="images/run_hover.png" title="Run All Tests" id="runAllTests">'
+		    $('.totalTests p').append('<input type="image" src="images/run_hover.png" title="Run All Tests" id="runAllTests" class="classButton">'
 					+'<button type="button" id="hideTestsOK">Hide/Show Passed Tests</button>');
 	    }
 	}
 	
 	createRunTestButton = function (selector,divName){
-		$(selector).append('<input type="image" src="images/run_hover.png" title="Run test" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTests">');
+		$(selector).append('<input type="image" src="images/run.png" title="Run test" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTests">');
 	}
 
 	removeSingleElements = function (){
@@ -282,7 +285,7 @@ $(document).on('ready',function(){
 		var nameRun = $(element).data('name');
 		var typeRun = $(element).data('type');
 		var action = $(element).data('action');
-		var is_empty = false;
+		var is_empty;
 		$.ajax({
 			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
 			dataType: "json",
@@ -293,6 +296,7 @@ $(document).on('ready',function(){
 				is_empty = checkEmptyResults(request['result']);
 				switch (typeRun){
 					case "file":
+						alert(is_empty);
 						if (is_empty == true){
 							$('.black').each(function(){
 								if($(this).children("p.nameNFT").text() == nameRun){
@@ -301,7 +305,7 @@ $(document).on('ready',function(){
 							});
 							removeSingleElements();	
 						}else{
-							updateResults(request['result'],'',nameRun,'test');
+							updateResults(request['result'],'',nameRun,'file');
 						}
 					break;
 					case "group":

@@ -63,8 +63,9 @@
 .box{
 	margin:10px 20px 10px 20px;
 	font-size:0.8em;
-	border-width:2.0px;
+	border-width:1.0px;
 	border-style:solid;
+	padding: 10px;
 }
 
 .groupName p{
@@ -72,7 +73,7 @@
 }
 .groupContent {
 	margin-bottom:10px;
-	border-width:2.0px;
+	border-width:1.0px;
 	border-style:solid;
 	border-color: #949486;
 	background:white;
@@ -108,13 +109,11 @@
 }
 
 .buttonFile{
-	width:2.0em;
-	height:2.0em;
+
 }
 
 .testInfo{
 	display:none;
-	margin:10px;
 	font-family:courier-new;
 	clear:right;
 }
@@ -201,7 +200,8 @@
 	/*border: rgb(128,128,128) 1px solid;*/ 
 	font-size: 8pt; 
 	font-family: Verdana; 
-    background: rgb(233,233,233)"
+    width:2.0em;
+	height:2.0em;
 }
 
 
@@ -215,8 +215,8 @@
 }
 
 .buttonTest{
-	width: 1.5em;
-	height: 1.5em;
+	/*width: 1.5em;
+	height: 1.5em;*/
 }
 
 
