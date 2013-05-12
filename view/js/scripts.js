@@ -163,15 +163,19 @@ $(document).on('ready',function(){
 			    	  }
 			      }
 			      
-			      removeSingleElements();
 		       }
 			});
 		}		
-
+		checkDissapearedTests(request,typeUpdate,runSingleTest,folderName);
+	    removeSingleElements();
+		displayTotalTests();
+	}
+	
+	checkDissapearedTests = function(request,type, nameTest, folderName){
 		var ids;
-		switch (typeUpdate){
+		switch (type){
 			case "file":
-				ids = getFileIds(".black",runSingleTest);
+				ids = getFileIds(".black",nameTest);
 				$.each(ids, function(key,value){
 					selector = "#"+value+" .box";
 					removeDissapearedTest(selector,request);
@@ -187,13 +191,11 @@ $(document).on('ready',function(){
 			break;
 			
 			case "group":
-				ids = runSingleTest+"content";
+				ids = nameTest+"content";
 				selector = "#"+ids+" .grey .black .box";
 				removeDissapearedTest(selector,request);
 			break;
 		}
-
-		displayTotalTests();
 	}
 	
 	removeDissapearedTest = function(selector,request){
