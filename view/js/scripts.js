@@ -155,7 +155,11 @@ $(document).on('ready',function(){
 			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p";
 			    	  createRunTestButton(selector,divName);
 			    	  if(is_hidden){
-			    		  $("#"+divName.replace(/:/g,'\\:')).slideToggle(); 
+			    		  var testSelector = "#"+divName.replace(/:/g,'\\:');
+			    		  var classSelector = "#"+$(testSelector).parent().attr("id");
+			    		  var folderSelector = "#"+$(classSelector).parent().attr("id");
+			    		  var groupSelector = "#"+$(folderSelector).parent().attr("id");
+			    		  hideElements(testSelector,classSelector,folderSelector,groupSelector);
 			    	  }
 			      }
 			      
@@ -163,11 +167,7 @@ $(document).on('ready',function(){
 		       }
 			});
 		}		
-		/*if ($.inArray("AddTest::test_setUpWorksAdd",folders) >= 0){
-			alert("funciona");
-		}else{
-			alert("NON funciona");
-		}*/
+
 		var ids;
 		switch (typeUpdate){
 			case "file":
@@ -257,24 +257,24 @@ $(document).on('ready',function(){
 		return result;
 	}
 	
-	hideClassName = function(){
-		$(".black ").each(function(){
+	hideClassName = function(selector){
+		$(selector).each(function(){
 			if(!$(this).children().hasClass('testFailed')){
 				$(this).slideToggle();
 			}
 		});
 	}
 
-	hideFolderName = function(){
-		$(".grey").each(function(){
+	hideFolderName = function(selector){
+		$(selector).each(function(){
 			if(!$(this).children().children().hasClass('testFailed')){
 				$(this).slideToggle();
 			}
 		});
 	}
 	
-	hideGroupName = function(){
-		$(".groupContent").each(function(){
+	hideGroupName = function(selector){
+		$(selector).each(function(){
 			if(!$(this).children().children().children().hasClass('testFailed')){
 				$(this).slideToggle();
 				$(this).prev().slideToggle();
@@ -283,11 +283,11 @@ $(document).on('ready',function(){
 		
 	}
 	
-	hideElements = function(selector){
-		hideGroupName();
-		hideFolderName();
-		hideClassName();
-		$(selector).slideToggle(); 
+	hideElements = function(testSelector,classSelector,folderSelector,groupSelector){
+		hideGroupName(groupSelector);
+		hideFolderName(folderSelector);
+		hideClassName(classSelector);
+		$(testSelector).slideToggle(); 
 	}
 	
 	getClassNameTest = function(value, passed, incomplete, skipped, errors){
@@ -406,9 +406,13 @@ $(document).on('ready',function(){
 		return is_empty;
 	}
 	
-	$("#content").on('click','.greyBox p #hideTestsOK', function() {
-		hideElements(".testIncomplete,.testOK");
+	set_isHidden = function(){
 		is_hidden = !is_hidden;
+	}
+	
+	$("#content").on('click','.greyBox p #hideTestsOK', function() {
+		hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent");
+		set_isHidden();
 	});
 	
 	
