@@ -97,6 +97,8 @@ $(document).on('ready',function(){
 		    	createDiv(group_name,"groupName","content",group_name);
 			    createDiv('','groupContent', 'content', group_name+"content");
 			    $(selector).prepend('<input type="image" src="images/run.png" title="Run group" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runTests">');
+
+			    showGroupsInOrder(group_name);
 		    }
 		 
 		    		    
@@ -165,10 +167,31 @@ $(document).on('ready',function(){
 			      
 		       }
 			});
-		}		
+		}	
+
 		checkDissapearedTests(request,typeUpdate,runSingleTest,folderName);
 	    removeSingleElements();
 		displayTotalTests();
+	}
+	
+	showGroupsInOrder = function (groupName){
+	    var divBefore = sortGroups(groupName);
+	    if (typeof divBefore === "undefined"){
+	    	$("#"+groupName).insertAfter(".totalTests");
+	    }else{
+	    	$("#"+groupName).insertAfter("#"+divBefore+"content");		    	
+	    }
+	    $("#"+groupName+"content").insertAfter("#"+groupName);
+	}
+	
+	sortGroups = function(groupName){
+		var result;
+		$(".groupName").each(function(){
+			if($(this).text() > groupName){
+				result = $(this).attr("id");
+			}
+		});
+		return result;
 	}
 	
 	checkDissapearedTests = function(request,type, nameTest, folderName){

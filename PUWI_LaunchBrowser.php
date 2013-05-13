@@ -92,7 +92,7 @@ class PUWI_LaunchBrowser{
 			$arrayResult[$groups[$index]] = $arrayTests;
 			$index++;
 		}
-
+		krsort($arrayResult);
 		return $arrayResult;
 	}
 
