@@ -1,15 +1,10 @@
 
 $(document).on('ready',function(){
 
-	var countDivs = 0;
-	var countFolder = 0;
-	var countClass = 0;
+
 	
 	var is_hidden = false;
-	
-	var count = 0;
-	var idCode = "";
-	var idTrace = "";
+	var projectName;
 	
 	getURLParams = function(){
 		var pageURL = window.location.toString().split('?');
@@ -21,33 +16,29 @@ $(document).on('ready',function(){
 		
 	}
 
-	createDiv = function (contentDiv,className,divParent,divName) {
+	createDiv = function (contentDiv,className,divParent,divName, pClass) {
 		divParent="#"+divParent.replace(/:/g,'\\:');
 		$('<div/>', {
 		    id: divName,
 		    class: className,
-		    html: '<p class="nameNFT">'+contentDiv+'</p>'
+		    html: '<p class="nameNFT '+pClass+'">'+contentDiv+'</p>'
 		}).appendTo(divParent);
 	}
 	
-	createDivFailedTest = function (contentDiv,className,divParent,divName,file,line,message,trace,code) { 
-		idCode = "idCode"+count;		
-		idTrace = "idTrace"+count;
+	createDivFailedTest = function (contentDiv,className,divParent,divName,file,line,message,trace,code,pClass) { 
 		divParent="#"+divParent;
 			$('<div/>', {
 		    id: divName,
 		    class: className,
-		    html: '<p class="nameFT bold">'+contentDiv+'</p>'+'<p class="fileFT left">'+file+'</p>'+'<p class="red textRight bold">+'+line+'</p>'
+		    html: '<p class="nameFT bold '+pClass+'">'+contentDiv+'</p>'+'<p class="fileFT left">'+file+'</p>'+'<p class="red textRight bold">+'+line+'</p>'
 		          +'<p class="italic">'+message
-		          +'<input type="image" src="images/console.png" title="Display trace" class="trace classButton" data-idtrace='+"#"+idTrace+'>'
-		          +'<input type="image" src="images/bullet_arrow_down1.png" title="Display code" class="code classButton" data-idcode='+"#"+idCode+' data-file='+file+' data-line='+line+' data-test='+contentDiv+'></p>'
+		          +'<input type="image" src="images/console.png" title="Display trace" class="trace classButton" data-idtrace='+"#"+divName+"trace"+'>'
+		          +'<input type="image" src="images/bullet_arrow_down1.png" title="Display code" class="code classButton" data-idcode='+"#"+divName+"code"+' data-file='+file+' data-line='+line+' data-test='+contentDiv+'></p>'
 		         
 		}).appendTo(divParent);
 
-		createDiv(code,"testInfo greyBox box",divName,idCode);
-		createDiv(trace,"testInfo darkBox box",divName,idTrace);
-		count = count + 1;
-		
+		createDiv(code,"testInfo greyBox box",divName,divName+"code");
+		createDiv(trace,"testInfo darkBox box",divName,divName+"trace");		
 	}
 	
 	runFirstTime = function (){
@@ -59,8 +50,10 @@ $(document).on('ready',function(){
 			data: {action:'rerun',argv:getURLParams()},
 				
 			success: function(request){
-				createDiv(request['result']["projectName"],"","content","projectName");
-				createDiv(" ","totalTests greyBox box","content","");
+				projectName = request['result']["projectName"];
+				//createDiv(request['result']["projectName"],"","content","projectName");
+				createDiv("","totalTests greyBox box","content","");
+
 				updateResults(request['result'],'','');
 			},
 			error: function(request){
@@ -96,7 +89,7 @@ $(document).on('ready',function(){
 		    if (typeof existingGroup ===  "undefined") {
 		    	createDiv(group_name,"groupName","content",group_name);
 			    createDiv('','groupContent', 'content', group_name+"content");
-			    $(selector).prepend('<input type="image" src="images/run.png" title="Run group" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runTests">');
+			    $(selector).prepend('<input type="image" src="images/run_group.png" title="Run group" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runTests">');
 
 			    showGroupsInOrder(group_name);
 		    }
@@ -140,31 +133,35 @@ $(document).on('ready',function(){
 			      var divParent = idDivFolder+className;
 			      var testSelector = "#"+divName.replace(/:/g,'\\:');
 			      
-			      $(testSelector).remove();
+			      if(typeUpdate == 'test' && typeof $(testSelector).attr("id") !== "undefined"){		    
+			    	    removeOldClass(testSelector,classNameTest);
+						if (classNameTest == 'testFailed box'){
+							updateTestFailedContent(testSelector,test,info,divName);
+						}else{
+							hideSingleTest(divName);
+						}
 
-			      if (classNameTest == "testFailed box"){
-			    	 
-			    	  var failedTest = getInfoFailedTests(value,info);
-			    	  
-			    	  createDivFailedTest(test,classNameTest,divParent,divName,failedTest['file'],failedTest['line'],
-			    			  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'),failedTest['code']);
-			    	  
-			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p.nameFT";
-			    	  createRunTestButton(selector,divName);
-			    	
 			      }else{
-			    	  createDiv(test,classNameTest,divParent,divName);
-			    	  var selector = "#"+divName.replace(/:/g,'\\:')+" > p";
-			    	  createRunTestButton(selector,divName);
-			    	  if(is_hidden){
-			    		  var testSelector = "#"+divName.replace(/:/g,'\\:');
-			    		  var classSelector = "#"+$(testSelector).parent().attr("id");
-			    		  var folderSelector = "#"+$(classSelector).parent().attr("id");
-			    		  var groupSelector = "#"+$(folderSelector).parent().attr("id");
-			    		  hideElements(testSelector,classSelector,folderSelector,groupSelector);
-			    	  }
+						$(testSelector).remove();
+						if (classNameTest == "testFailed box"){
+							 
+							  var failedTest = getInfoFailedTests(value,info);
+							  
+							  createDivFailedTest(test,classNameTest,divParent,divName,failedTest['file'],failedTest['line'],
+									  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'),failedTest['code'], "margin0");
+							  
+							  var selector = "#"+divName.replace(/:/g,'\\:')+" > p.nameFT";
+							  createRunTestButton(selector,divName);
+							  
+						 }else{
+							  createDiv(test,classNameTest,divParent,divName, "margin0");
+							  var selector = "#"+divName.replace(/:/g,'\\:')+" > p";
+							  createRunTestButton(selector,divName);
+							  
+							  hideSingleTest(divName);
+						 }
 			      }
-			      
+
 		       }
 			});
 		}	
@@ -172,6 +169,38 @@ $(document).on('ready',function(){
 		checkDissapearedTests(request,typeUpdate,runSingleTest,folderName);
 	    removeSingleElements();
 		displayTotalTests();
+	}
+	
+	removeOldClass = function(testSelector,classNameTest){
+		if ($(testSelector).hasClass('testOK')){
+			$(testSelector).removeClass('testOK').addClass(classNameTest);
+		}else{
+			if ($(testSelector).hasClass('testIncomplete')){
+				$(testSelector).removeClass('testIncomplete').addClass(classNameTest);
+			}else{
+				if ($(testSelector).hasClass('testFailed')){
+					
+					$(testSelector).removeClass('testFailed box').addClass(classNameTest);
+					remove_content = testSelector+' p.fileFT,'+testSelector+' p.red,'+testSelector+' p.italic,'+testSelector+' .testInfo';
+					$(remove_content).remove();
+				}
+			}
+		}
+		$(testSelector+" p").removeClass('nameFT bold').addClass('nameNFT');
+	}
+	
+	updateTestFailedContent = function(testSelector,testName,info,divName){
+		var failedTest = getInfoFailedTests(divName,info);
+		
+		$(testSelector+" p").removeClass('nameNFT').addClass('nameFT bold');
+		$(testSelector).append('<p class="fileFT">'+failedTest['file']+'</p>');
+		$(testSelector).append('<p class="red textRight bold">'+"+"+failedTest['line']+'</p>');
+		$(testSelector).append('<p class="italic">'+failedTest['message']+
+				'<input type="image" src="images/console.png" title="Display trace" class="trace classButton" data-idtrace='+"#"+divName+"trace"+'>'+
+				'<input type="image" src="images/bullet_arrow_down1.png" title="Display code" class="code classButton" data-idcode='+"#"+divName+"code"+' data-file='+failedTest['file']+' data-line='+failedTest['line']+' data-test='+testName+'></p>');
+
+		createDiv(failedTest['code'],"testInfo greyBox box",divName,divName+"code");
+		createDiv(failedTest['trace'].replace(/#/g,'</br>#'),"testInfo darkBox box",divName,divName+"trace");
 	}
 	
 	showGroupsInOrder = function (groupName){
@@ -233,11 +262,19 @@ $(document).on('ready',function(){
 	
 	displayTotalTests = function(){
 		var total = $(".testFailed").size() + $(".testOK").size() + $(".testIncomplete").size();
-		var result = (total == 0) ? "No tests executed" : total+" test passing";
+		var result = (total == 0) ? "No tests executed" : "<strong>"+projectName+"</strong> project: "+total+" test passing";
 		$(".totalTests p").html(result);
 	    if (total != 0){
 		    $('.totalTests p').append('<input type="image" src="images/run_hover.png" title="Run All Tests" id="runAllTests" class="classButton">'
-					+'<button type="button" id="hideTestsOK">Hide/Show Passed Tests</button>');
+					+'<input type="image" src="images/hide.png" id="hideTestsOK" class="hideTests classButton">');
+		    
+	    	$("#hideTestsOK").hover(
+	    			function(){
+	    				var title = (is_hidden) ? 'Show passed tests' : 'Hide passed tests';
+	    				$(this).attr('src','images/hide_hover.png');$(this).attr('title',title);
+	    			}, 
+	    			function(){$(this).attr('src','images/hide.png');}
+	    	);
 	    }
 	}
 	
@@ -280,6 +317,16 @@ $(document).on('ready',function(){
 			}
 		});
 		return result;
+	}
+	
+	hideSingleTest = function(divName){
+		if(is_hidden){
+  		  var testSelector = "#"+divName.replace(/:/g,'\\:');
+  		  var classSelector = "#"+$(testSelector).parent().attr("id");
+  		  var folderSelector = "#"+$(classSelector).parent().attr("id");
+  		  var groupSelector = "#"+$(folderSelector).parent().attr("id");
+  		  hideElements(testSelector,classSelector,folderSelector,groupSelector);
+		}
 	}
 	
 	hideClassName = function(selector){
@@ -478,14 +525,15 @@ $(document).on('ready',function(){
 	});
 	
 
-	$( "#content" ).on('click',".groupContent .grey .black .testFailed .italic .code", function(){
-		var idCode = $(this).data('idcode');
+	$( "#content" ).on('click',".groupContent .grey .black .testFailed .code", function(){
+		var idCode = $(this).data('idcode').replace(/:/g,'\\:');
+
 		$(idCode).slideToggle();
 		
 	});
 	
-	$( "#content" ).on('click',".groupContent .grey .black .testFailed .italic .trace", function(){
-		var idTrace = $(this).data('idtrace');
+	$( "#content" ).on('click',".groupContent .grey .black .testFailed .trace", function(){
+		var idTrace = $(this).data('idtrace').replace(/:/g,'\\:');
 		$(idTrace).slideToggle();
 	});
 	
