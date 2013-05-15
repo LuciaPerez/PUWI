@@ -213,25 +213,16 @@
 }
 
 .trace{
-	
+	height:1.5em;
 }
 
 .code{
-	
+	height:2.3em;
 }
 
 .nameNFT,.nameFT{
-	line-height:25px;
+	line-height:20px;
 }
-
-
-
-/*.hideTests:hover,.hideTests:active{
-	visibility: visible;
-	overflow:visible;
-	display:block;
-	background:url(../images/hide_hover.png) no-repeat; border: none;
-}*/
 
 .nameFT{
 	width:auto;	
@@ -246,6 +237,7 @@
 .margin0{
 	margin: 0;
 	padding: 5px !important;
+	line-height: 25px;
 }
 
 .buttonTest{
