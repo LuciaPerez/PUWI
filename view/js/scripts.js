@@ -89,9 +89,11 @@ $(document).on('ready',function(){
 		    if (typeof existingGroup ===  "undefined") {
 		    	createDiv(group_name,"groupName","content",group_name);
 			    createDiv('','groupContent', 'content', group_name+"content");
-			    $(selector).prepend('<input type="image" src="images/run_group.png" title="Run group" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runTests">');
+			    $(selector).prepend('<input type="image" src="images/run_group.png" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runTests">');
 
 			    showGroupsInOrder(group_name);
+			  
+			    changeButtonsAppearance(".buttonGroup","Run group","run_group.png","run_group_hover.png");
 		    }
 		 
 		    		    
@@ -119,14 +121,18 @@ $(document).on('ready',function(){
 		    		  createDiv(folder,fName+' grey',group_name+"content",idDivFolder);
 		    		  
 			    	  var selector = "#"+idDivFolder+" > p";
-			    	  $(selector).append('<input type="image" src="images/run_folder.png" title="Run folder" class="buttonFolder classButton" data-name='+folder+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
-			      }
+			    	  $(selector).append('<input type="image" src="images/run_folder.png" class="buttonFolder classButton" data-name='+folder+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
+			    	  
+			    	  changeButtonsAppearance(".buttonFolder","Run folder","run_folder.png","run_folder_hover.png");
+		    	  }
 
 			      var divFileSelector = divFolderSelector+className;
 			      if(typeof $(divFileSelector).html() === "undefined"){
 						createDiv(className,'black margin20',idDivFolder, idDivFolder+className);
 						var selector = "#"+idDivFolder+className+" > p";
-						$(selector).append('<input type="image" src="images/run_file.png" title="Run file" class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runTests">');
+						$(selector).append('<input type="image" src="images/run_file.png" class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runTests">');
+			      
+						changeButtonsAppearance(".buttonFile","Run file","run_file.png","run_file_hover.png");
 			      }
 			      
 			      var divName = value;
@@ -169,6 +175,15 @@ $(document).on('ready',function(){
 		checkDissapearedTests(request,typeUpdate,runSingleTest,folderName);
 	    removeSingleElements();
 		displayTotalTests();
+	}
+	
+	changeButtonsAppearance = function(selector,title,image,image_hover){
+		 $(selector).hover(
+	    			function(){
+	    				$(this).attr('src',"images/"+image_hover);$(this).attr('title',title);
+	    			}, 
+	    			function(){$(this).attr('src',"images/"+image);}
+	    	);
 	}
 	
 	removeOldClass = function(testSelector,classNameTest){
@@ -265,9 +280,11 @@ $(document).on('ready',function(){
 		var result = (total == 0) ? "No tests executed" : "<strong>"+projectName+"</strong> project: "+total+" test passing";
 		$(".totalTests p").html(result);
 	    if (total != 0){
-		    $('.totalTests p').append('<input type="image" src="images/run_hover.png" title="Run All Tests" id="runAllTests" class="classButton">'
+		    $('.totalTests p').append('<input type="image" src="images/run.png" id="runAllTests" class="classButton">'
 					+'<input type="image" src="images/hide.png" id="hideTestsOK" class="hideTests classButton">');
 		    
+
+		    changeButtonsAppearance("#runAllTests","Run all tests","run.png","run_hover.png");
 	    	$("#hideTestsOK").hover(
 	    			function(){
 	    				var title = (is_hidden) ? 'Show passed tests' : 'Hide passed tests';
@@ -291,7 +308,9 @@ $(document).on('ready',function(){
 	}
 	
 	createRunTestButton = function (selector,divName){
-		$(selector).append('<input type="image" src="images/run.png" title="Run test" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTests">');
+		$(selector).append('<input type="image" src="images/run.png" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTests">');
+	
+		changeButtonsAppearance(".buttonTest","Run test","run.png","run_hover.png");
 	}
 
 	removeSingleElements = function (){
