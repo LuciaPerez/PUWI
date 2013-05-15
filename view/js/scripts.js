@@ -1,8 +1,6 @@
 
 $(document).on('ready',function(){
 
-
-	
 	var is_hidden = false;
 	var projectName;
 	
@@ -33,10 +31,10 @@ $(document).on('ready',function(){
 		    html: '<p class="nameFT bold '+pClass+'">'+contentDiv+'</p>'+'<p class="fileFT left">'+file+'</p>'+'<p class="red textRight bold">+'+line+'</p>'
 		          +'<p class="italic">'+message
 		          +'<input type="image" src="images/console.png" title="Display trace" class="trace classButton" data-idtrace='+"#"+divName+"trace"+'>'
-		          +'<input type="image" src="images/bullet_arrow_down1.png" title="Display code" class="code classButton" data-idcode='+"#"+divName+"code"+' data-file='+file+' data-line='+line+' data-test='+contentDiv+'></p>'
+		          +'<input type="image" src="images/bullet_arrow_down1.png" class="code classButton" data-idcode='+"#"+divName+"code"+' data-file='+file+' data-line='+line+' data-test='+contentDiv+'></p>'
 		         
 		}).appendTo(divParent);
-
+		changeButtonsAppearance(".code","Display test code","bullet_arrow_down1.png","arrow_down_hover.png");
 		createDiv(code,"testInfo greyBox box",divName,divName+"code");
 		createDiv(trace,"testInfo darkBox box",divName,divName+"trace");		
 	}
@@ -83,7 +81,6 @@ $(document).on('ready',function(){
 
 		for (var group_name in groups) {
 		    var selector = "#"+group_name+" > p";
-
 	    	var existingGroup = $(selector).html();
 
 		    if (typeof existingGroup ===  "undefined") {
@@ -91,12 +88,10 @@ $(document).on('ready',function(){
 			    createDiv('','groupContent', 'content', group_name+"content");
 			    $(selector).prepend('<input type="image" src="images/run_group.png" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runTests">');
 
-			    showGroupsInOrder(group_name);
-			  
+			    showGroupsInOrder(group_name);		  
 			    changeButtonsAppearance(".buttonGroup","Run group","run_group.png","run_group_hover.png");
 		    }
-		 
-		    		    
+		    
 		    $.each(groups[group_name], function(key, value) {
 				separated_values = value.split("::"); 
 				var className = separated_values[0];
