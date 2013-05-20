@@ -1,16 +1,19 @@
 <?php
 include_once 'PUWI_UtilFilter.php';
 class PUWI_LaunchBrowser{
-
+	
+	/**
+	 * @var array
+	 */
 	private $infoFailedTests = array(); 
 
 
-	/*
+	/**
 	*@param integer $totalTests
 	*@param string  $projectName
 	*/
 
-	public function launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$argv){
+	/*public function launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$argv){
 		
 		$passed = $this->send_array($passed); 
 		$failures = $this->send_array($failures);
@@ -38,8 +41,18 @@ class PUWI_LaunchBrowser{
 		$command="x-www-browser ".$url." &";
 		system($command);
 
-	}
-
+	}*/
+	
+	/**
+	 * Get all data about tests executed
+	 * 
+	 * @param string $projectName
+	 * @param string $result
+	 * @param array $folders
+	 * @param boolean $new <================================================
+	 * @param array $argv
+	 * @return array
+	 */
 	public function getResults($projectName,$result,$folders,$new,$argv){
 		$totalTests = $result->count();
 		$projectName = $this->getProjectName($projectName);
@@ -54,9 +67,9 @@ class PUWI_LaunchBrowser{
 		$groups = $result->topTestSuite()->getGroups();
 		$groups = $this->getGroups($groups_details,$groups);
 		
-		if ($new == TRUE){
+	/*	if ($new == TRUE){
 			$this->launchBrowser($totalTests,$projectName,$passed,$failures,$errors,$incomplete,$skipped,$groups,$folders,$argv);
-		}else{
+		}else{*/
 			return array("argv" => $argv,
 						"projectName" => $projectName,
 						 "totalTests" => $totalTests,
@@ -69,10 +82,17 @@ class PUWI_LaunchBrowser{
 						 "groups" => $groups,
 						 "folders" => $folders,
 						 "failedTests" => $this->infoFailedTests);
-		}
+	//	}
 
 	}
 
+	/**
+	 * Get groups of tests
+	 * 
+	 * @param array $groups_details
+	 * @param array $groups
+	 * @return array
+	 */
 	function getGroups($groups_details,$groups){
 	
 		$index=0;
@@ -95,13 +115,18 @@ class PUWI_LaunchBrowser{
 		krsort($arrayResult);
 		return $arrayResult;
 	}
-
+/*
 	function send_array($array) { 
 	    $tmp = serialize($array); 
 	    $tmp = urlencode($tmp); 
 	    return $tmp; 
 	}
-	
+	*/
+	/**
+	 * Get project name from the full path
+	 * 
+	 * @param string $projectName
+	 */
 	public function getProjectName($projectName){
 		$projectName=explode("/",$projectName);
 		$size=sizeof($projectName);
@@ -109,30 +134,66 @@ class PUWI_LaunchBrowser{
 		return $projectName[$size-2];
 	}
 
+	/**
+	 * Get tests passed
+	 * 
+	 * @param PHPUnit_Framework_TestResult $result
+	 * @return array $passed
+	 */
 	function getTestsPassed(PHPUnit_Framework_TestResult $result){
 		$r=$result->passed();
 		$passed=array_keys($r);
-		return($passed);
+		return $passed;
 	} 
 
+	/**
+	 * Get tests failed
+	 * 
+	 * @param PHPUnit_Framework_TestResult $result
+	 * @return array
+	 */
 	function getTestsFailed(PHPUnit_Framework_TestResult $result){
 		$fail=$result->failures();
 		$this->getFails($fail,false);
-		return($this->getClassAndNameTest($fail));
+		return $this->getClassAndNameTest($fail);
 	}
-
+	
+	/**
+	 * Get tests error
+	 * 
+	 * @param PHPUnit_Framework_TestResult $result
+	 * @return array
+	 */
 	function getTestsError(PHPUnit_Framework_TestResult $result){
 		return($this->getClassAndNameTest($result->errors()));
 	}
-
+	
+	/**
+	 * Get tests incomplete
+	 *
+	 * @param PHPUnit_Framework_TestResult $result
+	 * @return array
+	 */
 	function getTestsIncompleted(PHPUnit_Framework_TestResult $result){
 		return($this->getClassAndNameTest($result->notImplemented()));
 	}
 
+	/**
+	 * Get tests skipped
+	 *
+	 * @param PHPUnit_Framework_TestResult $result
+	 * @return array
+	 */
 	function getTestsSkipped(PHPUnit_Framework_TestResult $result){
 		return($this->getClassAndNameTest($result->skipped()));
 	}
 	
+	/**
+	 * Get class and name belongs to every test
+	 *
+	 * @param array $tests
+	 * @return array $result
+	 */
 	function getClassAndNameTest(array $tests){
 		$result = array();
 		foreach ($tests as $test){
@@ -142,9 +203,16 @@ class PUWI_LaunchBrowser{
 			$fullName=$class."::".$name;
 			array_push($result,$fullName);
 		}
-		return($result);
+		return $result;
 	}
 
+	/**
+	 * Get information about a failed test
+	 * 
+	 * @param array $fail
+	 * @param boolean $singleTest
+	 * @return array $infoEachTest
+	 */
 	function getFails(array $fail, $singleTest){
 		$infoEachTest = array();
 
@@ -175,6 +243,14 @@ class PUWI_LaunchBrowser{
 		}
 	}
 	
+	/**
+	 * Search code of a test 
+	 * 
+	 * @param string $file
+	 * @param string $test
+	 * @param string $line
+	 * @return string $code
+	 */
 	function getCode($file,$test,$line){
 		$file_to_open = fopen ($file, "r");
 		$testName = substr(strstr($test, ':'),2);

@@ -249,3 +249,7 @@
 .fileFT{
 	float:left;
 }
+
+.isHidden{
+	display: none;
+}
