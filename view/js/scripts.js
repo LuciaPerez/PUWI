@@ -92,10 +92,8 @@ $(document).on('ready',function(){
 		hideGroupName(groupSelector);
 		hideFolderName(folderSelector);
 		hideClassName(classSelector);
-		//$(testSelector).slideToggle();
 
 		changeHiddenClass(testSelector);
-		alert("entra");
 	}
 	
 	/**
@@ -105,13 +103,10 @@ $(document).on('ready',function(){
 	hideGroupName = function(selector){
 		$(selector).each(function(){
 			if(!$(this).children().children().children().hasClass('testFailed')){
-				/*$(this).slideToggle();
-				$(this).parent().prev("p").slideToggle();*/
 				changeHiddenClass("#"+$(this).attr("id"));
 				changeHiddenClass("#"+$(this).prev().attr("id"));
 			}
 		});
-		//changeHiddenClass(selector);
 	}
 	
 	/**
@@ -121,8 +116,6 @@ $(document).on('ready',function(){
 	hideFolderName = function(selector){
 		$(selector).each(function(){
 			if(!$(this).children().children().hasClass('testFailed')){
-				//$(this).slideToggle();
-				
 				changeHiddenClass("#"+$(this).attr("id"));
 			}
 		});
@@ -135,7 +128,6 @@ $(document).on('ready',function(){
 	hideClassName = function(selector){
 		$(selector).each(function(){
 			if(!$(this).children().hasClass('testFailed')){
-				//$(this).slideToggle();
 				changeHiddenClass("#"+$(this).attr("id"));
 			}
 		});
@@ -147,14 +139,11 @@ $(document).on('ready',function(){
 	 * @param string selector
 	 */
 	changeHiddenClass = function(selector){
-		var className;
-		//alert("CHANGE: "+selector)
 		if ($(selector).hasClass("isHidden") && !is_hidden){
 			$(selector).removeClass('isHidden').addClass('isNoHidden');
 		}else{
 			$(selector).removeClass('isNoHidden').addClass('isHidden');
 		}
-		//return className;
 	}
 	
 	/**
@@ -172,6 +161,17 @@ $(document).on('ready',function(){
 	}
 	
 	/**
+	 * Show a failed test if it's hidden after rerun it
+	 */
+	showFaildedTest = function(selector){
+		 set_isHidden();
+ 		 if ($(selector).hasClass('isHidden')){
+ 			changeHiddenClass(selector);
+ 		 }
+ 		  set_isHidden();
+	}
+	
+	/**
 	 * Remove all showed elements and show results again
 	 */
 	runAllTests = function(){
@@ -180,7 +180,7 @@ $(document).on('ready',function(){
 	}
 	
 	/**
-	 * Get results of run tests from a project
+	 * Get results of running tests from a project
 	 */
 	runFirstTime = function (){
 		$.ajax({
@@ -362,8 +362,6 @@ $(document).on('ready',function(){
 		folders = request["folders"];
 		info = request["failedTests"];
 
-		//createDiv(contentDiv,className,divParent,divName)
-
 		for (var group_name in groups) {
 		    var selector = "#"+group_name+" > p";
 	    	var existingGroup = $(selector).html();
@@ -427,20 +425,11 @@ $(document).on('ready',function(){
 							
 						}else{
 							if(runSingleTest !=  '' || folderName != ''){
-								alert("ENTRA 1");
 								hideSingleTest(divName);
 							}
 						}
 
 			      }else{
-			    	  /* if (is_hidden && $(testSelector).hasClass('isHidden') && classNameTest == 'testFailed box'){
-			    		   var classSelector = "#"+$(testSelector).parent().attr("id");
-			   			alert("PRUEBA: "+classSelector);
-			     		  var folderSelector = "#"+$(classSelector).parent().attr("id");
-			     		  var groupSelector = "#"+$(folderSelector).parent().attr("id");
-			     		  
-			     		  hideClassName(classSelector);
-			    	   }*/
 			    	   var testIsHidden = ($(testSelector).hasClass('isHidden')) ? true : false;
 						$(testSelector).remove();
 						if (classNameTest == 'testFailed box'){
@@ -452,25 +441,22 @@ $(document).on('ready',function(){
 							  var selector = testSelector+" > p.nameFT";
 							  createRunTestButton(selector,divName);
 							  if (testIsHidden){
-								  set_isHidden();
 								  var classSelector = "#"+$(testSelector).parent().attr("id");
-					   			  alert("PRUEBA: "+classSelector);
-					     		 // var folderSelector = "#"+$(classSelector).parent().attr("id");
-					     		 // var groupSelector = "#"+$(folderSelector).parent().attr("id");
-						     		  
-					     		 changeHiddenClass(classSelector);
-					     		 alert("Deberia cambiar");
-					     		set_isHidden();
+						 		  var folderSelector = "#"+$(classSelector).parent().attr("id");
+						 		  var groupSelector = "#"+$(folderSelector).parent().attr("id");
+						 	      var groupNameSelector = "#"+$(folderSelector).parent().prev().attr("id");
+								  showFaildedTest(classSelector);
+								  showFaildedTest(folderSelector);
+								  showFaildedTest(groupSelector);
+								  showFaildedTest(groupNameSelector);
 							  }
 						 }else{
-							  //classNameTest += class_isHidden;
 							  classNameTest += ' isNoHidden';
 							  createDiv(test,classNameTest,divParent,divName, "margin0");
 							  var selector = "#"+divName.replace(/:/g,'\\:')+" > p";
 							  createRunTestButton(selector,divName);
 							  
 							 if(runSingleTest !=  '' || folderName != ''){
-								  alert("ENTRA 2");
 									hideSingleTest(divName);
 							  }
 						 }
@@ -486,7 +472,6 @@ $(document).on('ready',function(){
 	    removeSingleElements();
 		displayTotalTests();
 		if(runSingleTest ==  '' && folderName == '' && is_hidden){
-			alert("ENTRA 3");
 			hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent");
 	    }
 	}
