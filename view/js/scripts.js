@@ -139,42 +139,36 @@ $(document).on('ready',function(){
 	 * @param string selector
 	 */
 	changeHiddenClass = function(selector){
-		if ($(selector).hasClass("isHidden") && !is_hidden){
-			$(selector).removeClass('isHidden').addClass('isNoHidden');
+		if (is_hidden){
+			if ($(selector).hasClass("isNoHidden")){
+				$(selector).removeClass('isNoHidden').addClass('isHidden');
+			}
 		}else{
-			$(selector).removeClass('isNoHidden').addClass('isHidden');
+			if ($(selector).hasClass("isHidden")){
+				$(selector).text();
+				$(selector).removeClass('isHidden').addClass('isNoHidden');
+			}
 		}
 	}
 	
 	/**
-	 * Hide a single test if hide elements is activated
-	 */
-	hideSingleTest = function(divName){
-		var testSelector = "#"+divName.replace(/:/g,'\\:');
-		
-		if(is_hidden){
-  		  var classSelector = "#"+$(testSelector).parent().attr("id");
-  		  var folderSelector = "#"+$(classSelector).parent().attr("id");
-  		  var groupSelector = "#"+$(folderSelector).parent().attr("id");
-  		  hideElements(testSelector,classSelector,folderSelector,groupSelector);
-		}
-	}
-	
-	/**
-	 * Show a failed test if it's hidden after rerun it
+	 * Show only failed tests or all of them if there isn't any failed test
 	 */
 	showFaildedTest = function(selector){
-		 set_isHidden();
- 		 if ($(selector).hasClass('isHidden')){
- 			changeHiddenClass(selector);
- 		 }
- 		  set_isHidden();
+		if ($("#content .groupContent .grey .black").children().hasClass('testFailed')){
+			is_hidden = true;
+			hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent");
+		}else{
+			is_hidden = false;
+			hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent");
+		}
 	}
 	
 	/**
-	 * Remove all showed elements and show results again
+	 * Remove all the showed elements and show results again
 	 */
 	runAllTests = function(){
+		is_hidden = false;
 		$("#content").empty();
 		runFirstTime();
 	}
@@ -190,7 +184,7 @@ $(document).on('ready',function(){
 		    async: true,	
 			data: {action:'rerun',argv:getURLParams()},
 				
-			success: function(request){
+			success: function(request){	
 				projectName = request['result']["projectName"];
 				createDiv("","totalTests greyBox box","content","");
 
@@ -252,6 +246,7 @@ $(document).on('ready',function(){
 		    async: true,	
 			data: {action:action,name:nameRun,argv:getURLParams(),type:typeRun},
 			success:function(request){
+				is_hidden = false;
 				is_empty = checkEmptyResults(request['result']);
 				switch (typeRun){
 					case "file":
@@ -421,15 +416,8 @@ $(document).on('ready',function(){
 
 						if (classNameTest == 'testFailed box'){
 							updateTestFailedContent(testSelector,test,info,divName);
-							
-						}else{
-							if(runSingleTest !=  '' || folderName != ''){
-								hideSingleTest(divName);
-							}
 						}
-
 			      }else{
-			    	   var testIsHidden = ($(testSelector).hasClass('isHidden')) ? true : false;
 						$(testSelector).remove();
 						if (classNameTest == 'testFailed box'){
 							  var failedTest = getInfoFailedTests(value,info);
@@ -439,25 +427,11 @@ $(document).on('ready',function(){
 							  
 							  var selector = testSelector+" > p.nameFT";
 							  createRunTestButton(selector,divName);
-							  if (testIsHidden){
-								  var classSelector = "#"+$(testSelector).parent().attr("id");
-						 		  var folderSelector = "#"+$(classSelector).parent().attr("id");
-						 		  var groupSelector = "#"+$(folderSelector).parent().attr("id");
-						 	      var groupNameSelector = "#"+$(folderSelector).parent().prev().attr("id");
-								  showFaildedTest(classSelector);
-								  showFaildedTest(folderSelector);
-								  showFaildedTest(groupSelector);
-								  showFaildedTest(groupNameSelector);
-							  }
 						 }else{
 							  classNameTest += ' isNoHidden';
 							  createDiv(test,classNameTest,divParent,divName, "margin0");
 							  var selector = "#"+divName.replace(/:/g,'\\:')+" > p";
 							  createRunTestButton(selector,divName);
-							  
-							 if(runSingleTest !=  '' || folderName != ''){
-									hideSingleTest(divName);
-							  }
 						 }
 
 			      }
@@ -471,14 +445,8 @@ $(document).on('ready',function(){
 	    removeSingleElements();
 		displayTotalTests();
 
-		if(runSingleTest ==  '' && folderName == '' && is_hidden){
-			hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent");
-	    }
-		
-		if ($("#content .groupContent .grey .black").children().hasClass('testFailed')){
-			is_hidden = true;
-			hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent");
-		}
+		showFaildedTest();
+
 	}
 
 	/**
