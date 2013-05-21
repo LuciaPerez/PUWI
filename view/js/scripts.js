@@ -192,7 +192,6 @@ $(document).on('ready',function(){
 				
 			success: function(request){
 				projectName = request['result']["projectName"];
-				//createDiv(request['result']["projectName"],"","content","projectName");
 				createDiv("","totalTests greyBox box","content","");
 
 				updateResults(request['result'],'','');
@@ -471,9 +470,15 @@ $(document).on('ready',function(){
 		checkDissapearedTests(request,typeUpdate,runSingleTest,folderName);
 	    removeSingleElements();
 		displayTotalTests();
+
 		if(runSingleTest ==  '' && folderName == '' && is_hidden){
 			hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent");
 	    }
+		
+		if ($("#content .groupContent .grey .black").children().hasClass('testFailed')){
+			is_hidden = true;
+			hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent");
+		}
 	}
 
 	/**
