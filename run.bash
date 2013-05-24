@@ -19,8 +19,14 @@ function parseConfig {
 		checkVarInLine "$line"
 		[ "$isDep" == "yes" ] && theCommand=$theCommand:$( getWord "$line" 3 )
 	done < $scriptDir/config.ini
+
+	echo $theCommand:$phpDir
+	echo "------------------------------------------"
+	echo $phpDir
+
+	#echo $theCommand:$phpDir >>  
 }
 
+parseConfig
 
-
-main $@
+#main $@

@@ -12,13 +12,10 @@ function load_dep {
 
 [ -d $scriptDir/vendor ] || mkdir $scriptDir/vendor
 
-if [ $# -gt 0 ];
-	then echo -e "Loading dependencies..."
-	for dep in $@
-	do	
-		load_dep ${dep}
-	done
-fi
+echo -e "Loading dependencies..."
+
+curl -sS https://getcomposer.org/installer | php
+php composer.phar install
 
 
 

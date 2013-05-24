@@ -1,20 +1,22 @@
 [paths]
 
-pathAutoload = ./vendor/phpunit/PHPUnit/Autoload.php
-pathPear = /usr/share/php
-pathWWW = /var/www/puwi/
+pathAutoload = /opt/lampp/htdocs/PUWI/vendor/phpunit/phpunit/PHPUnit/Autoload.php
+
+serverDirectory = /opt/lampp/
+pubDirectory = /opt/lampp/htdocs/
+runService = /opt/lampp/lampp
 
 [dependencies]
 
-pathPhpunit = ./vendor/phpunit/ 
-pathDbunit = ./vendor/dbunit/
-pathCodeCoverage = ./vendor/php-code-coverage/
-pathFileIterator = ./vendor/php-file-iterator/
-pathInvoker = ./vendor/php-invoker/
-pathTextTemplate = ./vendor/php-text-template/
-pathTimer = ./vendor/php-timer
-pathTokenStream = ./vendor/php-token-stream
-pathMockObjects = ./vendor/phpunit-mock-objects/
-pathSelenium = ./vendor/phpunit-selenium/
-pathStory = ./vendor/phpunit-story/
-pathVersion = ./vendor/version
+pathPhpunit = vendor/phpunit/phpunit/ 
+pathDbunit = vendor/phpunit/dbunit/
+pathCodeCoverage = vendor/phpunit/php-code-coverage/
+pathFileIterator = vendor/phpunit/php-file-iterator/
+pathInvoker = vendor/phpunit/php-invoker/
+pathTextTemplate = vendor/phpunit/php-text-template/
+pathTimer = vendor/phpunit/php-timer
+pathTokenStream = vendor/phpunit/php-token-stream
+pathMockObjects = vendor/phpunit/phpunit-mock-objects/
+pathSelenium = vendor/phpunit/phpunit-selenium/
+pathStory = vendor/phpunit/phpunit-story/
+pathVersion = vendor/phpunit/version

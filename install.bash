@@ -1,6 +1,7 @@
 #!/bin/bash
 
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+phpDir=`pear config-show 2> /dev/null | grep php_dir | awk '{print $NF}'`
 
 . $scriptDir/functions.bash
 . $scriptDir/bash/messages.bash
@@ -12,12 +13,15 @@ end_with_ok
 
 function main {
 	read_config
-	if [ ${#vendor_deps[@]} -eq 0 ]; 
-		then 
-		echo "You don't have any available dependency to load in the default location. Review your config file ($scriptDir/config.ini)"
-	else $scriptDir/load_deps.bash ${vendor_deps[*]} 
-	fi
-	
+
+	$scriptDir/load_deps.bash 
+
+	cp -r $scriptDir/. $pubDirectory
+
+	echo $theCommand:$phpDir"\"" >> `find $serverDirectory -name php.ini 2>/dev/null` 
+	echo -e "Restarting server to update php.ini configuration...\n"
+	$runService restart
+
 	createAlias
 }
 
@@ -25,32 +29,34 @@ function read_config {
 	regex="^.*\/vendor\/.*"
 	
 	while read line
-		do 
+	do 
 		checkEnterSection && checkEnterDeps
 		path=`echo $line | awk '{print $3}'`
 		
-		if  [ "$inDeps" == "yes" ] && [[ $path =~ $regex ]]; 
-			then 
-			searchDepsName $path
-		else 
-			key=`echo $line | awk '{print $1}'`
-			searchPathWWW $key $path
-
-		fi
+		key=`echo $line | awk '{print $1}'`
+		searchServerInformation $key $path
 	done < $scriptDir/config.ini
-
-}
-wwwDir=""
-function searchPathWWW {
-	[ "$1" == "pathWWW" ] && wwwDir=$2
-	cp -r $scriptDir/view $wwwDir
-}
-
-function searchDepsName {
 	
-	dep=`echo $1 | cut -d"/" -f3`
-	index=`echo ${#vendor_deps[@]}`
-	vendor_deps[$index]=$dep
+	parseConfig
+}
+
+serverDirectory=""
+pubDirectory=""
+runService=""
+function searchServerInformation {
+	[ "$1" == "serverDirectory" ] && serverDirectory=$2
+	[ "$1" == "pubDirectory" ] && pubDirectory=$2"PUWI/"
+	[ "$1" == "runService" ] && runService=$2
+}
+
+function parseConfig {
+	theCommand='include_path=".'
+	while read line
+	do 
+		checkEnterSection && checkEnterDeps
+		checkVarInLine "$line"
+		[ "$isDep" == "yes" ] && theCommand=$theCommand:$pubDirectory$( getWord "$line" 3 )	
+	done < $scriptDir/config.ini
 }
 
 function createAlias {	
