@@ -7,13 +7,15 @@ phpDir=`pear config-show 2> /dev/null | grep php_dir | awk '{print $NF}'`
 . $scriptDir/bash/messages.bash
 
 
-echo -e "\nLoading configuration...\n"
-cp $scriptDir/config.ini.inc $scriptDir/config.ini
-end_with_ok 
-
 function main {
+
+	echo -e "\nLoading configuration...\n"
+	cp $scriptDir/config.ini.inc $scriptDir/config.ini
+	end_with_ok 
+
 	read_config
 
+	addPathAutoload
 	$scriptDir/load_deps.bash 
 
 	cp -r $scriptDir/. $pubDirectory
@@ -57,6 +59,11 @@ function parseConfig {
 		checkVarInLine "$line"
 		[ "$isDep" == "yes" ] && theCommand=$theCommand:$pubDirectory$( getWord "$line" 3 )	
 	done < $scriptDir/config.ini
+}
+
+function addPathAutoload {
+	pathAutoload="pathAutoload = "$pubDirectory"vendor/phpunit/phpunit/PHPUnit/Autoload.php";
+	echo $pathAutoload >> ./config.ini 
 }
 
 function createAlias {	
