@@ -7,14 +7,14 @@ PhpUnit Web Interface
 1. Download the project from the URL:   
   `git clone url_to_clone/puwi.git`
 
-2. If you want to use your own PHPUnit dependencies, modify the default location in the config file:  
-  `~/puwi/config.ini`    
-  It's also necessary to verify PEAR location.  
-  `pear config-show | grep php_dir`  
-  By default: */usr/share/php*. If it's different, it's necessary to change this parameter in *config.ini*.
+2. Firs of all, it's necessary to check in `~/PUWI/config.ini.inc` the following locations:
+
+serverDirectory is the directory where *php.ini* file is located
+pubDirectory is the location where files are published at the web server
+runService indicates the location of the service which must be restarted after modify *php.ini* file.
 
     2.1. Dependencies.
-    The following dependencies are to install:
+    The following dependencies will be installed:
     * phpunit
     * dbunit
     * php-code-coverage
@@ -27,9 +27,9 @@ PhpUnit Web Interface
     * phpunit-selenium
     * phpunit-story  
     
-    The default location to install these dependencies is */vendor*.
+    The default location to install these dependencies is *PUWI/vendor/*.
     
-3. Execute the installation script:   `~/puwi/install.bash`
+3. Execute the installation script:   `sudo ~/PUWI/install.bash`
 
 ### Running tests
 To execute tests from a project using PUWI, execute *puwi* command in your project location.
