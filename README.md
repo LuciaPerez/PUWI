@@ -5,15 +5,15 @@ PhpUnit Web Interface
 
 ### Installing PUWI
 1. Download the project from the URL:   
-  `git clone url_to_clone/puwi.git`
+  `git@github.com:LuciaPerez/PUWI.git`
 
 2. Firs of all, it's necessary to check in `~/PUWI/config.ini.inc` the following locations:
 
-*serverDirectory* is the directory where *php.ini* file is located
+**serverDirectory** is the directory where *php.ini* file is located
 
-*pubDirectory* is the location where files are published at the web server
+**pubDirectory** is the location where files are published at the web server
 
-*runService* indicates the location of the service which must be restarted after modify *php.ini* file.
+**runService** indicates the location of the service which must be restarted after modify *php.ini* file.
 
     2.1. Dependencies.
     The following dependencies will be installed:
@@ -33,7 +33,7 @@ PhpUnit Web Interface
     
     The default location to install these dependencies is *PUWI/vendor/*.
     
-3. Execute the installation script:   `sudo ~/PUWI/install.bash`
+3. Execute the installation script:  `sudo ~/PUWI/install.bash`
 
 ### Running tests
 To execute tests from a project using PUWI, execute *puwi* command in your project location.
