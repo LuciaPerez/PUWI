@@ -13,7 +13,7 @@
 		"phpunit/phpunit-story": "1.0.1",
 		"symfony/yaml": "~2.0",
 		"sebastian/version": ">=1.0.0"	
-	}
+	},
 	
 	"include-path": [
         "",
