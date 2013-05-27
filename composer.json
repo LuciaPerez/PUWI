@@ -14,5 +14,10 @@
 		"symfony/yaml": "~2.0",
 		"sebastian/version": ">=1.0.0"	
 	}
+	
+	"include-path": [
+        "",
+        "../../symfony/yaml/"
+    ]
 
 }
