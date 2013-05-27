@@ -1,11 +1,3 @@
-[paths]
-
-pathAutoload = /opt/lampp/htdocs/PUWI/vendor/phpunit/phpunit/PHPUnit/Autoload.php
-
-serverDirectory = /opt/lampp/
-pubDirectory = /opt/lampp/htdocs/
-runService = /opt/lampp/lampp
-
 [dependencies]
 
 pathPhpunit = vendor/phpunit/phpunit/ 
@@ -20,3 +12,10 @@ pathMockObjects = vendor/phpunit/phpunit-mock-objects/
 pathSelenium = vendor/phpunit/phpunit-selenium/
 pathStory = vendor/phpunit/phpunit-story/
 pathVersion = vendor/phpunit/version
+
+[paths]
+
+serverDirectory = /opt/lampp/
+pubDirectory = /opt/lampp/htdocs/
+runService = /opt/lampp/lampp
+
