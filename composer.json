@@ -12,10 +12,5 @@
 		"phpunit/phpunit-selenium": "1.2.12",
 		"phpunit/phpunit-story": "1.0.1",
 		"sebastian/version": ">=1.0.0"	
-	},
-	
-	"include-path": [
-		"vendor/symfony/yaml/"
-	]
-
+	}
 }
