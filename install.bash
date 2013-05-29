@@ -57,12 +57,12 @@ function parseConfig {
 	do 
 		checkEnterSection && checkEnterDeps
 		checkVarInLine "$line"
-		[ "$isDep" == "yes" ] && theCommand=$theCommand:$pubDirectory$( getWord "$line" 3 )	
+		[ "$isDep" == "yes" ] && theCommand=$theCommand:$( getWord "$line" 3 )	
 	done < $scriptDir/config.ini
 }
 
 function addPathAutoload {
-	pathAutoload="pathAutoload = "$pubDirectory"vendor/phpunit/phpunit/PHPUnit/Autoload.php";
+	pathAutoload="pathAutoload = vendor/phpunit/phpunit/PHPUnit/Autoload.php";
 	echo $pathAutoload >> ./config.ini 
 }
 
