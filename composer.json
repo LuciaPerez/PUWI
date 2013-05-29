@@ -11,13 +11,11 @@
 		"phpunit/phpunit-mock-objects": "1.2.3",
 		"phpunit/phpunit-selenium": "1.2.12",
 		"phpunit/phpunit-story": "1.0.1",
-		"symfony/yaml": "~2.0",
 		"sebastian/version": ">=1.0.0"	
 	},
 	
 	"include-path": [
-        "",
-        "../../symfony/yaml/"
-    ]
+		"vendor/symfony/yaml/"
+	]
 
 }
