@@ -12,6 +12,7 @@ pathMockObjects = vendor/phpunit/phpunit-mock-objects/
 pathSelenium = vendor/phpunit/phpunit-selenium/
 pathStory = vendor/phpunit/phpunit-story/
 pathVersion = vendor/phpunit/version
+pathSymfony = vendor/symfony/yaml
 
 [paths]
 
