@@ -69,7 +69,7 @@ function addPathAutoload {
 function createAlias {	
 	if [[ `grep "^alias puwi=" ~/.bashrc` = "" ]]
 	then
-		echo 'alias puwi='$pubDirectory'/launch_project.bash' >> ~/.bashrc && . ~/.bashrc 
+		echo 'alias puwi='$pubDirectory'launch_project.bash' >> ~/.bashrc && . ~/.bashrc 
 	fi
 }
 
