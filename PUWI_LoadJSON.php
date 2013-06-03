@@ -1,17 +1,17 @@
 <?php	
 	include_once 'PUWI_Command.php';
-	//$action = $_POST['action'];
-	$action = 'rerun';
+	$action = $_POST['action'];
+	//$action = 'rerun';
 	switch($action)
 	{
 		case 'rerun':
-			/*$URLParams = $_POST['argv'];
+			$URLParams = $_POST['argv'];
 			$URLParams[0] = $URLParams[0]."/PUWI_Command.php";
-			$URLParams[1] = $URLParams[1]."/";*/
+			$URLParams[1] = $URLParams[1]."/";
 			
 			$runner = new PUWI_Command;
-			//$argv=array($URLParams[0],$URLParams[1]);
-			$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/PUWI/");
+			$argv=array($URLParams[0],$URLParams[1]);
+			//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/PUWI/");
 			$results = $runner->run($argv,FALSE);
 
 			sendData($results);
@@ -43,8 +43,8 @@
 	 */
 	function sendData($results){
 		$array = array('result' => $results);
-		print_r($array);
-		//echo json_encode($array);
+		//print_r($array);
+		echo json_encode($array);
 	}
 	
 	/**
