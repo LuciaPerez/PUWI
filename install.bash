@@ -20,11 +20,10 @@ function main {
 
 	cp -r $scriptDir/. $pubDirectory
 
-	echo $theCommand:$phpDir"\"" >> `find $serverDirectory -name php.ini 2>/dev/null` 
-	echo -e "Restarting server to update php.ini configuration...\n"
-	$runService restart
+	addIncludePath
 
 	createAlias
+	echo -e "\nNow you can use <puwi> command in your PHP projects!\n"
 }
 
 function read_config {
@@ -64,6 +63,16 @@ function parseConfig {
 function addPathAutoload {
 	pathAutoload="pathAutoload = vendor/phpunit/phpunit/PHPUnit/Autoload.php";
 	echo $pathAutoload >> ./config.ini 
+}
+
+function addIncludePath {
+	phpIniLocation=`find $serverDirectory -name php.ini 2>/dev/null`
+	if [[ `grep "^include_path=\".:vendor\/phpunit" $phpIniLocation` = "" ]]
+	then
+		echo $theCommand:$phpDir"\"" >> $phpIniLocation
+		echo -e "Restarting server to update php.ini configuration...\n"
+		$runService restart
+	fi
 }
 
 function createAlias {	
