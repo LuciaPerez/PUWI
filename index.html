@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Puwi : PhpUnit Web Interface" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Puwi</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/LuciaPerez/PUWI">View on GitHub</a>
+
+          <h1 id="project_title">Puwi</h1>
+          <h2 id="project_tagline">PhpUnit Web Interface</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/LuciaPerez/PUWI/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/LuciaPerez/PUWI/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="puwi" class="anchor" href="#puwi"><span class="octicon octicon-link"></span></a>PUWI</h1>
+
+<h2>
+<a name="phpunit-web-interface" class="anchor" href="#phpunit-web-interface"><span class="octicon octicon-link"></span></a>PhpUnit Web Interface</h2>
+
+<h3>
+<a name="installing-puwi" class="anchor" href="#installing-puwi"><span class="octicon octicon-link"></span></a>Installing PUWI</h3>
+
+<ol>
+<li><p>Download the project from the URL:<br><code>git@github.com:LuciaPerez/PUWI.git</code></p></li>
+<li>
+<p>Firs of all, it's necessary to check in <code>~/PUWI/config.ini.inc</code> the following locations:</p>
+
+<p><strong>serverDirectory</strong> is the directory where <em>php.ini</em> file is located</p>
+
+<p><strong>pubDirectory</strong> is the location where files are published at the web server</p>
+
+<p><strong>runService</strong> indicates the location of the service which must be restarted after modify <em>php.ini</em> file.</p>
+
+<p>2.1. Dependencies.
+The following dependencies will be installed:</p>
+
+<ul>
+<li>phpunit 3.7.13</li>
+<li>dbunit 1.2.2</li>
+<li>php-code-coverage 1.2.7</li>
+<li>php-file-iterator 1.3.3</li>
+<li>php-invoker 1.1.2</li>
+<li>php-text-template 1.1.4</li>
+<li>php-timer 1.0.4</li>
+<li>php-token-stream 1.1.5</li>
+<li>phpunit-mock-objects 1.2.3</li>
+<li>phpunit-selenium 1.2.12</li>
+<li>phpunit-story  1.0.1
+*sebastian/version &gt;= 1.0.0
+*symfony/yaml ~2.0</li>
+</ul>
+<p>The default location to install these dependencies is <em>PUWI/vendor/</em>.</p>
+</li>
+<li><p>Execute the installation script:  <code>sudo ~/PUWI/install.bash</code></p></li>
+</ol><h3>
+<a name="running-tests" class="anchor" href="#running-tests"><span class="octicon octicon-link"></span></a>Running tests</h3>
+
+<p>To execute tests from a project using PUWI, execute <em>puwi</em> command in your project location.
+Below an example:</p>
+
+<pre><code>~/workspace$ cd MyProject
+~/workspace/MyProject$ puwi
+  PUWI is running on http://localhost/puwi/...
+~/workspace/MyProject$ 
+</code></pre>
+
+<p>Browser is launched in background to show PUWI.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Puwi maintained by <a href="https://github.com/LuciaPerez">LuciaPerez</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
