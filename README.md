@@ -5,7 +5,7 @@ PhpUnit Web Interface
 
 ### Installing PUWI
 1. Download the project from the URL:   
-  `git@github.com:LuciaPerez/PUWI.git`
+  `git clone https://github.com/LuciaPerez/PUWI.git`
 
 2. Firs of all, it's necessary to check in `~/PUWI/config.ini.inc` the following locations:
 
