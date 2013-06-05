@@ -7,7 +7,7 @@ PhpUnit Web Interface
 1. Download the project from the URL:   
   `git clone https://github.com/LuciaPerez/PUWI.git`
 
-2. Firs of all, it's necessary to check in `~/PUWI/config.ini.inc` the following locations:
+2. First of all, it's necessary to check in `~/PUWI/config.ini.inc` the following locations:
 
 	**serverDirectory** is the directory where *php.ini* file is located
 
