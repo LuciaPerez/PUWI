@@ -169,7 +169,7 @@ class PUWI_Runner extends PHPUnit_Runner_BaseTestRunner
     public function doRunSingleTest($suite,$argv){
     	$launch = new PUWI_LaunchBrowser();
     	$command = new PUWI_Command();
-    	$folders = $command->getArrayFolders($argv[1],$argv[1]);
+    	$folders = $command->getFolder($argv[1]);
     	
     	$groups_info = $suite->getGroupDetails();
     	$total_groups = $launch->getGroups($groups_info,$suite->getGroups());
