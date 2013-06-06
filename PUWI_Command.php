@@ -93,7 +93,7 @@
 		
 	}
 
-	protected function getFolder($pathDir){
+	public function getFolder($pathDir){
 	   $regex="/^\./";
 	   if (is_dir($pathDir)) { 
 
