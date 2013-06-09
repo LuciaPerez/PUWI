@@ -26,12 +26,12 @@
 	</div>
 	
 	<div id="content">
-		<div id="projectName"> <p></p> </div>
-		<div class="totalTests box"> <p></p> </div>
+		
 	</div>
 </div>
 <div id="footer">
 	<p> PUWI - <span class='green'>PhpUnit Web Interface </span></p>
+	<p> <a id="linkGitHub" href="https://github.com/LuciaPerez/PUWI">View PUWI on GitHub</a> </p>
 </div>
 </body>
 </html>

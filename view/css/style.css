@@ -163,6 +163,13 @@
 	box-shadow:  0 -4px 3px 1px #888888;
 }
 
+#linkGitHub{
+	text-decoration: none;
+	color:white;
+}
+#linkGitHub:hover{
+	font-weight: bold;
+}
 .green{
 	color:#66cc33;
 }
