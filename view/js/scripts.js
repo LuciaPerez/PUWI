@@ -105,6 +105,9 @@ $(document).on('ready',function(){
 			if(!$(this).children().children().children().hasClass('testFailed')){
 				changeHiddenClass("#"+$(this).attr("id"));
 				changeHiddenClass("#"+$(this).prev().attr("id"));
+			}else{
+				$("#"+$(this).attr("id")).removeClass('isHidden').addClass('isNoHidden');
+				$("#"+$(this).prev().attr("id")).removeClass('isHidden').addClass('isNoHidden');
 			}
 		});
 	}
@@ -117,6 +120,8 @@ $(document).on('ready',function(){
 		$(selector).each(function(){
 			if(!$(this).children().children().hasClass('testFailed')){
 				changeHiddenClass("#"+$(this).attr("id"));
+			}else{
+				$("#"+$(this).attr("id")).removeClass('isHidden').addClass('isNoHidden');
 			}
 		});
 	}
@@ -126,9 +131,11 @@ $(document).on('ready',function(){
 	 * @param string selector
 	 */
 	hideClassName = function(selector){
-		$(selector).each(function(){
+		$(selector).each(function(){	
 			if(!$(this).children().hasClass('testFailed')){
 				changeHiddenClass("#"+$(this).attr("id"));
+			}else{
+				$("#"+$(this).attr("id")).removeClass('isHidden').addClass('isNoHidden');
 			}
 		});
 		
@@ -155,6 +162,7 @@ $(document).on('ready',function(){
 	 * Show only failed tests or all of them if there isn't any failed test
 	 */
 	showFaildedTest = function(selector){
+		
 		if ($("#content .groupContent .grey .black").children().hasClass('testFailed')){
 			is_hidden = true;
 			hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent");
@@ -187,7 +195,7 @@ $(document).on('ready',function(){
 			success: function(request){	
 				projectName = request['result']["projectName"];
 				createDiv("","totalTests greyBox box","content","");
-
+				
 				updateResults(request['result'],'','');
 			},
 			error: function(request){
@@ -212,7 +220,8 @@ $(document).on('ready',function(){
 	/**
 	 * Create dynamic divs for failed tests
 	 */
-	createDivFailedTest = function (contentDiv,className,divParent,divName,file,line,message,trace,code,pClass) { 
+	createDivFailedTest = function (contentDiv,className,divParent,divName,file,line,message,trace,code,pClass) {
+		
 		divParent="#"+divParent;
 			$('<div/>', {
 		    id: divName,
@@ -229,7 +238,7 @@ $(document).on('ready',function(){
 	}
 	
 	/**
-	 * Run a group of tests (group, folder or file)
+	 * Run a group of tests (group, single test or file)
 	 * 
 	 * @param object element 
 	 */
@@ -355,6 +364,7 @@ $(document).on('ready',function(){
 		groups = request["groups"];
 		folders = request["folders"];
 		info = request["failedTests"];
+		
 
 		for (var group_name in groups) {
 		    var selector = "#"+group_name+" > p";
@@ -397,7 +407,7 @@ $(document).on('ready',function(){
 			    	  
 			    	  changeButtonsAppearance(".buttonFolder","Run folder","run_folder.png","run_folder_hover.png");
 		    	  }
-
+		    	  
 			      var divFileSelector = divFolderSelector+className;
 			      if(typeof $(divFileSelector).html() === "undefined"){
 						createDiv(className,'black margin20 isNoHidden',idDivFolder, idDivFolder+className);
@@ -413,7 +423,7 @@ $(document).on('ready',function(){
 			      
 			      if(typeUpdate == 'test' && typeof $(testSelector).attr("id") !== "undefined"){
 			    	    removeOldClass(testSelector,classNameTest);
-
+			    	    
 						if (classNameTest == 'testFailed box'){
 							updateTestFailedContent(testSelector,test,info,divName);
 						}
@@ -421,12 +431,14 @@ $(document).on('ready',function(){
 						$(testSelector).remove();
 						if (classNameTest == 'testFailed box'){
 							  var failedTest = getInfoFailedTests(value,info);
+							  
 							  classNameTest += ' isNoHidden';
 							  createDivFailedTest(test,classNameTest,divParent,divName,failedTest['file'],failedTest['line'],
 									  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'),failedTest['code'], "margin0");
 							  
 							  var selector = testSelector+" > p.nameFT";
 							  createRunTestButton(selector,divName);
+
 						 }else{
 							  classNameTest += ' isNoHidden';
 							  createDiv(test,classNameTest,divParent,divName, "margin0");
@@ -523,6 +535,7 @@ $(document).on('ready',function(){
 	 * Search a folder name from a class name
 	 */
 	getFolder = function(folders,className){
+		
 		var result = "";
 		 $.each(folders, function(folder, tests) {
 			 $.each(folders[folder], function(index, test) {
