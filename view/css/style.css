@@ -40,6 +40,9 @@
 	margin-top: 30px;
 	text-align: center;
 	color:#F9F9F5;
+	font-weight: 300;
+    background: none;
+    text-shadow: #111 0px 0px 10px;
 }
 
 #content{
