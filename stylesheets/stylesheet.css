@@ -313,6 +313,16 @@ Full-Width Styles
   margin: 0 auto;
 }
 
+
+#container {
+    color: #000000;
+    font-family: sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 600px;
+    width: 960px;
+}
+
 #forkme_banner {
   display: block;
   position: absolute;
