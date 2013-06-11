@@ -317,7 +317,7 @@ Full-Width Styles
   border-bottom-right-radius: 2px;
 }
 
-#header_wrap {
+/*#header_wrap {
   background: #212121;
   background: -moz-linear-gradient(top, #373737, #f2f2f2);
   background: -webkit-linear-gradient(top, #373737, #f2f2f2);
@@ -328,9 +328,35 @@ Full-Width Styles
 
 #header_wrap .inner {
   padding: 50px 10px 30px 10px;
+}*/
+#header{
+	margin:10px 0 25px;
+	float:left;
+	width:100%;
+	height:20%;
 }
-
-#project_title {
+#logo{
+	width:270px;
+	height:150px;
+	float:left;
+	margin-top:15px;
+	padding-top:10px;	
+	background: url('../images/code_puwi.png') no-repeat;
+}
+#logo img{
+	margin-left:50px;
+}
+#title{
+	width:690px;
+	float:left;
+	margin-top: 30px;
+	text-align: center;
+	color:#F9F9F5;
+	font-weight: 300;
+    background: none;
+    text-shadow: #111 0px 0px 10px;
+}
+/*#project_title {
   margin: 0;
   color: #fff;
   font-size: 42px;
@@ -344,7 +370,7 @@ Full-Width Styles
   font-weight: 300;
   background: none;
   text-shadow: #111 0px 0px 10px;
-}
+}*/
 
 #downloads {
   position: absolute;
