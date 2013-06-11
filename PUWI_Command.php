@@ -23,7 +23,7 @@
 		*/
 		public function run(array $argv, $exit = TRUE)
 		{
-			$this->handleArguments($argv);
+			parent::handleArguments($argv);
 	
 			$runner = $this->createRunner();
 	
@@ -36,25 +36,6 @@
 			      $this->arguments['testFile'],
 			      $this->arguments['testSuffixes']
 			    );
-			}
-	
-			if ($this->arguments['listGroups']) {
-			    PHPUnit_TextUI_TestRunner::printVersionString();
-	
-			    print "Available test group(s):\n";
-	
-			    $groups = $suite->getGroups();
-			    sort($groups);
-	
-			    foreach ($groups as $group) {
-				print " - $group\n";
-			    }
-	
-			    if ($exit) {
-				exit(PHPUnit_TextUI_TestRunner::SUCCESS_EXIT);
-			    } else {
-				return PHPUnit_TextUI_TestRunner::SUCCESS_EXIT;
-			    }
 			}
 	
 			unset($this->arguments['test']);
@@ -73,16 +54,6 @@
 			}
 			
 			if (count($argv) < 3){
-				$ret = PHPUnit_TextUI_TestRunner::FAILURE_EXIT;
-		
-				if (isset($result) && $result->wasSuccessful()) {
-				    $ret = PHPUnit_TextUI_TestRunner::SUCCESS_EXIT;
-				}
-		
-				else if (!isset($result) || $result->errorCount() > 0) {
-				    $ret = PHPUnit_TextUI_TestRunner::EXCEPTION_EXIT;
-				}
-			
 			
 				$results = new PUWI_GetResults();
 	

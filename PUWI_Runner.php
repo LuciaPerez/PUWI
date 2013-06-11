@@ -21,17 +21,6 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
      */
     protected $loader = NULL;
 
-    /**
-     * @var PHPUnit_TextUI_ResultPrinter
-     */
-    protected $printer = NULL;
-
-    /**
-     * @var boolean
-     */
-    protected static $versionStringPrinted = FALSE;
-
-
 
     private function processSuiteFilters(PHPUnit_Framework_TestSuite $suite, array $arguments) {
         if (!$arguments['filter'] &&
@@ -337,74 +326,6 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
 
         unset($suite);
         $result->flushListeners();
-
-        if (isset($codeCoverage)) {
-            if (isset($arguments['coverageClover'])) {
-                $this->printer->write(
-                  "\nGenerating code coverage report in Clover XML format ..."
-                );
-
-                $writer = new PHP_CodeCoverage_Report_Clover;
-                $writer->process($codeCoverage, $arguments['coverageClover']);
-
-                $this->printer->write(" done\n");
-                unset($writer);
-            }
-
-            if (isset($arguments['reportDirectory'])) {
-                $this->printer->write(
-                  "\nGenerating code coverage report in HTML format ..."
-                );
-
-                $writer = new PHP_CodeCoverage_Report_HTML(
-                  $arguments['reportCharset'],
-                  $arguments['reportHighlight'],
-                  $arguments['reportLowUpperBound'],
-                  $arguments['reportHighLowerBound'],
-                  sprintf(
-                    ' and <a href="http://phpunit.de/">PHPUnit %s</a>',
-                    PHPUnit_Runner_Version::id()
-                  )
-                );
-
-                $writer->process($codeCoverage, $arguments['reportDirectory']);
-
-                $this->printer->write(" done\n");
-                unset($writer);
-            }
-
-            if (isset($arguments['coveragePHP'])) {
-                $this->printer->write(
-                  "\nGenerating code coverage report in PHP format ..."
-                );
-
-                $writer = new PHP_CodeCoverage_Report_PHP;
-                $writer->process($codeCoverage, $arguments['coveragePHP']);
-
-                $this->printer->write(" done\n");
-                unset($writer);
-            }
-
-            if (isset($arguments['coverageText'])) {
-                if ($arguments['coverageText'] == 'php://stdout') {
-                    $outputStream = $this->printer;
-                    $colors       = (bool)$arguments['colors'];
-                } else {
-                    $outputStream = new PHPUnit_Util_Printer($arguments['coverageText']);
-                    $colors       = FALSE;
-                }
-
-                $writer = new PHP_CodeCoverage_Report_Text(
-                  $outputStream,
-                  $arguments['reportLowUpperBound'],
-                  $arguments['reportHighLowerBound'],
-                  $arguments['coverageTextShowUncoveredFiles'],
-                  $arguments['coverageTextShowOnlySummary']
-                );
-
-                $writer->process($codeCoverage, $colors);
-            }
-        }
 
         return $result;
     }
