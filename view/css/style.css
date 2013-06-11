@@ -167,11 +167,13 @@
 }
 
 #linkGitHub{
-	text-decoration: none;
-	color:white;
+	float: right;
 }
-#linkGitHub:hover{
-	font-weight: bold;
+#contentFooter{
+	width:960px;
+	left:50%;
+	position: absolute;
+	margin-left: -480px;
 }
 .green{
 	color:#66cc33;

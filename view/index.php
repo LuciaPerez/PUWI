@@ -30,8 +30,16 @@
 	</div>
 </div>
 <div id="footer">
-	<p> PUWI - <span class='green'>PhpUnit Web Interface </span></p>
-	<p> <a id="linkGitHub" href="https://github.com/LuciaPerez/PUWI">View PUWI on GitHub</a> </p>
+	<div id="contentFooter">
+	<p> 
+		PUWI - <span class='green'>PhpUnit Web Interface </span>
+		 
+		<a href="https://github.com/LuciaPerez/PUWI" target="_blank">
+			<input type="image" src="images/blacktocat.png" id="linkGitHub" title="View PUWI on GitHub">
+		</a> 
+	</p>
+	<!--<p> <a id="linkGitHub" href="https://github.com/LuciaPerez/PUWI">View PUWI on GitHub</a> </p>-->
+	</div>
 </div>
 </body>
 </html>
