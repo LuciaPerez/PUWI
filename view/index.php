@@ -30,16 +30,17 @@
 	</div>
 </div>
 <div id="footer">
-	<div id="contentFooter">
-	<p> 
-		PUWI - <span class='green'>PhpUnit Web Interface </span>
-		 
-		<a href="https://github.com/LuciaPerez/PUWI" target="_blank">
-			<input type="image" src="images/blacktocat.png" id="linkGitHub" title="View PUWI on GitHub">
+	<p> PUWI - <span class='green'>PhpUnit Web Interface </span>
+	<span id="contentFooter">
+		<a href="http://www.agil-az.com/" target="_blank">
+			<input type="image" src="images/logo_agilaz_bg.png" class="linkFooter" title="Agil-AZ.SL">
 		</a> 
-	</p>
+		<a href="https://github.com/LuciaPerez/PUWI" target="_blank">
+			<input type="image" src="images/blacktocat.png" class="linkFooter" title="View PUWI on GitHub">
+		</a> 
 	<!--<p> <a id="linkGitHub" href="https://github.com/LuciaPerez/PUWI">View PUWI on GitHub</a> </p>-->
-	</div>
+	</span>
+	</p>
 </div>
 </body>
 </html>
