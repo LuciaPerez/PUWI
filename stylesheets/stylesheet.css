@@ -115,10 +115,6 @@ p {
   margin: 10px 0 15px 0;
 }
 
-/*footer p {
-  color: #f2f2f2;
-}*/
-
 a {
   text-decoration: none;
   color: #66cc33;
@@ -141,10 +137,7 @@ a {
   text-shadow: #0090ff 0px 0px 2px;
 }
 
-/*footer a:hover {
-  color: #43adff;
-  text-shadow: #0090ff 0px 0px 2px;
-}*/
+
 .linkFooter{
 	float: right;
 	margin-left: 15px;
@@ -338,18 +331,7 @@ Full-Width Styles
   border-bottom-right-radius: 2px;
 }
 
-/*#header_wrap {
-  background: #212121;
-  background: -moz-linear-gradient(top, #373737, #f2f2f2);
-  background: -webkit-linear-gradient(top, #373737, #f2f2f2);
-  background: -ms-linear-gradient(top, #373737, #f2f2f2);
-  background: -o-linear-gradient(top, #373737, #f2f2f2);
-  background: linear-gradient(top, #373737, #f2f2f2);
-}
 
-#header_wrap .inner {
-  padding: 50px 10px 30px 10px;
-}*/
 #header{
 	margin:10px 0 25px;
 	float:left;
@@ -376,37 +358,6 @@ Full-Width Styles
 	font-weight: 300;
     background: none;
     text-shadow: #111 0px 0px 10px;
-}
-/*#project_title {
-  margin: 0;
-  color: #fff;
-  font-size: 42px;
-  font-weight: 700;
-  text-shadow: #111 0px 0px 10px;
-}
-
-#project_tagline {
-  color: #fff;
-  font-size: 24px;
-  font-weight: 300;
-  background: none;
-  text-shadow: #111 0px 0px 10px;
-}*/
-
-#downloads {
-  position: absolute;
-  width: 210px;
-  z-index: 10;
-  bottom: -40px;
-  right: 0;
-  height: 70px;
-  background: url('../images/icon_download.png') no-repeat 0% 90%;
-}
-
-
-
-#main_content_wrap {
-  background: #f2f2f2;
 }
 
 #main_content {
