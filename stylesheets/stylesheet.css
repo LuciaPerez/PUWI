@@ -63,7 +63,8 @@ body {
   font-family: 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  
+}
+#background{
   width:100%;
   background: -ms-linear-gradient(#757570 0%, #EAEADF 20%) ;
   background: -moz-linear-gradient(#757570 0%, #EAEADF 20%) ;
