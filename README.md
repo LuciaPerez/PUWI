@@ -4,8 +4,8 @@ PhpUnit Web Interface
 ---------------------
 
 ###Requirements
-It's necessary to have 'git' and 'curl' installed: 
-	`sudo apt-get install git` 
+It's necessary to have 'git' and 'curl' installed:  
+	`sudo apt-get install git`  
 	`sudo apt-get install curl php5-curl`
 
 ### Installing PUWI
