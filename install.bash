@@ -51,14 +51,7 @@ function searchServerInformation {
 }
 
 function parseConfig {
-	theCommand='include_path=".:/home/lucia/phpunit/'
-	#theCommand='include_path=".'
-	#while read line
-	#do 
-	#	checkEnterSection && checkEnterDeps
-	#	checkVarInLine "$line"
-	#	[ "$isDep" == "yes" ] && theCommand=$theCommand:$( getWord "$line" 3 )	
-	#done < $scriptDir/config.ini
+	theCommand='include_path=".:vendor/phpunit/'
 }
 
 function addPathAutoload {
