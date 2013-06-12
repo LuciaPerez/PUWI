@@ -51,17 +51,18 @@ function searchServerInformation {
 }
 
 function parseConfig {
-	theCommand='include_path=".'
-	while read line
-	do 
-		checkEnterSection && checkEnterDeps
-		checkVarInLine "$line"
-		[ "$isDep" == "yes" ] && theCommand=$theCommand:$( getWord "$line" 3 )	
-	done < $scriptDir/config.ini
+	theCommand='include_path=".:/home/lucia/phpunit/'
+	#theCommand='include_path=".'
+	#while read line
+	#do 
+	#	checkEnterSection && checkEnterDeps
+	#	checkVarInLine "$line"
+	#	[ "$isDep" == "yes" ] && theCommand=$theCommand:$( getWord "$line" 3 )	
+	#done < $scriptDir/config.ini
 }
 
 function addPathAutoload {
-	pathAutoload="pathAutoload = vendor/phpunit/phpunit/PHPUnit/Autoload.php";
+	pathAutoload="pathAutoload = vendor/phpunit/PHPUnit/Autoload.php";
 	echo $pathAutoload >> ./config.ini 
 }
 
