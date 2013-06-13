@@ -7,7 +7,6 @@ class PUWI_GetResults{
 	 */
 	private $infoFailedTests = array(); 
 	private $folder='';
-	private $pathProject='';
 	private $arrayFolders = array();
 
 	/**
@@ -15,8 +14,6 @@ class PUWI_GetResults{
 	 * 
 	 * @param string $projectName
 	 * @param string $result
-	 * @param array $folders
-	 * @param boolean $new <================================================
 	 * @param array $argv
 	 * @return array
 	 */
@@ -127,13 +124,7 @@ class PUWI_GetResults{
 		krsort($arrayResult);
 		return $arrayResult;
 	}
-/*
-	function send_array($array) { 
-	    $tmp = serialize($array); 
-	    $tmp = urlencode($tmp); 
-	    return $tmp; 
-	}
-	*/
+
 	/**
 	 * Get project name from the full path
 	 * 
