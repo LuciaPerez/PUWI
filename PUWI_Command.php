@@ -61,15 +61,15 @@
 		}
 	
 	    /**
-	     * Create a PHPUnit_TextUI_TestRunner, override in subclasses.
+	     * Create a PUWI_Runner.
 	     *
-	     * @return PHPUnit_TextUI_PHPUnit_TextUI_TestRunner
-	     * @since  Method available since Release 3.6.0
+	     * @return PUWI_Runner
 	     */
 	    protected function createRunner()
 	    {
 	    	return new PUWI_Runner($this->arguments['loader']);
 	    }
+	    
     }
 
 ?>
