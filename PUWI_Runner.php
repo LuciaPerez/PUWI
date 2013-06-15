@@ -7,9 +7,6 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
     	$results = new PUWI_GetResults();
     	
     	$mySuite = new PHPUnit_Framework_TestSuite;
-
-    	$groups_info = $suite->getGroupDetails();
-    	$total_groups = $results->getGroups($groups_info,$suite->getGroups());
     	
     	$test_suite = $suite->tests();
     	$result = array();
@@ -30,9 +27,11 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
     				break;
     				
     				case 'group':	
+    					$groups_info = $suite->getGroupDetails();
+    					$total_groups = $results->getGroups($groups_info,$suite->getGroups());
+    					
     					if(in_array($argv[2],array_keys($total_groups))){
 		    				foreach($total_groups[$argv[2]] as $single_test){
-		    					$className = strstr($single_test, ':', true);
 		    					if ($this->checkSingleTest($test_case->getName()."::".$st->getName(), $single_test)){	
 		    						$mySuite->addTest($st);
 		    					}
