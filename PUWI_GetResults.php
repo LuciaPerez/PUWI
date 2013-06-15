@@ -13,15 +13,16 @@ class PUWI_GetResults{
 	 * Get all data about tests executed
 	 * 
 	 * @param string $projectName
-	 * @param string $result
+	 * @param PHPUnit_Framework_TestResult $result
 	 * @param array $argv
+	 * @param PHPUnit_Framework_Test
 	 * @return array
 	 */
-	public function getResults($projectName,$result,$argv){
+	public function getResults($pathProject,$result,$argv,$suite){
 		define("PATH_PROJECT", $argv[1]);
 		
 		$totalTests = $result->count();
-		$projectName = $this->getProjectName($projectName);
+		$projectName = $this->getProjectName($pathProject);
 	
 		$passed = $this->getTestsPassed($result);
 		$failures = $this->getTestsFailed($result);
@@ -30,9 +31,9 @@ class PUWI_GetResults{
 		$skipped = $this->getTestsSkipped($result);
 		
 		$this->getFoldersProject($argv[1]);
-		
-		$groups_details = $result->topTestSuite()->getGroupDetails();
-		$groups = $result->topTestSuite()->getGroups();
+
+		$groups_details = $suite->getGroupDetails();
+		$groups = $suite->getGroups();
 		$groups = $this->getGroups($groups_details,$groups);
 		
 

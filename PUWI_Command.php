@@ -45,23 +45,17 @@
 				if (count($argv) >= 3){
 					$result = $runner->doRunSingleTest($suite,$argv);
 				}else{
-			    	$result = $runner->doRun($suite, $this->arguments);
+			    	$result = $runner->doRun($suite, $argv);
 				}
 			}
 	
 			catch (PHPUnit_Framework_Exception $e) {
 			    print $e->getMessage() . "\n";
 			}
+
+			$results = new PUWI_GetResults();
 			
-			if (count($argv) < 3){
-			
-				$results = new PUWI_GetResults();
-	
-				$arrayResults = $results->getResults($argv[1],$result,$argv);
-			}else{
-				$arrayResults=$result;
-			}
-	
+			$arrayResults = $results->getResults($argv[1],$result,$argv,$suite);
 			return $arrayResults;
 	
 		}
