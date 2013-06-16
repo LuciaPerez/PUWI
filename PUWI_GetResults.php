@@ -15,13 +15,12 @@ class PUWI_GetResults{
 	 * @param string $projectName
 	 * @param PHPUnit_Framework_TestResult $result
 	 * @param array $argv
-	 * @param PHPUnit_Framework_Test
+	 * @param PHPUnit_Framework_Test $suite
 	 * @return array
 	 */
 	public function getResults($pathProject,$result,$argv,$suite){
 		define("PATH_PROJECT", $argv[1]);
 		
-		$totalTests = $result->count();
 		$projectName = $this->getProjectName($pathProject);
 	
 		$passed = $this->getTestsPassed($result);
@@ -37,10 +36,7 @@ class PUWI_GetResults{
 		$groups = $this->getGroups($groups_details,$groups);
 		
 
-		return array("argv" => $argv,
-					"projectName" => $projectName,
-					 "totalTests" => $totalTests,
-					 "projectName" => $projectName,
+		return array("projectName" => $projectName,
 					 "passed" => $passed,
 					 "failures"=> $failures,
 					 "errors" => $errors,
@@ -52,17 +48,32 @@ class PUWI_GetResults{
 
 	}
 	
+	/**
+	 * Get directories from a given path
+	 * 
+	 * @param string $pathDir
+	 */
 	public function getArrayFolders($pathDir){
 		define("PATH_PROJECT", $pathDir);
 		$this->getFoldersProject($pathDir);
 		return $this->arrayFolders;
 	}
 	
+	/**
+	 * Get only the directory name from a given path as of the path of main project
+	 * 
+	 * @param string $pathDir
+	 */
 	protected function getFolderName($pathDir){
 		return substr($pathDir,strlen(PATH_PROJECT));
 	
 	}
 	
+	/**
+	 * Search subdirectories from a given path path 
+	 * 
+	 * @param string $pathDir
+	 */
 	public function getFoldersProject($pathDir){
 		$regex="/^\./";
 		
