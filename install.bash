@@ -18,12 +18,12 @@ function main {
 	addPathAutoload
 	$scriptDir/load_deps.bash 
 
-	cp -r $scriptDir/. $pubDirectory
+	mv $scriptDir/. $pubDirectory
 
 	addIncludePath
 
 	createAlias
-	echo -e "\nNow you can use <puwi> command in your PHP projects!\n"
+	echo -e "\nAfter RESTART your terminal, you can use <puwi> command in your PHP projects!\n"
 }
 
 function read_config {
