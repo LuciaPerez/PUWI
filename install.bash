@@ -3,7 +3,7 @@
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 phpDir=`pear config-show 2> /dev/null | grep php_dir | awk '{print $NF}'`
 
-. $scriptDir/functions.bash
+. $scriptDir/bash/functions.bash
 . $scriptDir/bash/messages.bash
 
 
