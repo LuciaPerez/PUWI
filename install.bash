@@ -46,7 +46,7 @@ pubDirectory=""
 runService=""
 function searchServerInformation {
 	[ "$1" == "serverDirectory" ] && serverDirectory=$2
-	[ "$1" == "pubDirectory" ] && pubDirectory=$2"PUWI/"
+	[ "$1" == "pubDirectory" ] && pubDirectory=$2
 	[ "$1" == "runService" ] && runService=$2
 }
 
@@ -72,7 +72,7 @@ function addIncludePath {
 function createAlias {	
 	if [[ `grep "^alias puwi=" ~/.bashrc` = "" ]]
 	then
-		echo 'alias puwi='$pubDirectory'launch_project.bash' >> ~/.bashrc && . ~/.bashrc 
+		echo 'alias puwi='$pubDirectory'PUWI/launch_project.bash' >> ~/.bashrc && . ~/.bashrc 
 	fi
 }
 
