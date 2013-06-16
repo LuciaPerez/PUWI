@@ -18,7 +18,7 @@ function main {
 	addPathAutoload
 	$scriptDir/load_deps.bash 
 
-	mv $scriptDir/. $pubDirectory
+	mv $scriptDir/ $pubDirectory
 
 	addIncludePath
 
