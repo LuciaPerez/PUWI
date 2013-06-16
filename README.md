@@ -18,11 +18,11 @@ It's necessary too:
 
 2. First of all, it's necessary to check in `~/PUWI/config.ini.inc` the following locations:
 
-	* **serverDirectory** is the directory where *php.ini* file is located, in Apache server is /etc/php5/apache2/
+	 **- serverDirectory** is the directory where *php.ini* file is located, in Apache server is /etc/php5/apache2/
 
-	* **pubDirectory** is the location where files are published at the web server, in Apache server is var/www
+	 **- pubDirectory** is the location where files are published at the web server, in Apache server is var/www
 
-	* **runService** indicates the location of the service which must be restarted after modify *php.ini* file, in Apache server is /etc/init.d/
+	 **- runService** indicates the location of the service which must be restarted after modify *php.ini* file, in Apache server is /etc/init.d/
 
     2.1. Dependencies
 
