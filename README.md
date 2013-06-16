@@ -8,7 +8,7 @@ It's necessary to have 'git' and 'curl' installed:
 	`sudo apt-get install git`  
 	`sudo apt-get install curl php5-curl`
 
-It's necessary too:
+It's necessary too:  
 	PHP > 5.3.3  
 	xdebug >= 2.2.1
 
