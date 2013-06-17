@@ -22,11 +22,11 @@ It's necessary too:
 
 	 **- pubDirectory** is the location where files are published at the web server, in Apache server is var/www
 
-	 **- runService** indicates the location of the service which must be restarted after modify *php.ini* file, in Apache server is /etc/init.d/
+	 **- runService** indicates the location of the service which must be restarted after modifying *php.ini* file, in Apache server is /etc/init.d/
 
     2.1. Dependencies
 
-    Install PUWI involves install automatically the last available PHPUnit version and every dependency that needs to work properly.
+    Install PUWI involves installing automatically the last available PHPUnit version and every dependency that needs to work properly.
     The default location to install these dependencies is *PUWI/vendor/*.
     
     
