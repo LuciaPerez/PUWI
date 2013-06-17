@@ -8,6 +8,7 @@ class PUWI_GetResults{
 	private $infoFailedTests = array(); 
 	private $folder='';
 	private $arrayFolders = array();
+	private $pathProject='';
 
 	/**
 	 * Get all data about tests executed
@@ -19,8 +20,7 @@ class PUWI_GetResults{
 	 * @return array
 	 */
 	public function getResults($pathProject,$result,$argv,$suite){
-		define("PATH_PROJECT", $argv[1]);
-		
+		$this->pathProject = $argv[1];
 		$projectName = $this->getProjectName($pathProject);
 	
 		$passed = $this->getTestsPassed($result);
@@ -35,7 +35,6 @@ class PUWI_GetResults{
 		$groups = $suite->getGroups();
 		$groups = $this->getGroups($groups_details,$groups);
 		
-
 		return array("projectName" => $projectName,
 					 "passed" => $passed,
 					 "failures"=> $failures,
@@ -45,7 +44,7 @@ class PUWI_GetResults{
 					 "groups" => $groups,
 					 "folders" => $this->arrayFolders,
 					 "failedTests" => $this->infoFailedTests);
-
+		
 	}
 	
 	/**
@@ -54,7 +53,7 @@ class PUWI_GetResults{
 	 * @param string $pathDir
 	 */
 	public function getArrayFolders($pathDir){
-		define("PATH_PROJECT", $pathDir);
+		$this->pathProject = $pathDir;
 		$this->getFoldersProject($pathDir);
 		return $this->arrayFolders;
 	}
@@ -65,7 +64,7 @@ class PUWI_GetResults{
 	 * @param string $pathDir
 	 */
 	protected function getFolderName($pathDir){
-		return substr($pathDir,strlen(PATH_PROJECT));
+		return substr($pathDir,strlen($this->pathProject));
 	
 	}
 	
