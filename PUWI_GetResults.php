@@ -115,23 +115,25 @@ class PUWI_GetResults{
 	 * @return array
 	 */
 	function getGroups($groups_details,$groups){
-	
-		$index=0;
 		$arrayResult = array();
-		foreach ($groups_details as $group){
-			$group_values = array_values($group);
-			$arrayTests = array();
-			foreach ($group_values as $g){
-				$gd = $g->getGroupDetails();
-				$array= $gd[$groups[$index]];
 		
-				foreach ($array as $test){
-					array_push($arrayTests,$g->getName()."::".$test->getName());
+		while (list($group_name, $group_content) = each($groups_details)){
+			$arrayTests = array();
+			while (list($index, $suite) = each($group_content)){				
+				$groups_suite = $suite->getGroupDetails();
+				
+				while (list($key, $value) = each($groups_suite[$group_name])){
+					
+					$class = get_class($value);
+					if ($class == "PHPUnit_Framework_TestSuite_DataProvider"){
+						array_push($arrayTests,$value->getName());
+					}else{
+						array_push($arrayTests,$class."::".$value->getName());
+					}
 				}
-			
+				
 			}
-			$arrayResult[$groups[$index]] = $arrayTests;
-			$index++;
+			$arrayResult[$group_name] = $arrayTests;
 		}
 		krsort($arrayResult);
 		return $arrayResult;
@@ -268,9 +270,12 @@ class PUWI_GetResults{
 	function getCode($file,$test,$line){
 		
 		$file_to_open = fopen ($file, "r");
-		$testName = substr(strstr($test, ':'),2);
+		$testName = explode(' ',$test);
+		$testName = substr(strstr($testName[0], ':'),2);
+
 		$code = "";
 		$number_line=1;
+
 		$search = "/.".$testName."./";
 		$in_function='no';
 	

@@ -14,9 +14,9 @@ class SampleTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(42, $this->aVar);
 	}
 
-	public function test_setUpFails(
+	/*public function test_setUpFails(
 	) {
 		$this->fail("This test of SampleTest class fails");
-	}
+	}*/
 
 }
