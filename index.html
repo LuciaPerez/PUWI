@@ -30,54 +30,43 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
 
+<h3><a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h3>
+
+<p class="tabular">It's necessary to have 'git' and 'curl' installed: <br><code class="tabular">sudo apt-get install git</code> <br><code class="tabular">sudo apt-get install curl php5-curl</code></p>
+<p class="tabular">It's necessary too: <br><span class="tabular">PHP > 5.3.3</span> <br><span class="tabular">xdebug >= 2.2.1</span></p>
+
 <h3>
 <a name="installing-puwi" class="anchor" href="#installing-puwi"><span class="octicon octicon-link"></span></a>Installing PUWI</h3>
 
 <ol>
-<li><p>Download the project from the URL:<br><code>git clone https://github.com/LuciaPerez/PUWI.git</code></p></li>
+<li><p>Download the project from the URL:<br><code class="tabular">git clone https://github.com/LuciaPerez/PUWI.git</code></p>
+</li>
 <li>
 <p>First of all, it's necessary to check in <code>~/PUWI/config.ini.inc</code> the following locations:</p>
 
-<p><strong>serverDirectory</strong> is the directory where <em>php.ini</em> file is located</p>
+<p class="tabular"><strong>serverDirectory</strong> is the directory where <em>php.ini</em> file is located, in Apache server is /etc/php5/apache2/</p>
 
-<p><strong>pubDirectory</strong> is the location where files are published at the web server</p>
+<p class="tabular"><strong>pubDirectory</strong> is the location where files are published at the web server, in Apache server is var/www</p>
 
-<p><strong>runService</strong> indicates the location of the service which must be restarted after modify <em>php.ini</em> file.</p>
+<p class="tabular"><strong>runService</strong> indicates the location of the service which must be restarted after modify <em>php.ini</em> file, in Apache server is /etc/init.d/</p>
 
-<p>2.1. Dependencies.
-The following dependencies will be installed:</p>
-
-<ul>
-<li>phpunit 3.7.13</li>
-<li>dbunit 1.2.2</li>
-<li>php-code-coverage 1.2.7</li>
-<li>php-file-iterator 1.3.3</li>
-<li>php-invoker 1.1.2</li>
-<li>php-text-template 1.1.4</li>
-<li>php-timer 1.0.4</li>
-<li>php-token-stream 1.1.5</li>
-<li>phpunit-mock-objects 1.2.3</li>
-<li>phpunit-selenium 1.2.12</li>
-<li>phpunit-story  1.0.1
-*sebastian/version &gt;= 1.0.0
-*symfony/yaml ~2.0</li>
-</ul>
-<p>The default location to install these dependencies is <em>PUWI/vendor/</em>.</p>
+<ol class="tabular"><p>2.1. Dependencies <p class="tabular">Install PUWI involves install automatically the last available PHPUnit version and every dependency that needs to work properly. </p>
+<p class="tabular">The default location to install these dependencies is <em>PUWI/vendor/</em>.</p></p></ol>
 </li>
 <li><p>Execute the installation script:  <code>sudo ~/PUWI/install.bash</code></p></li>
 </ol><h3>
 <a name="running-tests" class="anchor" href="#running-tests"><span class="octicon octicon-link"></span></a>Running tests</h3>
 
-<p>To execute tests from a project using PUWI, execute <em>puwi</em> command in your project location.
+<p class="tabular">To execute tests from a project using PUWI, execute <em>puwi</em> command in your project location.
 Below an example:</p>
 
-<pre><code>~/workspace$ cd MyProject
+<pre class="tabular"><code>~/workspace$ cd MyProject
 ~/workspace/MyProject$ puwi
   PUWI is running on http://localhost/puwi/...
 ~/workspace/MyProject$ 
 </code></pre>
 
-<p>Browser is launched in background to show PUWI.</p>
+<p class="tabular">Browser is launched in background to show PUWI.</p>
       </section>
     </div>
  </div>
