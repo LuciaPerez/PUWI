@@ -18,7 +18,7 @@
 <div id="container">
 	<div id="header">
 		<div id="logo">
-			<img src="images/puwi_logo_green.png" alt="Logo" height="80"/>
+			<img src="images/puwi_logo_green.png" alt="Logo" />
 		</div>
 		<div id="title">
 			<h1>PhpUnit Web Interface</h1>
@@ -38,7 +38,6 @@
 		<a href="https://github.com/LuciaPerez/PUWI" target="_blank">
 			<input type="image" src="images/blacktocat.png" class="linkFooter" title="View PUWI on GitHub">
 		</a> 
-	<!--<p> <a id="linkGitHub" href="https://github.com/LuciaPerez/PUWI">View PUWI on GitHub</a> </p>-->
 	</span>
 	</p>
 </div>

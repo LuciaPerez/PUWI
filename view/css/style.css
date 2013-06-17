@@ -33,6 +33,7 @@
 }
 #logo img{
 	margin-left:50px;
+	height:80px;
 }
 #title{
 	width:690px;
@@ -146,6 +147,17 @@
 	background:#FF8080;
 }
 
+.linkFooter{
+	float: right;
+	margin-left: 15px;
+}
+#contentFooter{
+	width:960px;
+	left:50%;
+	position: absolute;
+	margin-left: -480px;
+}
+
 #footer{
 	width:100%;
 	background: -ms-linear-gradient(#333333 0%, #000000 100%);
@@ -166,16 +178,7 @@
 	box-shadow:  0 -4px 3px 1px #888888;
 }
 
-.linkFooter{
-	float: right;
-	margin-left: 15px;
-}
-#contentFooter{
-	width:960px;
-	left:50%;
-	position: absolute;
-	margin-left: -480px;
-}
+
 .green{
 	color:#66cc33;
 }
