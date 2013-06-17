@@ -170,7 +170,7 @@ class PUWI_GetResults{
 	 */
 	function getTestsFailed(PHPUnit_Framework_TestResult $result){
 		$fail=$result->failures();
-		$this->getFails($fail,false);
+		$this->getFails($fail);
 		return $this->getClassAndNameTest($fail);
 	}
 	
@@ -229,7 +229,7 @@ class PUWI_GetResults{
 	 * @param boolean $singleTest
 	 * @return array $infoEachTest
 	 */
-	function getFails(array $fail, $singleTest){
+	function getFails(array $fail){
 		$infoEachTest = array();
 
 		foreach ($fail as $f){
@@ -250,11 +250,9 @@ class PUWI_GetResults{
 			$infoEachTest['code'] = $this->getCode($file,$testName,$line);
 			$infoEachTest['trace'] = (string)$f->thrownException();
 			
-			if ($singleTest == false){
-				array_push($this->infoFailedTests,$infoEachTest);
-			}else{
-				return $infoEachTest;
-			}
+			
+			array_push($this->infoFailedTests,$infoEachTest);
+
 		}
 	}
 	
