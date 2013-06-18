@@ -59,7 +59,7 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
     public function doRun(PHPUnit_Framework_Test $suite, array $arguments = array())
     {
 
-        $result = $this->createTestResult();
+        $result = parent::createTestResult();
         
         $suite->run($result);
 
