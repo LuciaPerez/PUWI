@@ -11,7 +11,7 @@
 				$URLParams[0] = $URLParams[0]."/PUWI_Command.php";
 				$URLParams[1] = $URLParams[1]."/";
 				
-				$runner = new PUWI_Command;
+				$runner = createCommand();
 				$argv=array($URLParams[0],$URLParams[1]);
 				//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/home/lucia/Calculadora/");
 				$results = $runner->run($argv);
@@ -25,7 +25,7 @@
 				$URLParams[0] = $URLParams[0]."/PUWI_Command.php";
 				$URLParams[1] = $URLParams[1]."/".$folderName;
 					
-				$runner = new PUWI_Command;
+				$runner = createCommand();
 				$argv=array($URLParams[0],$URLParams[1]);
 				//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/workspace-eclipse/Calculadora/testsRepes/");
 				$results = $runner->run($argv);
@@ -62,13 +62,23 @@
 		$URLParams[0] = $URLParams[0]."/PUWI_Command.php";
 		$URLParams[1] = $URLParams[1]."/";
 		
-		$runner = new PUWI_Command;
+		$runner = createCommand();
 		$argv=array($URLParams[0],$URLParams[1],$elementName,$type);
 		//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/home/lucia/Calculadora/","AddTest","file");
 		//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/home/lucia/Calculadora/","grupo1","group");
 		//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/home/lucia/Calculadora/","AddTest::test_setUpWorksAdd","test");
 		return $runner->run($argv,FALSE);
 	}
+	
+	/**
+	 * Create a PUWI_Command
+	 * 
+	 * @return PUWI_Command
+	 */
+	function createCommand(){
+		return new PUWI_Command;
+	} 
+	
 	
 	selectRunner($action);
 	
