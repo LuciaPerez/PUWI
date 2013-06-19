@@ -256,6 +256,10 @@ class PUWI_GetResults{
 		}
 	}
 	
+	public function getInfoFailedTests(){
+		return $this->infoFailedTests;
+	}
+	
 	/**
 	 * Search code of a test 
 	 * 
