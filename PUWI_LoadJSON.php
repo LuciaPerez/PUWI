@@ -33,7 +33,10 @@
 			break;
 			
 			case 'runTests':
-				$results = runCommand();
+				$elementName = $_POST['name'];
+				$type = $_POST['type'];
+				$URLParams = $_POST['argv'];
+				$results = runCommand($elementName,$type,$URLParams);
 				sendData($results);
 			break;
 			
@@ -55,10 +58,8 @@
 	 * 
 	 * @return array
 	 */
-	function runCommand(){
-		$elementName = $_POST['name'];
-		$type = $_POST['type'];
-		$URLParams = $_POST['argv'];
+	function runCommand($elementName,$type,$URLParams){
+		
 		$URLParams[0] = $URLParams[0]."/PUWI_Command.php";
 		$URLParams[1] = $URLParams[1]."/";
 		
