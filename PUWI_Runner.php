@@ -4,7 +4,6 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
 {
 
     public function doRunSingleTest(PHPUnit_Framework_Test $suite,array $argv){
-    	$results = new PUWI_GetResults();
     	
     	$mySuite = new PHPUnit_Framework_TestSuite;
     	
@@ -27,6 +26,7 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
     				break;
     				
     				case 'group':	
+    					$results = new PUWI_GetResults();
     					$groups_info = $suite->getGroupDetails();
     					$total_groups = $results->getGroups($groups_info,$suite->getGroups());
     					
