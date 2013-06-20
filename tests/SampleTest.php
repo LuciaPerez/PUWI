@@ -8,7 +8,9 @@ class SampleTest extends PHPUnit_Framework_TestCase {
 	) {
 		$this->aVar = 42;
 	}
-
+	/**
+	* @group groupSampleTest
+	*/
 	public function test_setUpWorks(
 	) {
 		$this->assertEquals(42, $this->aVar);

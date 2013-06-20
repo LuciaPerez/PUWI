@@ -23,25 +23,9 @@ function tearDown {
 	clearGitMock
 }
 
-function testDoesntCallGitCloneWhenNoParameters {
+function testCallGitCloneWhenNoParameters {
 	output=$( $testeeScript )
 	assertEquals "no" $( called "git" )
-}
-
-function testCallsGitCloneWithParameter {
-	aParameter="aSampleParameter"
-	output=$( $testeeScript $aParameter )
-	assertEquals "yes" $( called "git" )
-	assertEquals "yes" $( calledWith "git" "clone git://github\.com/sebastianbergmann/.*$aParameter\.git .*vendor/.*" )
-}
-
-function testCallsGitCloneWithEachParameter {
-	aParameter="aSampleParameter"
-	anotherParameter="anotherSampleParameter"
-	output=$( $testeeScript $aParameter $anotherParameter )
-	assertEquals "yes" $( called "git" )
-	assertEquals "yes" $( calledWith "git" "clone git://github\.com/sebastianbergmann/.*$aParameter\.git .*vendor/.*" )
-	assertEquals "yes" $( calledWith "git" "clone git://github\.com/sebastianbergmann/.*$anotherParameter\.git .*vendor/.*" )
 }
 
 function testIfVendorDoesntExistItIsCreated {
@@ -50,15 +34,4 @@ function testIfVendorDoesntExistItIsCreated {
 	[ -d $scriptDir/temp/vendor ] || fail "Expected $scriptDir/temp/vendor to have been created"
 }
 
-function testIfCloneOkPromptOK {
-	aParameter="aSampleParameter"
-	output=$( $testeeScript $aParameter )
-	assertMatches ".*ok.*" "$output"
-}
 
-function testIfCloneFailsPromptKO {
-	setGitToFail
-	aParameter="aSampleParameter"
-	output=$( $testeeScript $aParameter )
-	assertMatches ".*ko.*" "$output"
-}

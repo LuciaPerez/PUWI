@@ -199,8 +199,7 @@ $(document).on('ready',function(){
 				updateResults(request['result'],'','');
 			},
 			error: function(request){
-				$('#title').html('request: '+request);
-				alert("falla");
+				alert("An error ocurred in AJAX request.");
 			}
 		});
 	}

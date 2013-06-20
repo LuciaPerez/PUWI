@@ -1,33 +1,30 @@
 <?php	
 	include_once 'PUWI_Command.php';
 	$action = $_POST['action'];
-	//$action = 'rerun';
+	$URLParams = $_POST['argv'];
 	
-	function selectRunner($action){
+	function selectRunner($action,$URLParams){
 		switch($action)
 		{
 			case 'rerun':
-				$URLParams = $_POST['argv'];
 				$URLParams[0] = $URLParams[0]."/PUWI_Command.php";
 				$URLParams[1] = $URLParams[1]."/";
 				
 				$runner = createCommand();
 				$argv=array($URLParams[0],$URLParams[1]);
-				//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/home/lucia/Calculadora/");
 				$results = $runner->run($argv);
 	
 				sendData($results);
 			break;
 			
 			case 'runFolder':
-				$URLParams = $_POST['argv'];
 				$folderName = $_POST['folderName'];
 				$URLParams[0] = $URLParams[0]."/PUWI_Command.php";
 				$URLParams[1] = $URLParams[1]."/".$folderName;
 					
 				$runner = createCommand();
 				$argv=array($URLParams[0],$URLParams[1]);
-				//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/opt/lampp/htdocs/workspace-eclipse/Calculadora/testsRepes/");
+
 				$results = $runner->run($argv);
 				sendData($results);
 			break;
@@ -35,7 +32,6 @@
 			case 'runTests':
 				$elementName = $_POST['name'];
 				$type = $_POST['type'];
-				$URLParams = $_POST['argv'];
 				$results = runCommand($elementName,$type,$URLParams);
 				sendData($results);
 			break;
@@ -51,7 +47,6 @@
 	 */
 	function sendData($results){
 		$array = array('result' => $results);
-		//print_r($array);
 		echo json_encode($array);
 	}
 	
@@ -67,9 +62,7 @@
 		
 		$runner = createCommand();
 		$argv=array($URLParams[0],$URLParams[1],$elementName,$type);
-		//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/home/lucia/Calculadora/","AddTest","file");
-		//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/home/lucia/Calculadora/","grupo1","group");
-		//$argv=array("/opt/lampp/htdocs/PUWI/PUWI_Command.php","/home/lucia/Calculadora/","AddTest::test_setUpWorksAdd","test");
+	
 		return $runner->run($argv,FALSE);
 	}
 	
@@ -83,7 +76,7 @@
 	} 
 	
 	
-	selectRunner($action);
+	selectRunner($action,$URLParams);
 	
 ?>
 

@@ -7,9 +7,6 @@ scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo -e "Loading dependencies..."
 
-#curl -sS https://getcomposer.org/installer | php
-#php composer.phar install
-
 cd $scriptDir/vendor/
 git clone git://github.com/sebastianbergmann/phpunit.git
 

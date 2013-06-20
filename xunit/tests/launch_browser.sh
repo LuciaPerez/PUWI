@@ -2,7 +2,7 @@
 
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-launchBrowserScript=$scriptDir/../../launch_browser.bash
+launchBrowserScript=$scriptDir/../../launch_project.bash
 . $scriptDir/../mocks/browser.sh
 
 function setUp {
@@ -26,9 +26,8 @@ function testMessagePUWIrunning {
 }
 
 function testCallsBrowser {
-	htmlFile=$( normalizePath "$scriptDir/../../view/puwi.html" )
+	htmlFile=$( normalizePath "$scriptDir/../../view/index.html" )
 
 	output=$( $testeeScript )
 	assertEquals "yes" $( called "x-www-browser" )
-	assertEquals "yes" $( calledWith "x-www-browser" "$htmlFile" )
 }
