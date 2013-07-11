@@ -120,7 +120,7 @@
 
 .testInfo{
 	display:none;
-	font-family:courier-new;
+	font-family:courier-new, monospace;
 	clear:right;
 }
 .totalTests{
@@ -268,4 +268,8 @@
 
 .isHidden{
 	display: none;
+}
+
+.alwaysHidden{
+	display:none !important;
 }
