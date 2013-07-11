@@ -12,10 +12,13 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
 
     	foreach ($test_suite as $test_case){ 
     		$singleTests=$test_case->tests();
+    		
     		foreach ($singleTests as $st){
+    			$c = get_class($st);
+    			$checkingName = ($c == "PHPUnit_Framework_TestSuite_DataProvider") ? $st->getName() : $test_case->getName()."::".$st->getName();
     			switch ($argv[3]){
     				case "test":
-    					if ($this->checkSingleTest($test_case->getName()."::".$st->getName(),$argv[2])){
+    					if ($this->checkSingleTest($checkingName,$argv[2])){
     						$mySuite->addTest($st);
     					}	
     				break;
@@ -31,8 +34,8 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
     					$total_groups = $results->getGroups($groups_info,$suite->getGroups());
     					
     					if(in_array($argv[2],array_keys($total_groups))){
-		    				foreach($total_groups[$argv[2]] as $single_test){
-		    					if ($this->checkSingleTest($test_case->getName()."::".$st->getName(), $single_test)){	
+		    				foreach($total_groups[$argv[2]] as $single_test){			
+		    					if ($this->checkSingleTest($checkingName, $single_test)){
 		    						$mySuite->addTest($st);
 		    					}
 		    				}
@@ -43,6 +46,7 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
     		
     	}
     	$result = $this->doRun($mySuite, $argv);
+
     	return $result;
     }
     
