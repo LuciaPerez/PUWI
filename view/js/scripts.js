@@ -4,6 +4,7 @@ $(document).on('ready',function(){
 	var is_hidden = false;
 	var class_isHidden = " isNoHidden";
 	var projectName;
+	var actualIdTest;
 	
 	/*
 	 * Button actions 
@@ -38,7 +39,7 @@ $(document).on('ready',function(){
 			},
 		
 			error: function(request){
-				alert("an error ocurred in ajax request");
+				alert("An error ocurred in ajax request");
 			}
 		});
 	});
@@ -212,8 +213,20 @@ $(document).on('ready',function(){
 		$('<div/>', {
 		    id: divName,
 		    class: className,
-		    html: '<p class="nameNFT '+pClass+'">'+contentDiv+'</p>'
+		    html: '<p class="nameTest nameNFT '+pClass+'">'+contentDiv+'</p>'
 		}).appendTo(divParent);
+	}
+	
+	/**
+	 * Create dynamic divs
+	 */
+	createDivNextSibling = function (contentDiv,className,divBefore,divName, pClass) {
+		divBefore="#"+divBefore.replace(/:/g,'\\:');
+		$('<div/>', {
+		    id: divName,
+		    class: className,
+		    html: '<p class="nameTest nameNFT '+pClass+'">'+contentDiv+'</p>'
+		}).insertAfter(divBefore);
 	}
 	
 	/**
@@ -225,7 +238,7 @@ $(document).on('ready',function(){
 			$('<div/>', {
 		    id: divName,
 		    class: className,
-		    html: '<p class="nameFT bold '+pClass+'">'+contentDiv+'</p>'+'<p class="fileFT left">'+file+'</p>'+'<p class="red textRight bold">+'+line+'</p>'
+		    html: '<p class="nameTest nameFT bold '+pClass+'">'+contentDiv+'</p>'+'<p class="fileFT left">'+file+'</p>'+'<p class="red textRight bold">+'+line+'</p>'
 		          +'<p class="italic">'+message
 		          +'<input type="image" src="images/console.png" title="Display trace" class="trace classButton" data-idtrace='+"#"+divName+"trace"+'>'
 		          +'<input type="image" src="images/bullet_arrow_down1.png" class="code classButton" data-idcode='+"#"+divName+"code"+' data-file='+file+' data-line='+line+' data-test='+contentDiv+'></p>'
@@ -242,11 +255,14 @@ $(document).on('ready',function(){
 	 * @param object element 
 	 */
 	requestRunTests = function(element){
-		var idFile = $(element).data('idfile');
+		var idName = $(element).data('idname');
 		var nameRun = $(element).data('name');
 		var typeRun = $(element).data('type');
 		var action = $(element).data('action');
 		var is_empty;
+
+		actualIdTest = idName;
+
 		$.ajax({
 			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
 			dataType: "json",
@@ -255,7 +271,9 @@ $(document).on('ready',function(){
 			data: {action:action,name:nameRun,argv:getURLParams(),type:typeRun},
 			success:function(request){
 				is_hidden = false;
+				
 				is_empty = checkEmptyResults(request['result']);
+				
 				switch (typeRun){
 					case "file":
 						if (is_empty == true){
@@ -263,7 +281,7 @@ $(document).on('ready',function(){
 							$.each(idsFile,function(key,value){
 								$("#"+value).remove();
 							});
-							removeSingleElements();	
+							removeSingleElements(request['result']['groups']);	
 						}else{
 							updateResults(request['result'],'',nameRun,'file');
 						}
@@ -273,17 +291,18 @@ $(document).on('ready',function(){
 							$("#"+nameRun.replace(/:/g,'\\:')).next().remove();
 							$("#"+nameRun.replace(/:/g,'\\:')).remove();
 							
-							removeSingleElements();	
+							removeSingleElements(request['result']['groups']);	
 						}else{
 							updateResults(request['result'],'',nameRun,'group');
 						}
 
 					break;
-					case "test":
+					case "test":					
 						if (is_empty == true){
-							$("#"+nameRun.replace(/:/g,'\\:')).remove();
-							removeSingleElements();	
+							$("."+nameRun.replace(/:/g,'\\:')).remove();
+							removeSingleElements(request['result']['groups']);	
 						}else{
+
 							updateResults(request['result'],'',nameRun,'test');
 						}
 					break;
@@ -303,9 +322,11 @@ $(document).on('ready',function(){
 	 * @return boolean is_empty
 	 */
 	checkEmptyResults = function(array_data){
+		
 		var is_empty = true;
 		$.each(array_data,function(key,value){
-			if(key != 'groups' && key != 'folders'){
+			
+			if(key != 'groups' && key != 'folders' && key != 'projectName'){
 				if(!$.isEmptyObject(value)){	
 					is_empty = false;
 				}
@@ -317,7 +338,7 @@ $(document).on('ready',function(){
 	/**
 	 * Check if exits some group without tests and removes it.
 	 */
-	removeSingleElements = function (){
+	removeSingleElements = function (groups){
 		elem = getSingleElement(".black");
 		$(elem).remove();
 		
@@ -328,7 +349,7 @@ $(document).on('ready',function(){
 		$(elem).prev().remove();
 		$(elem).remove();
 		
-		displayTotalTests();
+		displayTotalTests(groups);
 	}
 	
 	/**
@@ -363,7 +384,6 @@ $(document).on('ready',function(){
 		groups = request["groups"];
 		folders = request["folders"];
 		info = request["failedTests"];
-		
 
 		for (var group_name in groups) {
 		    var selector = "#"+group_name+" > p";
@@ -379,26 +399,29 @@ $(document).on('ready',function(){
 		    }
 		    
 		    $.each(groups[group_name], function(key, value) {
+		    	
 				separated_values = value.split("::"); 
 				var className = separated_values[0];
 				var test = separated_values[1];
 				
 		       if (runSingleTest ==  '' || (runSingleTest == value && typeUpdate == 'test') || (runSingleTest == group_name && typeUpdate == 'group') || (runSingleTest == className && typeUpdate == 'file')){
-			      var classNameTest = getClassNameTest(value, passed, incomplete, skipped, errors);
+			      var classNameTest = getClassNameTest(value, passed, incomplete, skipped, errors, failures);
 			      
-			      var folder = getFolder(folders,className);
+		    	  var folder = getFolder(folders,className);			      
 			      
 			      if (folderName != ''){
 			    	  folder = (folder == 0) ? folderName : folderName+folder;
 			      }
-			      
+			     
 			      var fName = folder.replace(/\//g,''); 
 			      var idDivFolder =  group_name+fName;
+
 		    	  var divFolderSelector = "#"+idDivFolder;
 		    	  
 		    	  var folder_exists = $(divFolderSelector).html();
 		    	  
-		    	  if (typeof folder_exists ===  "undefined") {		    		  
+		    	  if (typeof folder_exists ===  "undefined") {
+		    		  
 		    		  createDiv(folder,fName+' grey isNoHidden',group_name+"content",idDivFolder);
 		    		  
 			    	  var selector = "#"+idDivFolder+" > p";
@@ -418,33 +441,62 @@ $(document).on('ready',function(){
 			      
 			      divName = value;
 			      var divParent = idDivFolder+className;
-			      var testSelector = "#"+divName.replace(/:/g,'\\:');    
+			      var testSelector = "#"+divName.replace(/:/g,'\\:');  
 			      
-			      if(typeUpdate == 'test' && typeof $(testSelector).attr("id") !== "undefined"){
-			    	    removeOldClass(testSelector,classNameTest);
-			    	    
-						if (classNameTest == 'testFailed box'){
-							updateTestFailedContent(testSelector,test,info,divName);
-						}
-			      }else{
-						$(testSelector).remove();
-						if (classNameTest == 'testFailed box'){
-							  var failedTest = getInfoFailedTests(value,info);
-							  
-							  classNameTest += ' isNoHidden';
-							  createDivFailedTest(test,classNameTest,divParent,divName,failedTest['file'],failedTest['line'],
+			      var index = 0;
+			      
+			      while(index < classNameTest.length){	    	  
+			    	  var resultClassTestExecuted = classNameTest[index];
+			    	  var testContent = classNameTest[index+1];
+
+			    	  if(typeUpdate == 'test' && typeof $(actualIdTest).attr("id") !== "undefined"){
+			    		  
+			    		  createOrDeleteDataProviderElements(divParent,divName,testSelector,classNameTest);
+			
+			    		  removeOldClass(testSelector+index,resultClassTestExecuted);
+			    		
+						  if (resultClassTestExecuted == 'testFailed box'){
+								updateTestFailedContent(testSelector+index,test,info,testContent,divName+index);
+								$(testSelector+index).removeClass("alwaysHidden");
+								$(testSelector+index).removeClass("isHidden").addClass("isNoHidden");
+						  }else{
+								$(testSelector+index+" p").text(testContent);
+								var selector = testSelector+index+" > p";
+								createRunTestButton(selector,divName,testSelector+index);
+								if (index>0){
+									$(testSelector+index).addClass("alwaysHidden");
+								}
+						  }
+
+			    		    
+				      }else{
+				    	 
+						$(testSelector+index).remove();
+
+						if (resultClassTestExecuted == 'testFailed box'){
+							
+							  var failedTest = getInfoFailedTests(testContent,info);
+
+							  resultClassTestExecuted += ' isNoHidden';
+							  resultClassTestExecuted +=  " "+divName;
+	  
+							  createDivFailedTest(failedTest['testName'],resultClassTestExecuted,divParent,divName+index,failedTest['file'],failedTest['line'],
 									  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'),failedTest['code'], "margin0");
 							  
-							  var selector = testSelector+" > p.nameFT";
-							  createRunTestButton(selector,divName);
+							  var selector = testSelector+index+" > p.nameFT";
+							  createRunTestButton(selector,divName,testSelector+index);
 
 						 }else{
-							  classNameTest += ' isNoHidden';
-							  createDiv(test,classNameTest,divParent,divName, "margin0");
-							  var selector = "#"+divName.replace(/:/g,'\\:')+" > p";
-							  createRunTestButton(selector,divName);
+							 resultClassTestExecuted += ' isNoHidden';
+							 resultClassTestExecuted +=  " "+divName;
+							  createDiv(testContent,resultClassTestExecuted,divParent,divName+index, "margin0");
+							  var selector = testSelector+index+" > p";
+							  createRunTestButton(selector,divName,testSelector+index);
 						 }
 
+				      }
+			    	 
+			    	  index+=2;
 			      }
 
 		       }
@@ -453,13 +505,51 @@ $(document).on('ready',function(){
 		}	
 
 		checkDissapearedTests(request,typeUpdate,runSingleTest,folderName);
-	    removeSingleElements();
-		displayTotalTests();
-
+		
+	    removeSingleElements(groups);
+		displayTotalTests(groups);
 		showFaildedTest();
 
 	}
+	
+	createOrDeleteDataProviderElements = function(divParent,divName,testSelector,classNameTest){
+		  var totalElementosCreados = $("."+divName.replace(/:/g,'\\:')).length;
+		  var totalElementosReales = classNameTest.length/2;
+		  var indexLastElement = totalElementosCreados*2;
+		  indexLastElement = indexLastElement-2;
+		  
+		  if (totalElementosCreados > totalElementosReales){ 
+			  var elems_to_delete = totalElementosCreados-totalElementosReales;
+			  removeLastElementsDataProvider(testSelector,elems_to_delete,indexLastElement);
+		  }
+		  
+		  if (totalElementosCreados < totalElementosReales){
+			  var elems_to_create = totalElementosReales-totalElementosCreados;
+			  createElementsDataProvider(divParent,divName,elems_to_create,indexLastElement);
+		  }
+	}
 
+	removeLastElementsDataProvider = function (testSelector,elems_to_delete,indexLastElement){	  
+		  var index_to_delete = 0;
+		  while (index_to_delete < elems_to_delete){
+			 $(testSelector+indexLastElement).remove();
+			 indexLastElement = indexLastElement-2;
+			 index_to_delete+=1;
+		  } 
+	}
+	
+	createElementsDataProvider = function (divParent,divName,elems_to_create,indexLastElement){
+		  divBefore=divName+indexLastElement;
+		  indexLastElement+=2;
+		  
+		  var index_to_create = 0;
+		  while (index_to_create < elems_to_create){
+			 createDivNextSibling('','testOK box '+divName,divBefore,divName+indexLastElement, "margin0");
+			 indexLastElement = indexLastElement+2;
+			 index_to_create+=1;
+		  } 
+	}
+	
 	/**
 	 * Change groups name position
 	 * 
@@ -516,17 +606,52 @@ $(document).on('ready',function(){
 	 * @param array skipped
 	 * @param array errors
 	 */
-	getClassNameTest = function(value, passed, incomplete, skipped, errors){
-		var classNameTest = "";
-		if($.inArray(value, passed) > -1){
-			classNameTest = "testOK box";
-		}else{
-			if(($.inArray(value,incomplete) > -1) || ($.inArray(value,skipped) > -1)){
-				classNameTest = "testIncomplete box";
-			}else{
-				classNameTest = "testFailed box";
+	getClassNameTest = function(value, passed, incomplete, skipped, errors, failures){
+		var regexequals = new RegExp(value+"$","gi");
+		var regex = new RegExp (".*"+value+" .*","gi");
+		
+		var classNameTest = [];
+		
+		$.each(errors,function(index,testName){
+			if(testName.match(regex) || testName.match(regexequals)){
+				classNameTest.push("testFailed box");
+				classNameTest.push(testName);
 			}
-		}
+		});
+		
+		$.each(failures,function(index,testName){
+			if(testName.match(regex) || testName.match(regexequals)){
+				classNameTest.push("testFailed box");
+				classNameTest.push(testName);
+			}
+		});
+		
+		var inside = false;
+		$.each(passed,function(index,testName){
+			if((testName.match(regex) || testName.match(regexequals)) && !inside){
+				var className = (classNameTest.length == 0)? "testOK box" : "testOK box alwaysHidden";
+				classNameTest.push(className);
+				classNameTest.push(testName);
+			}
+		});
+		
+		inside = false;
+		$.each(incomplete,function(index,testName){
+			if((testName.match(regex) || testName.match(regexequals)) && !inside){
+				classNameTest.push("testIncomplete box");
+				classNameTest.push(testName);
+			}
+		});
+		
+		inside = false;
+		$.each(skipped,function(index,testName){
+			if((testName.match(regex) || testName.match(regexequals)) && !inside){
+				classNameTest.push("testIncomplete box");
+				classNameTest.push(testName);
+			}
+		});
+			
+
 		return classNameTest;
 	}
 	
@@ -534,13 +659,15 @@ $(document).on('ready',function(){
 	 * Search a folder name from a class name
 	 */
 	getFolder = function(folders,className){
-		
 		var result = "";
-		 $.each(folders, function(folder, tests) {
+		
+		 $.each(folders, function(folder, tests) {	
 			 $.each(folders[folder], function(index, test) {
 				 var regex = new RegExp (".*"+className+".*","gi");
+				// alert("REGEX: "+regex);
 				 if (test.match(regex)){
 					 result = folder;
+					 
 				 }
 			     
 			 });
@@ -559,7 +686,6 @@ $(document).on('ready',function(){
 				$(testSelector).removeClass('testIncomplete box').addClass(classNameTest);
 			}else{
 				if ($(testSelector).hasClass('testFailed box')){
-					
 					$(testSelector).removeClass('testFailed box').addClass(classNameTest);
 					remove_content = testSelector+' p.fileFT,'+testSelector+' p.red,'+testSelector+' p.italic,'+testSelector+' .testInfo';
 					$(remove_content).remove();
@@ -573,19 +699,22 @@ $(document).on('ready',function(){
 	/**
 	 * Add failed test information (file, line, message, trace, code)
 	 */
-	updateTestFailedContent = function(testSelector,testName,info,divName){
+	updateTestFailedContent = function(testSelector,testName,info,divName,idName){
 		var failedTest = getInfoFailedTests(divName,info);
-		
 		$(testSelector+" p").removeClass('nameNFT').addClass('nameFT bold');
+		$(testSelector+" p").text(failedTest['testName']);
+		var selector = testSelector+" > p";
+		createRunTestButton(selector,divName,testSelector);
+		
 		$(testSelector).append('<p class="fileFT">'+failedTest['file']+'</p>');
 		$(testSelector).append('<p class="red textRight bold">'+"+"+failedTest['line']+'</p>');
 		$(testSelector).append('<p class="italic">'+failedTest['message']+
-				'<input type="image" src="images/console.png" title="Display trace" class="trace classButton" data-idtrace='+"#"+divName+"trace"+'>'+
-				'<input type="image" src="images/bullet_arrow_down1.png" title="Display code" class="code classButton" data-idcode='+"#"+divName+"code"+' data-file='+failedTest['file']+' data-line='+failedTest['line']+' data-test='+testName+'></p>');
+				'<input type="image" src="images/console.png" title="Display trace" class="trace classButton" data-idtrace='+"#"+idName+"trace"+'>'+
+				'<input type="image" src="images/bullet_arrow_down1.png" title="Display code" class="code classButton" data-idcode='+"#"+idName+"code"+' data-file='+failedTest['file']+' data-line='+failedTest['line']+' data-test='+testName+'></p>');
 		
 		changeButtonsAppearance(".code","Display test code","bullet_arrow_down1.png","arrow_down_hover.png");
-		createDiv(failedTest['code'],"testInfo greyBox box",divName,divName+"code");
-		createDiv(failedTest['trace'].replace(/#/g,'</br>#'),"testInfo darkBox box",divName,divName+"trace");
+		createDiv(failedTest['code'],"testInfo greyBox box",idName,idName+"code");
+		createDiv(failedTest['trace'].replace(/#/g,'</br>#'),"testInfo darkBox box",idName,idName+"trace");
 	}
 	
 	/**
@@ -594,8 +723,12 @@ $(document).on('ready',function(){
 	getInfoFailedTests = function(testName,infoFailedTests){
 		var result;
 		
+		var regexequals = new RegExp(testName+"$","gi");
+		var regex = new RegExp (testName+" .*","gi");
+		
 		$.each(infoFailedTests, function(key, value) {
-		      if (value['testName'] == testName){
+			 
+		      if (value['testName'].match(regex) || value['testName'].match(regexequals)){
 		    	  result = value;
 		      }
 		});
@@ -605,8 +738,9 @@ $(document).on('ready',function(){
 	/**
 	 * Create button to run each test
 	 */
-	createRunTestButton = function (selector,divName){
-		$(selector).append('<input type="image" src="images/run.png" class="buttonTest classButton" data-name='+divName+' data-type="test" data-action="runTests">');
+	createRunTestButton = function (selector,divName,idName){
+		
+		$(selector).append('<input type="image" src="images/run.png" class="buttonTest classButton" data-idname='+idName+' data-name='+divName+' data-type="test" data-action="runTests">');
 	
 		changeButtonsAppearance(".buttonTest","Run test","run.png","run_hover.png");
 	}
@@ -618,10 +752,11 @@ $(document).on('ready',function(){
 		var ids;
 		switch (type){
 			case "file":
+
 				ids = getFileIds(".black",nameTest);
 				$.each(ids, function(key,value){
 					selector = "#"+value+" .box";
-					removeDissapearedTest(selector,request);
+					removeDissapearedTest(selector,request,value);
 				});
 			break;
 			
@@ -661,12 +796,18 @@ $(document).on('ready',function(){
 	/**
 	 * Remove every test dissapeared
 	 */
-	removeDissapearedTest = function(selector,request){
+	removeDissapearedTest = function(selector,request,testName){
+
 		$(selector).each(function(){
+			var idTest = $(this).attr("id");
+			idTest = idTest.replace(/:/g,'\\:');
+			
 			if (!$(this).hasClass('testInfo')){
-				var testName = $(this).attr('id');
+				testName = $("#"+idTest+" > p.nameTest").text();
+
 				res = checkIfTestExists(testName,request);
-				if(!res){ $("#"+testName.replace(/:/g,'\\:')).remove(); }
+
+				if(!res){ $("#"+idTest).remove(); }
 			}
 		});
 	}
@@ -680,10 +821,19 @@ $(document).on('ready',function(){
 	 */
 	checkIfTestExists = function(nameTest, arrayData){
 		var exists = false;
+
 		$.each(arrayData,function(key,value){
+			
 			if((key == 'passed' || key == 'failures' || key == 'errors' || key == 'skipped' || key == 'incomplete') && !exists){
 				if ($.inArray(nameTest,value) >= 0){
 					exists = true;
+				}else{
+					$.each(arrayData['failedTests'],function(key,value){
+						if (nameTest == value['testName']){
+							exists = true;
+						}
+						
+					});
 				}
 			}
 		});
@@ -693,8 +843,13 @@ $(document).on('ready',function(){
 	/**
 	 * Display the number of tests executed
 	 */
-	displayTotalTests = function(){
-		var total = $(".testFailed").size() + $(".testOK").size() + $(".testIncomplete").size();
+	displayTotalTests = function(groups){
+		
+		var total = 0;
+		$.each(groups,function(key,value){
+			total+=value.length;
+		});
+
 		var result = (total == 0) ? "No tests executed" : "<strong>"+projectName+"</strong> project: "+total+" test passing";
 		$(".totalTests p").html(result);
 	    if (total != 0){
