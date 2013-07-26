@@ -42,3 +42,6 @@ Below an example:
 ~/workspace/MyProject$ 
 ```
 Browser is launched in background to show PUWI.
+
+
+Developed by [Lucía Pérez](http://www.linkedin.com/profile/view?id=274173439&trk=hb_tab_pro_top "Linkedin: Lucía Pérez")
