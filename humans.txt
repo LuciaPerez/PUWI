@@ -1,0 +1,28 @@
+/* TEAM */
+	Collaborator and joint manager: Pepe Doval Gonzalez
+	Twitter: @pepellou
+	From: Santiago de Compostela, Galicia, Spain
+	Works for: Agil-AZ S.L.
+
+	Collaborator: Eduardo Jose Alvarez Novoa
+	Twitter: @eanovoa
+	From: Vigo, Galicia, Spain
+	Works for: Agil-AZ S.L.
+
+	Developer: Lucía Pérez Fernández
+	Twitter: @LuciaPF13
+	From: Ourense, Galicia, Spain
+
+/* THANKS */
+
+	Project Manager: Miguel Reboiro Jato
+	Contact: mrjato[at]uvigo.es
+	From: Ourense, Galicia, Spain
+	Works for: University of Vigo
+		
+
+/* SITE */
+	Last update: 2013/07/31
+	Language: English 
+	Doctype: XHTML 1.0 Strict
+	IDE: Eclipse, Gedit, Vim
