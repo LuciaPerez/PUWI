@@ -120,7 +120,7 @@ p {
 
 a {
   text-decoration: none;
-  color: #66cc33;
+  color: black;/*#66cc33;*/
   text-shadow: none;
 
   transition: color 0.5s ease;
@@ -136,10 +136,18 @@ a {
 }
 
 #main_content a:hover {
-  color: #0069ba;
-  text-shadow: #0090ff 0px 0px 2px;
+  color: black;/*#0069ba;*/
+  text-shadow: #66cc33 0px 0px 2px;
 }
 
+.logos input{
+	width: 100px;
+	margin-right: 10px;
+}
+
+.logos{
+	text-align:center;
+}
 
 .linkFooter{
 	float: right;
