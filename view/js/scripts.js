@@ -472,15 +472,15 @@ $(document).on('ready',function(){
 				      }else{
 				    	 
 						$(testSelector+index).remove();
-
+						
 						if (resultClassTestExecuted == 'testFailed box'){
 							
 							  var failedTest = getInfoFailedTests(testContent,info);
 
 							  resultClassTestExecuted += ' isNoHidden';
 							  resultClassTestExecuted +=  " "+divName;
-	  
-							  createDivFailedTest(failedTest['testName'],resultClassTestExecuted,divParent,divName+index,failedTest['file'],failedTest['line'],
+							  //failedTest['testName']
+							  createDivFailedTest(testContent,resultClassTestExecuted,divParent,divName+index,failedTest['file'],failedTest['line'],
 									  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'),failedTest['code'], "margin0");
 							  
 							  var selector = testSelector+index+" > p.nameFT";
@@ -489,6 +489,7 @@ $(document).on('ready',function(){
 						 }else{
 							 resultClassTestExecuted += ' isNoHidden';
 							 resultClassTestExecuted +=  " "+divName;
+
 							  createDiv(testContent,resultClassTestExecuted,divParent,divName+index, "margin0");
 							  var selector = testSelector+index+" > p";
 							  createRunTestButton(selector,divName,testSelector+index);
@@ -606,53 +607,37 @@ $(document).on('ready',function(){
 	 * @param array skipped
 	 * @param array errors
 	 */
+	
+	searchTestEachArrayOfData = function (arrayData, regexequals, regex, classNameTestResult,className){
+		var search = '';
+		$.each(arrayData,function(index,testName){
+			if(testName.match(regex) || testName.match(regexequals)){
+				
+				if (className == "testOK box"){
+					className = (classNameTestResult.length == 0)? "testOK box" : "testOK box alwaysHidden";
+				}
+
+				classNameTestResult.push(className);
+				testName = testName.split('::');
+				classNameTestResult.push(testName[1]);
+
+			}
+		});
+		return classNameTestResult;
+	}
+	
 	getClassNameTest = function(value, passed, incomplete, skipped, errors, failures){
 		var regexequals = new RegExp(value+"$","gi");
 		var regex = new RegExp (".*"+value+" .*","gi");
-		
-		var classNameTest = [];
-		
-		$.each(errors,function(index,testName){
-			if(testName.match(regex) || testName.match(regexequals)){
-				classNameTest.push("testFailed box");
-				classNameTest.push(testName);
-			}
-		});
-		
-		$.each(failures,function(index,testName){
-			if(testName.match(regex) || testName.match(regexequals)){
-				classNameTest.push("testFailed box");
-				classNameTest.push(testName);
-			}
-		});
-		
-		var inside = false;
-		$.each(passed,function(index,testName){
-			if((testName.match(regex) || testName.match(regexequals)) && !inside){
-				var className = (classNameTest.length == 0)? "testOK box" : "testOK box alwaysHidden";
-				classNameTest.push(className);
-				classNameTest.push(testName);
-			}
-		});
-		
-		inside = false;
-		$.each(incomplete,function(index,testName){
-			if((testName.match(regex) || testName.match(regexequals)) && !inside){
-				classNameTest.push("testIncomplete box");
-				classNameTest.push(testName);
-			}
-		});
-		
-		inside = false;
-		$.each(skipped,function(index,testName){
-			if((testName.match(regex) || testName.match(regexequals)) && !inside){
-				classNameTest.push("testIncomplete box");
-				classNameTest.push(testName);
-			}
-		});
-			
 
-		return classNameTest;
+		var classNameTestResult = [];
+		classNameTestResult = searchTestEachArrayOfData(errors, regexequals, regex,classNameTestResult,"testFailed box");
+		classNameTestResult = searchTestEachArrayOfData(failures, regexequals, regex,classNameTestResult,"testFailed box");
+		classNameTestResult = searchTestEachArrayOfData(passed, regexequals, regex,classNameTestResult,"testOK box");
+		classNameTestResult = searchTestEachArrayOfData(incomplete, regexequals, regex,classNameTestResult,"testIncomplete box");
+		classNameTestResult = searchTestEachArrayOfData(skipped, regexequals, regex,classNameTestResult,"testIncomplete box");
+		
+		return classNameTestResult;
 	}
 	
 	/**
@@ -664,7 +649,7 @@ $(document).on('ready',function(){
 		 $.each(folders, function(folder, tests) {	
 			 $.each(folders[folder], function(index, test) {
 				 var regex = new RegExp (".*"+className+".*","gi");
-				// alert("REGEX: "+regex);
+
 				 if (test.match(regex)){
 					 result = folder;
 					 
@@ -749,10 +734,10 @@ $(document).on('ready',function(){
 	 * Choose group of tests to check if some of them are dissapeared
 	 */
 	checkDissapearedTests = function(request,type, nameTest, folderName){
+
 		var ids;
 		switch (type){
-			case "file":
-
+			case "file":			
 				ids = getFileIds(".black",nameTest);
 				$.each(ids, function(key,value){
 					selector = "#"+value+" .box";
@@ -803,10 +788,10 @@ $(document).on('ready',function(){
 			idTest = idTest.replace(/:/g,'\\:');
 			
 			if (!$(this).hasClass('testInfo')){
+				classTestName = $("#"+idTest).prev().text();
 				testName = $("#"+idTest+" > p.nameTest").text();
 
-				res = checkIfTestExists(testName,request);
-
+				res = checkIfTestExists(classTestName+"::"+testName,request);
 				if(!res){ $("#"+idTest).remove(); }
 			}
 		});
