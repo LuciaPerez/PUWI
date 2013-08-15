@@ -6,7 +6,7 @@
 	<meta  http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<link rel="icon" type="image/png" href="images/favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="css/style.css"/>
-	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 	<script type="text/javascript" src="js/scripts.js" ></script>
 
 	<title>PhpUnit Web Interface</title>
