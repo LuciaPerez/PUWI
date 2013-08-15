@@ -273,7 +273,7 @@ $(document).on('ready',function(){
 				is_hidden = false;
 				
 				is_empty = checkEmptyResults(request['result']);
-				
+
 				switch (typeRun){
 					case "file":
 						if (is_empty == true){
@@ -302,7 +302,6 @@ $(document).on('ready',function(){
 							$("."+nameRun.replace(/:/g,'\\:')).remove();
 							removeSingleElements(request['result']['groups']);	
 						}else{
-
 							updateResults(request['result'],'',nameRun,'test');
 						}
 					break;
@@ -389,6 +388,9 @@ $(document).on('ready',function(){
 		    var selector = "#"+group_name+" > p";
 	    	var existingGroup = $(selector).html();
 	    	var divName;
+	    	/*
+	    	 * Show groups
+	    	 */
 		    if (typeof existingGroup ===  "undefined") {
 		    	createDiv(group_name,"groupName isNoHidden","content",group_name);
 			    createDiv('','groupContent isNoHidden', 'content', group_name+"content");
@@ -406,7 +408,9 @@ $(document).on('ready',function(){
 				
 		       if (runSingleTest ==  '' || (runSingleTest == value && typeUpdate == 'test') || (runSingleTest == group_name && typeUpdate == 'group') || (runSingleTest == className && typeUpdate == 'file')){
 			      var classNameTest = getClassNameTest(value, passed, incomplete, skipped, errors, failures);
-			      
+			      /*
+			       * Show folders
+			       */
 		    	  var folder = getFolder(folders,className);			      
 			      
 			      if (folderName != ''){
@@ -429,7 +433,9 @@ $(document).on('ready',function(){
 			    	  
 			    	  changeButtonsAppearance(".buttonFolder","Run folder","run_folder.png","run_folder_hover.png");
 		    	  }
-		    	  
+		    	  /*
+		    	   * Show class name
+		    	   */
 			      var divFileSelector = divFolderSelector+className;
 			      if(typeof $(divFileSelector).html() === "undefined"){
 						createDiv(className,'black margin20 isNoHidden',idDivFolder, idDivFolder+className);
@@ -444,7 +450,9 @@ $(document).on('ready',function(){
 			      var testSelector = "#"+divName.replace(/:/g,'\\:');  
 			      
 			      var index = 0;
-			      
+			      /*
+			       * Show each test
+			       */
 			      while(index < classNameTest.length){	    	  
 			    	  var resultClassTestExecuted = classNameTest[index];
 			    	  var testContent = classNameTest[index+1];
@@ -454,7 +462,7 @@ $(document).on('ready',function(){
 			    		  createOrDeleteDataProviderElements(divParent,divName,testSelector,classNameTest);
 			
 			    		  removeOldClass(testSelector+index,resultClassTestExecuted);
-			    		
+
 						  if (resultClassTestExecuted == 'testFailed box'){
 								updateTestFailedContent(testSelector+index,test,info,testContent,divName+index);
 								$(testSelector+index).removeClass("alwaysHidden");
@@ -470,23 +478,25 @@ $(document).on('ready',function(){
 
 			    		    
 				      }else{
-				    	 
+
 						$(testSelector+index).remove();
 						
 						if (resultClassTestExecuted == 'testFailed box'){
 							
 							  var failedTest = getInfoFailedTests(testContent,info);
+							  testContent = failedTest['testName'].split("::");
 
 							  resultClassTestExecuted += ' isNoHidden';
 							  resultClassTestExecuted +=  " "+divName;
-							  //failedTest['testName']
-							  createDivFailedTest(testContent,resultClassTestExecuted,divParent,divName+index,failedTest['file'],failedTest['line'],
+
+							  createDivFailedTest(testContent[1],resultClassTestExecuted,divParent,divName+index,failedTest['file'],failedTest['line'],
 									  failedTest['message'],failedTest['trace'].replace(/#/g,'</br>#'),failedTest['code'], "margin0");
 							  
 							  var selector = testSelector+index+" > p.nameFT";
 							  createRunTestButton(selector,divName,testSelector+index);
 
 						 }else{
+
 							 resultClassTestExecuted += ' isNoHidden';
 							 resultClassTestExecuted +=  " "+divName;
 
@@ -687,7 +697,8 @@ $(document).on('ready',function(){
 	updateTestFailedContent = function(testSelector,testName,info,divName,idName){
 		var failedTest = getInfoFailedTests(divName,info);
 		$(testSelector+" p").removeClass('nameNFT').addClass('nameFT bold');
-		$(testSelector+" p").text(failedTest['testName']);
+		var testNameWithoutClass = failedTest['testName'].split('::');
+		$(testSelector+" p").text(testNameWithoutClass[1]);
 		var selector = testSelector+" > p";
 		createRunTestButton(selector,divName,testSelector);
 		
