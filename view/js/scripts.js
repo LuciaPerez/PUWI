@@ -448,7 +448,7 @@ $(document).on('ready',function(){
 			      divName = value;
 			      var divParent = idDivFolder+className;
 			      var testSelector = "#"+divName.replace(/:/g,'\\:');  
-			      
+			      var testNameWithoutAditionalInfo = divName.split('::');
 			      var index = 0;
 			      /*
 			       * Show each test
@@ -458,7 +458,6 @@ $(document).on('ready',function(){
 			    	  var testContent = classNameTest[index+1];
 
 			    	  if(typeUpdate == 'test' && typeof $(actualIdTest).attr("id") !== "undefined"){
-			    		  
 			    		  createOrDeleteDataProviderElements(divParent,divName,testSelector,classNameTest);
 			
 			    		  removeOldClass(testSelector+index,resultClassTestExecuted);
@@ -468,7 +467,8 @@ $(document).on('ready',function(){
 								$(testSelector+index).removeClass("alwaysHidden");
 								$(testSelector+index).removeClass("isHidden").addClass("isNoHidden");
 						  }else{
-								$(testSelector+index+" p").text(testContent);
+							  	
+								$(testSelector+index+" p").text(testNameWithoutAditionalInfo[1]);
 								var selector = testSelector+index+" > p";
 								createRunTestButton(selector,divName,testSelector+index);
 								if (index>0){
@@ -500,7 +500,7 @@ $(document).on('ready',function(){
 							 resultClassTestExecuted += ' isNoHidden';
 							 resultClassTestExecuted +=  " "+divName;
 
-							  createDiv(testContent,resultClassTestExecuted,divParent,divName+index, "margin0");
+							  createDiv(testNameWithoutAditionalInfo[1],resultClassTestExecuted,divParent,divName+index, "margin0");
 							  var selector = testSelector+index+" > p";
 							  createRunTestButton(selector,divName,testSelector+index);
 						 }
@@ -700,7 +700,8 @@ $(document).on('ready',function(){
 		var testNameWithoutClass = failedTest['testName'].split('::');
 		$(testSelector+" p").text(testNameWithoutClass[1]);
 		var selector = testSelector+" > p";
-		createRunTestButton(selector,divName,testSelector);
+		
+		createRunTestButton(selector,failedTest['testName'],testSelector);
 		
 		$(testSelector).append('<p class="fileFT">'+failedTest['file']+'</p>');
 		$(testSelector).append('<p class="red textRight bold">'+"+"+failedTest['line']+'</p>');
@@ -735,7 +736,6 @@ $(document).on('ready',function(){
 	 * Create button to run each test
 	 */
 	createRunTestButton = function (selector,divName,idName){
-		
 		$(selector).append('<input type="image" src="images/run.png" class="buttonTest classButton" data-idname='+idName+' data-name='+divName+' data-type="test" data-action="runTests">');
 	
 		changeButtonsAppearance(".buttonTest","Run test","run.png","run_hover.png");
