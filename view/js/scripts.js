@@ -283,6 +283,7 @@ $(document).on('ready',function(){
 							});
 							removeSingleElements(request['result']['groups']);	
 						}else{
+
 							updateResults(request['result'],'',nameRun,'file');
 						}
 					break;
@@ -436,6 +437,7 @@ $(document).on('ready',function(){
 		    	  /*
 		    	   * Show class name
 		    	   */
+		    	  
 			      var divFileSelector = divFolderSelector+className;
 			      if(typeof $(divFileSelector).html() === "undefined"){
 						createDiv(className,'black margin20 isNoHidden',idDivFolder, idDivFolder+className);
@@ -450,6 +452,7 @@ $(document).on('ready',function(){
 			      var testSelector = "#"+divName.replace(/:/g,'\\:');  
 			      var testNameWithoutAditionalInfo = divName.split('::');
 			      var index = 0;
+			      
 			      /*
 			       * Show each test
 			       */
@@ -503,6 +506,7 @@ $(document).on('ready',function(){
 							  createDiv(testNameWithoutAditionalInfo[1],resultClassTestExecuted,divParent,divName+index, "margin0");
 							  var selector = testSelector+index+" > p";
 							  createRunTestButton(selector,divName,testSelector+index);
+
 						 }
 
 				      }
@@ -799,7 +803,8 @@ $(document).on('ready',function(){
 			idTest = idTest.replace(/:/g,'\\:');
 			
 			if (!$(this).hasClass('testInfo')){
-				classTestName = $("#"+idTest).prev().text();
+				var idParent = $("#"+idTest).parent().attr("id");
+				classTestName = $("#"+idParent+" > p").text();
 				testName = $("#"+idTest+" > p.nameTest").text();
 
 				res = checkIfTestExists(classTestName+"::"+testName,request);
