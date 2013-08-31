@@ -9,8 +9,8 @@
 	From: Vigo, Galicia, Spain
 	Works for: Agil-AZ S.L.
 
-	Developer: Lucía Pérez Fernández
-	Twitter: @LuciaPF13
+	Developer: Lucï¿½a Pï¿½rez Fernï¿½ndez
+	Twitter: lpfernandez[at]esei.uvigo.es
 	From: Ourense, Galicia, Spain
 
 /* THANKS */
