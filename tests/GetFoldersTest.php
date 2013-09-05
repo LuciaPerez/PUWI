@@ -1,6 +1,6 @@
 <?php
 require_once dirname(dirname(__FILE__)).'/PUWI_GetResults.php';
-require_once dirname(dirname(__FILE__)).'/tests/MySuite.php';
+
 
 class GetFoldersTest extends PHPUnit_Framework_TestCase{
 	private $gr;
