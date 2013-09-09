@@ -200,7 +200,7 @@ $(document).on('ready',function(){
 				updateResults(request['result'],'','');
 			},
 			error: function(request){
-				alert("An error ocurred in AJAX request.");
+				alert("An error ocurred in AJAX request. \nOne of the most common reasons is to have a 'print' instruction in PUWI code.");
 			}
 		});
 	}
@@ -339,15 +339,23 @@ $(document).on('ready',function(){
 	 * Check if exits some group without tests and removes it.
 	 */
 	removeSingleElements = function (groups){
+
 		elem = getSingleElement(".black");
-		$(elem).remove();
+		$.each(elem,function(index,single_element){
+			$(single_element).remove();
+		});
+		
 		
 		elem = getSingleElement(".grey");
-		$(elem).remove();
+		$.each(elem,function(index,single_element){
+			$(single_element).remove();
+		});
 
 		elem = getSingleElement(".groupContent");
-		$(elem).prev().remove();
-		$(elem).remove();
+		$.each(elem,function(index,single_element){
+			$(single_element).prev().remove();
+			$(single_element).remove();
+		});
 		
 		displayTotalTests(groups);
 	}
@@ -356,13 +364,14 @@ $(document).on('ready',function(){
 	 * Check if an element has only child
 	 * @param string selector
 	 */
-	getSingleElement = function(selector){
-		var result;	
+	getSingleElement = function(selector){	
+		var result = [];	
 		$(selector).each(function(){
 			if($(this).children().size() == 1){
-				result = this;
+				result.push(this);
 			}
 		});
+		alert("SELECTOR--> "+selector+" --- "+result.id);
 		return result;
 	}
 	
@@ -749,7 +758,7 @@ $(document).on('ready',function(){
 	 * Choose group of tests to check if some of them are dissapeared
 	 */
 	checkDissapearedTests = function(request,type, nameTest, folderName){
-
+		alert("entra");
 		var ids;
 		switch (type){
 			case "file":			
