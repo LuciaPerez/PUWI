@@ -339,7 +339,7 @@ $(document).on('ready',function(){
 	 * Check if exits some group without tests and removes it.
 	 */
 	removeSingleElements = function (groups){
-
+		
 		elem = getSingleElement(".black");
 		$.each(elem,function(index,single_element){
 			$(single_element).remove();
@@ -371,7 +371,7 @@ $(document).on('ready',function(){
 				result.push(this);
 			}
 		});
-		alert("SELECTOR--> "+selector+" --- "+result.id);
+
 		return result;
 	}
 	
@@ -758,7 +758,6 @@ $(document).on('ready',function(){
 	 * Choose group of tests to check if some of them are dissapeared
 	 */
 	checkDissapearedTests = function(request,type, nameTest, folderName){
-		alert("entra");
 		var ids;
 		switch (type){
 			case "file":			
@@ -857,7 +856,9 @@ $(document).on('ready',function(){
 		
 		var total = 0;
 		$.each(groups,function(key,value){
-			total+=value.length;
+			if($('#'+key).length){
+				total+=value.length;
+			}
 		});
 
 		var result = (total == 0) ? "No tests executed" : "<strong>"+projectName+"</strong> project: "+total+" test passing";
