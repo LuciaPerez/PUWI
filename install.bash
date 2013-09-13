@@ -20,6 +20,8 @@ function main {
 
 	mv $scriptDir/ $pubDirectory
 
+	chmod 777 $pubDirectory/PUWI/	
+
 	addIncludePath
 
 	createAlias
