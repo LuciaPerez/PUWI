@@ -1,5 +1,6 @@
 <?php
 include_once 'PUWI_UtilFilter.php';
+
 class PUWI_GetResults{
 	
 	/**
@@ -19,7 +20,7 @@ class PUWI_GetResults{
 	 * @param PHPUnit_Framework_Test $suite
 	 * @return array
 	 */
-	public function getResults($pathProject,$result,$argv,$suite){
+	public function getResults($pathProject,$result,$argv,$suite,$coverage_path){
 		$this->pathProject = $argv[1];
 		$projectName = $this->getProjectName($pathProject);
 	
@@ -35,6 +36,30 @@ class PUWI_GetResults{
 		$groups = $suite->getGroups();
 		$groups = $this->getGroups($groups_details,$groups);
 		
+		$puwi_path = substr($argv[0],0,strripos($argv[0],"/"));
+
+		$activate_coverage = '';
+		if($coverage_path != ''){
+			
+			$puwi_path .= "/tmp/";
+			if(is_dir($puwi_path)){
+				$this->deleteTemporaryDirectory($puwi_path);
+			}
+			mkdir($puwi_path);
+			
+			$this->checkPhpunitConfiguration($coverage_path,$puwi_path.$projectName);
+			$directories = (explode("/",$argv[1]));
+			$activate_coverage = "http://localhost/PUWI/tmp/".$projectName;
+			$continue = true;
+			foreach($directories as $directory){
+				if ($directory != $projectName && $continue){
+					$activate_coverage .= $directory."/";
+				}else{
+					$continue = false;
+				}
+			}
+			$activate_coverage .= "index.html";
+		}
 		return array("projectName" => $projectName,
 					 "passed" => $passed,
 					 "failures"=> $failures,
@@ -43,8 +68,70 @@ class PUWI_GetResults{
 					 "skipped" => $skipped,
 					 "groups" => $groups,
 					 "folders" => $this->arrayFolders,
-					 "failedTests" => $this->infoFailedTests);
+					 "failedTests" => $this->infoFailedTests,
+					 "coverage" => $activate_coverage);
+	}
+	
+	/**
+	 * Delete temporary directory ('tmp/')
+	 * 
+	 * @param string $dir
+	 */
+	protected function deleteTemporaryDirectory($dir){
+		if (is_dir($dir)) {
+	     $objects = scandir($dir);
+	     foreach ($objects as $object) {
+	       if ($object != "." && $object != "..") {
+	         if (filetype($dir."/".$object) == "dir"){
+	         	$this->deleteTemporaryDirectory($dir."/".$object);
+	         }else {unlink($dir."/".$object);}
+	       }
+	     }
+	     reset($objects);
+	     rmdir($dir);
+	   }
+	}
+	
+	
+	/**
+	 * Copy coverage-html files generated from the directory defined by the user to the server 
+	 * 
+	 * @param string $coverage_path
+	 * @param string $puwi_path
+	 */
+	protected function checkPhpunitConfiguration($coverage_path,$puwi_path){
+		$coverage_path = (substr($coverage_path,-1,1) != '/') ? $coverage_path.'/' : $coverage_path;
+		$puwi_path = (substr($puwi_path,-1,1) != '/') ? $puwi_path.'/' : $puwi_path;
+
+		if(!is_dir($puwi_path)){
+			mkdir($puwi_path);
+		}
 		
+		if (is_dir($coverage_path)) {
+			if ($dir = opendir($coverage_path)) {
+				
+				while (false !== ($fileName = readdir($dir))) {
+					if(is_file($coverage_path.$fileName) && $fileName!="." && $fileName!=".."){
+						$file_to_open = fopen ($coverage_path.$fileName, "r");
+						$file_to_copy = fopen($puwi_path.$fileName, "w");
+						
+						while ($content = fgets($file_to_open, 1024)){
+							fwrite($file_to_copy, $content);
+						}
+						
+						fclose($file_to_copy);
+						fclose($file_to_open);
+					}else{
+						if(is_dir($coverage_path.$fileName) && $fileName!="." && $fileName!=".."){
+							$this->checkPhpunitConfiguration($coverage_path.$fileName,$puwi_path.$fileName);
+						}
+					}
+				}
+					
+				closedir($dir);
+			}		
+		}
+
 	}
 	
 	/**
@@ -100,8 +187,7 @@ class PUWI_GetResults{
 					
 				closedir($dir);
 			}
-	
-	
+
 		}
 	
 	}
