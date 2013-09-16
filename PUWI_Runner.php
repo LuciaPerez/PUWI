@@ -2,6 +2,15 @@
 
 class PUWI_Runner extends PHPUnit_TextUI_TestRunner
 {
+	var $coverage_path='';
+	
+	public function getCoverageDestination(){
+		return $this->coverage_path;
+	}
+	
+	protected function setCoverageDestination($path){  
+		$this->coverage_path = $path;
+	}
 
     public function doRunSingleTest(PHPUnit_Framework_Test $suite,array $argv,$arguments){
     	
@@ -100,6 +109,12 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
 	
     	$this->processSuiteFilters($suite, $full_arguments);
     	
+		if(in_array('configuration',array_keys($full_arguments))){
+			if(in_array('coverage-html',$full_arguments['configuration']->getLoggingConfiguration())){
+    			$this->setCoverageDestination($full_arguments['configuration']->getLoggingConfiguration()['coverage-html']);
+			}
+		}
+		
     	if (isset($full_arguments['bootstrap'])) {
     		$GLOBALS['__PHPUNIT_BOOTSTRAP'] = $full_arguments['bootstrap'];
     	}
