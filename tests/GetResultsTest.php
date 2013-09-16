@@ -1,17 +1,18 @@
 <?php
-require_once dirname(dirname(__FILE__)).'/PUWI_GetResults.php';
+include_once dirname(dirname(__FILE__)).'/PUWI_GetResults.php';
 
 class GetResultsTest extends PHPUnit_Framework_TestCase{
 
 	private $gr;
 	private static $suite;
 	private static $result;
+	private static $coverage_path;
 
 	public static function setUpBeforeClass()
 	{
 		self::$suite = new PHPUnit_Framework_TestSuite;
-		
-		self::$suite->addTestFile(dirname(__FILE__).'/SampleTest.php');
+		self::$coverage_path = dirname(dirname(__FILE__)).'/tests/Calculadora/results-coverage';
+		self::$suite->addTestFile(dirname(__FILE__).'/Calculadora/tests/CalculadoraTest.php');
 		self::$result = self::$suite->run();
 	}
 	protected function setUp(){		
@@ -37,7 +38,6 @@ class GetResultsTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testgetTestPassed(){
-		$this->markTestIncomplete();
 		$this->assertInternalType("array",$this->gr->getTestsPassed(self::$result));
 	}
 	
@@ -52,7 +52,6 @@ class GetResultsTest extends PHPUnit_Framework_TestCase{
 	
 
 	public function testgetTestFailed(){
-		$this->markTestSkipped();
 		$this->assertInternalType("array",$this->gr->getTestsFailed(self::$result));
 	}
 	
@@ -68,23 +67,23 @@ class GetResultsTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testCheckArrayResults(){
-		$argv = array("",dirname(dirname(__FILE__)));
-		$arrayResults = $this->gr->getResults(dirname(dirname(__FILE__)),self::$result,$argv,self::$suite);
+		$argv = array(dirname(dirname(__FILE__)),dirname(__FILE__).'/Calculadora');
+		$arrayResults = $this->gr->getResults(dirname(dirname(__FILE__)),self::$result,$argv,self::$suite,self::$coverage_path);
 		
-		$keys = array('projectName','passed','failures','errors','incompleted','skipped','groups','folders','failedTests');
+		$keys = array('projectName','passed','failures','errors','incomplete','skipped','groups','folders','failedTests','coverage');
 		
 		$this->assertEquals($keys,array_keys($arrayResults));
 	}
 	
 	public function testReturnTypeProjectName(){
-		$argv = array("",dirname(dirname(__FILE__)));
-		$arrayResults = $this->gr->getResults(dirname(dirname(__FILE__)),self::$result,$argv,self::$suite);
+		$argv = array(dirname(dirname(__FILE__)),dirname(__FILE__).'/Calculadora');
+		$arrayResults = $this->gr->getResults(dirname(dirname(__FILE__)),self::$result,$argv,self::$suite,self::$coverage_path);
 	
 		$this->assertInternalType("string",$arrayResults['projectName']);
 	}
 	
 	public function testCheckTestsName(){
-		self::$suite->addTestFile(dirname(__FILE__).'/../SampleTest.php');
+		self::$suite->addTestFile(dirname(__FILE__).'/SampleTest.php');
 		$name_groups = $this->gr->getGroups(self::$suite->getGroupDetails(), self::$suite->getGroups());
 
 		foreach (array_values($name_groups) as $content){
@@ -96,7 +95,6 @@ class GetResultsTest extends PHPUnit_Framework_TestCase{
 	
 	//Get Fails Tests
 	public function testGetFailsReturnType(){
-		print_r(self::$suite->getName());
 		$this->gr->getFails(self::$result->failures());	
 		$this->assertInternalType("array",$this->gr->getInfoFailedTests());
 	}
@@ -117,11 +115,11 @@ class GetResultsTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testArrayFoldersIsArray(){
+		$this->array_folders = $this->gr->getArrayFolders($this->pathProject);
 		$this->assertInternalType("array",$this->array_folders);	
 	}
 	
 	public function testCheckIsDir(){
-		$this->fail();
 		$this->pathProject = dirname(dirname(__FILE__)).'/PUWI_GetResults.php';
 		$this->array_folders = $this->gr->getArrayFolders($this->pathProject);
 		$this->assertEmpty($this->array_folders);
@@ -131,7 +129,20 @@ class GetResultsTest extends PHPUnit_Framework_TestCase{
 		$this->assertEquals('tests/',substr($this->pathProject.'tests/',strlen($this->pathProject)));
 	}
 
+	//Coverage analysis
+	public function testGetCoverageLocation(){
+		$coverage_locacion = dirname(dirname(__FILE__)).'/COVERAGE-PUWI';	
+		$this->assertTrue(is_dir($coverage_locacion));
+	}
 
+	public function testCoverageURL(){
+		$argv = array(dirname(dirname(__FILE__)),dirname(__FILE__).'/Calculadora');
+		$arrayResults = $this->gr->getResults(dirname(dirname(__FILE__)),self::$result,$argv,self::$suite,self::$coverage_path);
+		
+		$expected_url = "http://localhost/PUWI/tmp/Calculadora/index.html";
+		
+		$this->assertEquals($expected_url,$arrayResults['coverage']);
+	}
 	
 }
 ?>

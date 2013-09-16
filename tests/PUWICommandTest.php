@@ -16,7 +16,6 @@ class PUWICommandTest extends PHPUnit_Framework_TestCase{
 	public function testGroupOfTests(){
 		$actionStartTest = 'mv '.dirname(dirname(__FILE__)).'/tests/Calculadora '.dirname(dirname(dirname(__FILE__))).'/';
 		exec($actionStartTest);
-	
 		$argv = array(dirname(__FILE__).'/PUWI_Command.php',dirname(dirname(dirname(__FILE__))).'/Calculadora/','CalculadoraTest','file');
 		$this->command->run($argv);
 		$this->assertGreaterThan(3,sizeof($argv));

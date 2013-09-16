@@ -1,5 +1,5 @@
 <?php
-require_once '/home/lucia/Calculadora/src/Calcu.php';
+require_once dirname(__FILE__).'/../src/Calcu.php';
 class CalculadoraTest extends PHPUnit_Framework_TestCase
 {
 	private $c;
@@ -8,9 +8,7 @@ class CalculadoraTest extends PHPUnit_Framework_TestCase
 		$this->c = new Calculadora();
 	}
 
-	public function testInConstruction(){
-		$this->markTestIncomplete();
-	}
+
 
 	/**
 	* @group grupo_Suma
@@ -35,9 +33,10 @@ class CalculadoraTest extends PHPUnit_Framework_TestCase
 
 	/**
 	* @group grupo_Division
+	* @test
 	*/
-	public function testDivisor(){
-		$this->assertEquals(-1,$this->c->div(15, 0));
+	public function Divisor(){
+		$this->assertEquals(-2,$this->c->div(15, 0));
 	}
 
 	/**
@@ -46,6 +45,13 @@ class CalculadoraTest extends PHPUnit_Framework_TestCase
 	public function testMult(){
 		$this->assertEquals(18,$this->c->mult(3, 6));
 	}
+
+	public function testInConstruction(){
+		$this->markTestIncomplete();
+	}
+
+
+
 
 }
 ?>
