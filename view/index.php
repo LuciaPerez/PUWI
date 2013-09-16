@@ -25,10 +25,11 @@
 		</div>
 	</div>
 	
-	<div id="content">
-		
+	<div id="content">	
 	</div>
 </div>
+</body>
+
 <div id="footer">
 	<p> PUWI - <span class='green'>PhpUnit Web Interface </span>
 	<span id="contentFooter">
@@ -41,5 +42,4 @@
 	</span>
 	</p>
 </div>
-</body>
 </html>

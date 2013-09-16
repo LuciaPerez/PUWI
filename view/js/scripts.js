@@ -533,6 +533,25 @@ $(document).on('ready',function(){
 	    removeSingleElements(groups);
 		displayTotalTests(groups);
 		showFaildedTest();
+		
+		if(request['coverage'] != ''){
+			$(".coverage").remove();
+
+			$('#footer').before($("<p></p",{
+				class: "coverage",
+				html: "Code Coverage Analysis",
+				css: { "text-align": "center" }
+			}));
+			
+			$('#footer').before($("<iframe></iframe>", {
+				class: "coverage",
+		        src: request['coverage'],
+		        scrolling: "auto",
+		        frameborder: "no",
+		        css: { "width": "100%", "height": "500", "text-align": "center" }
+			}));
+
+		}
 
 	}
 	
