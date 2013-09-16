@@ -26,7 +26,8 @@
 			$this->handleArguments($argv);
 	
 			$runner = $this->createRunner();
-	
+
+				
 			if (is_object($this->arguments['test']) &&
 			    $this->arguments['test'] instanceof PHPUnit_Framework_Test) {
 			    $suite = $this->arguments['test'];
@@ -47,6 +48,8 @@
 				}else{
 			    	$result = $runner->doRun($suite, $argv,$this->arguments);
 				}
+				$coverage_path = $runner->getCoverageDestination();
+
 			}
 	
 			catch (PHPUnit_Framework_Exception $e) {
@@ -55,7 +58,7 @@
 
 			$results = new PUWI_GetResults();
 			
-			$arrayResults = $results->getResults($argv[1],$result,$argv,$suite);
+			$arrayResults = $results->getResults($argv[1],$result,$argv,$suite,$coverage_path);
 			return $arrayResults;
 	
 		}
