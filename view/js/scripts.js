@@ -1,7 +1,7 @@
 
 $(document).on('ready',function(){
 
-	var is_hidden = false;
+	var hide_tests = true;
 	var class_isHidden = " isNoHidden";
 	var projectName;
 	var actualIdTest;
@@ -11,7 +11,8 @@ $(document).on('ready',function(){
 	 */
 	$("#content").on('click','.greyBox p #hideTestsOK', function() {
 		set_isHidden();
-		hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent");
+		hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent",hide_tests);
+
 		
 	});
 	
@@ -79,33 +80,33 @@ $(document).on('ready',function(){
 	}
 
 	/**
-	 * Change value of is_hidden variable
+	 * Change value of hide_tests variable
 	 */
 	set_isHidden = function(){
-		is_hidden = !is_hidden;
-		class_isHidden = (is_hidden == true) ? " isHidden" : " isNoHidden";
+		hide_tests = !hide_tests;
+		class_isHidden = (hide_tests == true) ? " isHidden" : " isNoHidden";
 	}
 	
 	/**
 	 * Manage selectors to hide elements
 	 */
-	hideElements = function(testSelector,classSelector,folderSelector,groupSelector){
-		hideGroupName(groupSelector);
-		hideFolderName(folderSelector);
-		hideClassName(classSelector);
+	hideElements = function(testSelector,classSelector,folderSelector,groupSelector,showTest){
+		hideGroupName(groupSelector,showTest);
+		hideFolderName(folderSelector,showTest);
+		hideClassName(classSelector,showTest);
 
-		changeHiddenClass(testSelector);
+		changeHiddenClass(testSelector,showTest);
 	}
 	
 	/**
 	 * Check if there are some failed tests in a group
 	 * @param string selector
 	 */
-	hideGroupName = function(selector){
+	hideGroupName = function(selector,showTest){
 		$(selector).each(function(){
 			if(!$(this).children().children().children().hasClass('testFailed')){
-				changeHiddenClass("#"+$(this).attr("id"));
-				changeHiddenClass("#"+$(this).prev().attr("id"));
+				changeHiddenClass("#"+$(this).attr("id"),showTest);
+				changeHiddenClass("#"+$(this).prev().attr("id"),showTest);
 			}else{
 				$("#"+$(this).attr("id")).removeClass('isHidden').addClass('isNoHidden');
 				$("#"+$(this).prev().attr("id")).removeClass('isHidden').addClass('isNoHidden');
@@ -117,10 +118,10 @@ $(document).on('ready',function(){
 	 * Check if there are some failed tests in a folder
 	 * @param string selector
 	 */
-	hideFolderName = function(selector){
+	hideFolderName = function(selector,showTest){
 		$(selector).each(function(){
 			if(!$(this).children().children().hasClass('testFailed')){
-				changeHiddenClass("#"+$(this).attr("id"));
+				changeHiddenClass("#"+$(this).attr("id"),showTest);
 			}else{
 				$("#"+$(this).attr("id")).removeClass('isHidden').addClass('isNoHidden');
 			}
@@ -131,10 +132,10 @@ $(document).on('ready',function(){
 	 * Check if there are some failed tests in a class
 	 * @param string selector
 	 */
-	hideClassName = function(selector){
+	hideClassName = function(selector,showTest){
 		$(selector).each(function(){	
 			if(!$(this).children().hasClass('testFailed')){
-				changeHiddenClass("#"+$(this).attr("id"));
+				changeHiddenClass("#"+$(this).attr("id"),showTest);
 			}else{
 				$("#"+$(this).attr("id")).removeClass('isHidden').addClass('isNoHidden');
 			}
@@ -146,8 +147,8 @@ $(document).on('ready',function(){
 	 * Change class to hide a test
 	 * @param string selector
 	 */
-	changeHiddenClass = function(selector){
-		if (is_hidden){
+	changeHiddenClass = function(selector,showTest){
+		if (hide_tests){
 			if ($(selector).hasClass("isNoHidden")){
 				$(selector).removeClass('isNoHidden').addClass('isHidden');
 			}
@@ -165,11 +166,10 @@ $(document).on('ready',function(){
 	showFaildedTest = function(selector){
 		
 		if ($("#content .groupContent .grey .black").children().hasClass('testFailed')){
-			is_hidden = true;
-			hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent");
+			hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent",hide_tests);
 		}else{
-			is_hidden = false;
-			hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent");
+			hide_tests = false;
+			hideElements(".testIncomplete,.testOK",".black",".grey",".groupContent",hide_tests);
 		}
 	}
 	
@@ -177,7 +177,7 @@ $(document).on('ready',function(){
 	 * Remove all the showed elements and show results again
 	 */
 	runAllTests = function(){
-		is_hidden = false;
+		//hide_tests = false;
 		$("#content").empty();
 		runFirstTime();
 	}
@@ -270,7 +270,7 @@ $(document).on('ready',function(){
 		    async: true,	
 			data: {action:action,name:nameRun,argv:getURLParams(),type:typeRun},
 			success:function(request){
-				is_hidden = false;
+				//hide_tests = false;
 				
 				is_empty = checkEmptyResults(request['result']);
 
@@ -691,7 +691,7 @@ $(document).on('ready',function(){
 		 $.each(folders, function(folder, tests) {	
 			 $.each(folders[folder], function(index, test) {
 				 var regex = new RegExp (".*"+className+".*","gi");
-
+				 
 				 if (test.match(regex)){
 					 result = folder;
 					 
@@ -890,7 +890,7 @@ $(document).on('ready',function(){
 		    changeButtonsAppearance("#runAllTests","Run all tests","run.png","run_hover.png");
 	    	$("#hideTestsOK").hover(
 	    			function(){
-	    				var title = (is_hidden) ? 'Show passed tests' : 'Hide passed tests';
+	    				var title = (hide_tests) ? 'Show passed tests' : 'Hide passed tests';
 	    				$(this).attr('src','images/hide_hover.png');$(this).attr('title',title);
 	    			}, 
 	    			function(){$(this).attr('src','images/hide.png');}
