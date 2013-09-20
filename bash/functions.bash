@@ -23,11 +23,11 @@ function getWord {
 }
 
 function change_owner {
-	mkdir tmp/
+	sudo mkdir tmp_puwi/
 	
-	echo $1 > tmp/tmp.txt
+	echo $1 | sudo tee -a tmp_puwi/tmp.txt 1>/dev/null
 
-	pubDirectory=`cut -d "/" -f4 tmp/tmp.txt`
+	pubDirectory=`cut -d "/" -f4 tmp_puwi/tmp.txt`
 
 	
 	param=$1
@@ -44,17 +44,37 @@ function change_owner {
 
 	path_pub_dir=`expr substr $param 1 $length_path_pub_dir`
 	
-	ls -l $path_pub_dir > tmp/permissions.txt
+	ls -l $path_pub_dir | sudo tee -a tmp_puwi/permissions.txt 1>/dev/null 
 
-	user=`awk '/'$pubDirectory'/ {print $0}' tmp/permissions.txt | cut -d " " -f4`
+	user=`awk '/'$pubDirectory'/ {print $0}' tmp_puwi/permissions.txt | cut -d " " -f4`
 
-	group=`awk '/'$pubDirectory'/ {print $0}' tmp/permissions.txt | cut -d " " -f5`
+	group=`awk '/'$pubDirectory'/ {print $0}' tmp_puwi/permissions.txt | cut -d " " -f5`
 
-	path_puwi=$param"/PUWI/"
 
-	chown $user $path_puwi
-	chgrp $group $path_puwi
+	sudo chown $user $2
+	sudo chgrp $group $2
 	
-	rm tmp/tmp.txt tmp/permissions.txt
-	rmdir tmp/
+	sudo rm tmp_puwi/tmp.txt tmp_puwi/permissions.txt
+	sudo rmdir tmp_puwi/
+}
+
+function read_config {
+	while read line
+	do 
+		checkEnterSection && checkEnterDeps
+		path=`echo $line | awk '{print $3}'`
+		
+		key=`echo $line | awk '{print $1}'`
+		searchServerInformation $key $path
+	done < $scriptDir/config.ini
+
+}
+
+serverDirectory=""
+pubDirectory=""
+runService=""
+function searchServerInformation {
+	[ "$1" == "serverDirectory" ] && serverDirectory=$2
+	[ "$1" == "pubDirectory" ] && pubDirectory=$2
+	[ "$1" == "runService" ] && runService=$2
 }
