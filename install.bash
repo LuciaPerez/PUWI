@@ -19,8 +19,8 @@ function main {
 	$scriptDir/load_deps.bash 
 
 	mv $scriptDir/ $pubDirectory
-
-	chmod 777 $pubDirectory/PUWI/	
+	
+	change_owner $pubDirectory	
 
 	addIncludePath
 
