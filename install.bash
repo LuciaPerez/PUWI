@@ -14,13 +14,21 @@ function main {
 	end_with_ok 
 
 	read_config
+	parseConfig
 
 	addPathAutoload
 	$scriptDir/load_deps.bash 
 
 	mv $scriptDir/ $pubDirectory
 	
-	change_owner $pubDirectory	
+	if [[ `echo ${pubDirectory: -1}` = "/" ]]
+	then
+		path_puwi=$pubDirectory'PUWI/'
+	else
+		path_puwi=$pubDirectory'/PUWI/'
+	fi
+
+	change_owner $pubDirectory $path_puwi	
 
 	addIncludePath
 
@@ -28,42 +36,18 @@ function main {
 	echo -e "\nAfter RESTART your terminal, you can use <puwi> command in your PHP projects!\n"
 }
 
-function read_config {
-	regex="^.*\/vendor\/.*"
-	
-	while read line
-	do 
-		checkEnterSection && checkEnterDeps
-		path=`echo $line | awk '{print $3}'`
-		
-		key=`echo $line | awk '{print $1}'`
-		searchServerInformation $key $path
-	done < $scriptDir/config.ini
-	
-	parseConfig
-}
-
-serverDirectory=""
-pubDirectory=""
-runService=""
-function searchServerInformation {
-	[ "$1" == "serverDirectory" ] && serverDirectory=$2
-	[ "$1" == "pubDirectory" ] && pubDirectory=$2
-	[ "$1" == "runService" ] && runService=$2
-}
-
 function parseConfig {
-	theCommand='include_path=".:vendor/phpunit/'
+	theCommand='include_path=".:phpunit/'
 }
 
 function addPathAutoload {
-	pathAutoload="pathAutoload = vendor/phpunit/PHPUnit/Autoload.php";
+	pathAutoload="pathAutoload = phpunit/PHPUnit/Autoload.php";
 	echo $pathAutoload >> ./config.ini 
 }
 
 function addIncludePath {
 	phpIniLocation=`find $serverDirectory -name php.ini 2>/dev/null`
-	if [[ `grep "^include_path=\".:vendor\/phpunit" $phpIniLocation` = "" ]]
+	if [[ `grep "^include_path=\".:phpunit" $phpIniLocation` = "" ]]
 	then
 		echo $theCommand:$phpDir"\"" >> $phpIniLocation
 		echo -e "Restarting server to update php.ini configuration...\n"
