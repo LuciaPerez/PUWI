@@ -267,7 +267,9 @@ class PUWI_GetResults{
 	 * @return array
 	 */
 	function getTestsError(PHPUnit_Framework_TestResult $result){
-		return($this->getClassAndNameTest($result->errors()));
+		$error=$result->errors();
+		$this->getFails($error);
+		return($this->getClassAndNameTest($error));
 	}
 	
 	/**
