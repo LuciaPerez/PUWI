@@ -22,13 +22,14 @@ $(document).on('ready',function(){
 	});
 	
 	$("#content").on('click',".groupName .buttonGroup", function() {
+		
 		requestRunTests(this);
 	});
 	
 	$("#content").on('click',".groupContent .grey p .buttonFolder", function() {
 		var folderName = $(this).data('name');
 		var idFolder = $(this).data('idfolder');
-
+		
 		$.ajax({
 			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
 			dataType: "json",
@@ -50,6 +51,7 @@ $(document).on('ready',function(){
 	});
 	
 	$("#content").on('click',".groupContent .grey .black .box p .buttonTest", function() {
+		
 		requestRunTests(this);
 	});
 	
@@ -177,7 +179,6 @@ $(document).on('ready',function(){
 	 * Remove all the showed elements and show results again
 	 */
 	runAllTests = function(){
-		//hide_tests = false;
 		$("#content").empty();
 		runFirstTime();
 	}
@@ -186,6 +187,7 @@ $(document).on('ready',function(){
 	 * Get results of running tests from a project
 	 */
 	runFirstTime = function (){
+		$("#content").html('<div class="center"><img src="images/loading.gif"/></div>');
 		$.ajax({
 			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
 			dataType: "json",
@@ -194,13 +196,15 @@ $(document).on('ready',function(){
 			data: {action:'rerun',argv:getURLParams()},
 				
 			success: function(request){	
+				$("#content").empty();
 				projectName = request['result']["projectName"];
 				createDiv("","totalTests greyBox box","content","");
 				
 				updateResults(request['result'],'','');
 			},
 			error: function(request){
-				alert("An error ocurred in AJAX request. \nOne of the most common reasons is to have a 'print' instruction in PUWI code.");
+				$("#content").empty();
+				alert("An error ocurred in AJAX request.");
 			}
 		});
 	}
@@ -263,6 +267,9 @@ $(document).on('ready',function(){
 
 		actualIdTest = idName;
 
+		var original_content = $(idName).html();
+		$(idName).html('<div class="center"><img src="images/loading.gif"/></div>');
+		
 		$.ajax({
 			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
 			dataType: "json",
@@ -270,7 +277,6 @@ $(document).on('ready',function(){
 		    async: true,	
 			data: {action:action,name:nameRun,argv:getURLParams(),type:typeRun},
 			success:function(request){
-				//hide_tests = false;
 				
 				is_empty = checkEmptyResults(request['result']);
 
@@ -298,7 +304,8 @@ $(document).on('ready',function(){
 						}
 
 					break;
-					case "test":					
+					case "test":	
+						$(idName).html(original_content);
 						if (is_empty == true){
 							$("."+nameRun.replace(/:/g,'\\:')).remove();
 							removeSingleElements(request['result']['groups']);	
@@ -768,7 +775,8 @@ $(document).on('ready',function(){
 	 * Create button to run each test
 	 */
 	createRunTestButton = function (selector,divName,idName){
-		$(selector).append('<input type="image" src="images/run.png" class="buttonTest classButton" data-idname='+idName+' data-name='+divName+' data-type="test" data-action="runTests">');
+		var idButton = idName+"button";
+		$(selector).append('<input type="image" src="images/run.png" id='+idButton+' class="buttonTest classButton" data-idname='+idName+' data-name='+divName+' data-type="test" data-action="runTests">');
 	
 		changeButtonsAppearance(".buttonTest","Run test","run.png","run_hover.png");
 	}
