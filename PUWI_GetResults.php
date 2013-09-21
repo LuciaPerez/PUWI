@@ -327,18 +327,24 @@ class PUWI_GetResults{
 			
 			$testName = $f->failedTest()->toString();
 			$message = $f->getExceptionAsString();			
+			
+			$data = explode("\n",$data);
+
+			$array_aux = array ("");
+			$data = array_values(array_diff($data,$array_aux));
+			$data = array_pop($data);
 
 			$file=strstr($data, ':', true);
 			$line=trim(substr(strstr($data, ':'),1));
-			
+
+
 			$infoEachTest['testName'] = $testName;
 			$infoEachTest['file'] = $file;
 			$infoEachTest['line'] = $line;
 			$infoEachTest['message'] = $message;
 			$infoEachTest['code'] = $this->getCode($file,$testName,$line);
 			$infoEachTest['trace'] = (string)$f->thrownException();
-			
-			
+				
 			array_push($this->infoFailedTests,$infoEachTest);
 
 		}
