@@ -21,14 +21,15 @@ $(document).on('ready',function(){
 		runAllTests();
 	});
 	
-	$("#content").on('click',".groupName .buttonGroup", function() {
-		
+	$("#content").on('click',".groupName .buttonGroup", function() {	
 		requestRunTests(this);
 	});
 	
 	$("#content").on('click',".groupContent .grey p .buttonFolder", function() {
 		var folderName = $(this).data('name');
 		var idFolder = $(this).data('idfolder');
+		
+		$(this).attr("src","images/loading.gif");
 		
 		$.ajax({
 			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
@@ -266,9 +267,8 @@ $(document).on('ready',function(){
 		var is_empty;
 
 		actualIdTest = idName;
-
-		var original_content = $(idName).html();
-		$(idName).html('<div class="center"><img src="images/loading.gif"/></div>');
+		
+		$(element).attr("src","images/loading.gif");
 		
 		$.ajax({
 			url:  'http://localhost/PUWI/PUWI_LoadJSON.php',
@@ -305,7 +305,6 @@ $(document).on('ready',function(){
 
 					break;
 					case "test":	
-						$(idName).html(original_content);
 						if (is_empty == true){
 							$("."+nameRun.replace(/:/g,'\\:')).remove();
 							removeSingleElements(request['result']['groups']);	
@@ -411,7 +410,7 @@ $(document).on('ready',function(){
 		    if (typeof existingGroup ===  "undefined") {
 		    	createDiv(group_name,"groupName isNoHidden","content",group_name);
 			    createDiv('','groupContent isNoHidden', 'content', group_name+"content");
-			    $(selector).prepend('<input type="image" src="images/run_group.png" class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runTests">');
+			    $(selector).prepend('<input type="image" src="images/run_group.png" id='+group_name+'button class="buttonGroup classButton" data-name='+group_name+' data-type="group" data-action="runTests">');
 
 			    showGroupsInOrder(group_name);		  
 			    changeButtonsAppearance(".buttonGroup","Run group","run_group.png","run_group_hover.png");
@@ -446,7 +445,7 @@ $(document).on('ready',function(){
 		    		  createDiv(folder,fName+' grey isNoHidden',group_name+"content",idDivFolder);
 		    		  
 			    	  var selector = "#"+idDivFolder+" > p";
-			    	  $(selector).append('<input type="image" src="images/run_folder.png" class="buttonFolder classButton" data-name='+folder+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
+			    	  $(selector).append('<input type="image" src="images/run_folder.png" id='+folder+'button class="buttonFolder classButton" data-name='+folder+' data-idfolder='+"."+idDivFolder+'  data-action="runFolder">');
 			    	  
 			    	  changeButtonsAppearance(".buttonFolder","Run folder","run_folder.png","run_folder_hover.png");
 		    	  }
@@ -458,7 +457,7 @@ $(document).on('ready',function(){
 			      if(typeof $(divFileSelector).html() === "undefined"){
 						createDiv(className,'black margin20 isNoHidden',idDivFolder, idDivFolder+className);
 						var selector = "#"+idDivFolder+className+" > p";
-						$(selector).append('<input type="image" src="images/run_file.png" class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runTests">');
+						$(selector).append('<input type="image" src="images/run_file.png" id='+className+'button class="buttonFile classButton" data-idfile='+idDivFolder+className+' data-name='+className+' data-type="file" data-action="runTests">');
 			      
 						changeButtonsAppearance(".buttonFile","Run file","run_file.png","run_file_hover.png");
 			      }
