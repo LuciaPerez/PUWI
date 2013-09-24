@@ -502,6 +502,7 @@ $(document).on('ready',function(){
 						if (resultClassTestExecuted == 'testFailed box'){
 							
 							  var failedTest = getInfoFailedTests(testContent,info);
+						
 							  testContent = failedTest['testName'].split("::");
 
 							  resultClassTestExecuted += ' isNoHidden';
@@ -675,6 +676,7 @@ $(document).on('ready',function(){
 	}
 	
 	getClassNameTest = function(value, passed, incomplete, skipped, errors, failures){
+
 		var regexequals = new RegExp(value+"$","gi");
 		var regex = new RegExp (".*"+value+" .*","gi");
 
@@ -694,14 +696,19 @@ $(document).on('ready',function(){
 	getFolder = function(folders,className){
 		var result = "";
 		
-		 $.each(folders, function(folder, tests) {	
-			 $.each(folders[folder], function(index, test) {
-				 var regex = new RegExp (".*"+className+".*","gi");
+		 $.each(folders, function(folder, tests) {
+			 $.each(folders[folder], function(index, file) {
+				 $.each(file, function(fileName, className_inFile) {
+					// alert(fileName+" --- "+className_inFile+" --- "+className);
+					 if ($.inArray(className,className_inFile) !== -1){
+						 result = folder; 
+					 }
+				 });
+				/* var regex = new RegExp (".*"+className+".*","gi");
 				 
-				 if (test.match(regex)){
-					 result = folder;
-					 
-				 }
+				 if (test[ 1 ].match(regex)){
+					 result = folder; 
+				 }*/
 			     
 			 });
 		});
@@ -756,13 +763,22 @@ $(document).on('ready',function(){
 	 * Search failed test information from array of failed tests information
 	 */
 	getInfoFailedTests = function(testName,infoFailedTests){
+
 		var result;
-		
+
+		testName = testName.replace(/\(/g,'\\(');
+		testName = testName.replace(/\)/g,'\\)');
+		testName = testName.replace(/\]/g,'\\]');
+		testName = testName.replace(/\[/g,'\\[');
+		testName = testName.replace(/\*/g,'\\*');
+		testName = testName.replace(/\^/g,'\\^');
+		testName = testName.replace(/\$/g,'\\$');
+		testName = testName.replace(/\+/g,'\\+');
+
 		var regexequals = new RegExp(testName+"$","gi");
 		var regex = new RegExp (testName+" .*","gi");
 		
 		$.each(infoFailedTests, function(key, value) {
-			 
 		      if (value['testName'].match(regex) || value['testName'].match(regexequals)){
 		    	  result = value;
 		      }

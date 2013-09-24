@@ -173,7 +173,8 @@ class PUWI_GetResults{
 						$this->getFoldersProject($this->folder . "/");
 					} else{
 						if($file!="." && $file!=".." && $file!=".." && !preg_match($regex,$file)){
-							array_push($arrayFiles,$file);
+							$file_data[$file] = $this->find_classname($pathDir.$file);
+							array_push($arrayFiles,$file_data);
 	
 						}
 						if (count($arrayFiles) != 0){
@@ -190,6 +191,31 @@ class PUWI_GetResults{
 
 		}
 	
+	}
+	
+	/**
+	 * Find every class defined on a file
+	 * 
+	 * @param string $path_file
+	 */
+	
+	protected function find_classname($path_file){
+		$file_to_open = fopen ($path_file, "r");
+		
+		$class_name = array();
+		$pattern = "/(*ANY)class /";
+		
+		while ($line = fgets($file_to_open, 1024)){
+			if (preg_match($pattern,$line)){
+				$line_class_name = preg_split($pattern,$line);
+				$line_class_name = explode(' ',$line_class_name[1]);
+				$line_class_name = explode('{',$line_class_name[0]);
+				array_push($class_name,$line_class_name[0]);
+			}
+		}
+
+		fclose($file_to_open);
+		return $class_name;
 	}
 	
 	/**
