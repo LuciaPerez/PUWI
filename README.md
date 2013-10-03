@@ -18,7 +18,7 @@ In order to revise the **coverage report**, it's necessary to have 'coverage-htm
 1. Download the project from the URL:   
   `git clone https://github.com/LuciaPerez/PUWI.git`
 
-2. Download the correct PHPUnit version to run this project and save it in the PUWI directory:[Download PHPUnit](http://localhost/ghpage/phpunit.tar.gz)
+2. Download the correct PHPUnit version to run this project and save it in the PUWI directory.
 
 3. First of all, it's necessary to check in `~/PUWI/config.ini.inc` the following locations:
 
