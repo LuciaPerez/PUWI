@@ -41,9 +41,9 @@ $(document).on('ready',function(){
 				updateResults(request['result'],folderName,'',"folder");
 			},
 		
-			error: function(request){
-				alert("An error ocurred in ajax request");
-			}
+			error: function(request, ajaxOptions, thrownError) {
+		        alert("ReadyState: "+request.readyState+". \nStatus: "+request.status+". \n\nERROR: \n"+thrownError);
+		    }
 		});
 	});
 	
@@ -203,10 +203,10 @@ $(document).on('ready',function(){
 				
 				updateResults(request['result'],'','');
 			},
-			error: function(request){
+			error: function(request, ajaxOptions, thrownError) {
 				$("#content").empty();
-				alert("An error ocurred in AJAX request.");
-			}
+		        alert("ReadyState: "+request.readyState+". \nStatus: "+request.status+". \n\nERROR: \n"+thrownError);
+		    }
 		});
 	}
 
@@ -315,9 +315,9 @@ $(document).on('ready',function(){
 				}
 			},
 		
-			error: function(request){
-				alert("an error ocurred in ajax request");
-			}
+			error: function(request, ajaxOptions, thrownError) {
+		        alert("ReadyState: "+request.readyState+". \nStatus: "+request.status+". \n\nERROR: \n"+thrownError);
+		    }
 		});
 	}
 	
