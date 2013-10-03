@@ -12,11 +12,15 @@ It's necessary too:
 	   PHP >= 5.4.7  
 	   xdebug >= 2.2.1
 
+In order to revise the **coverage report**, it's necessary to have 'coverage-html' as logging type in the PHPUnit configuration file and also you have to establish write permissions for the directory where the resultant files of HTML coverage analysis are going to be saved.
+
 ### Installing PUWI
 1. Download the project from the URL:   
   `git clone https://github.com/LuciaPerez/PUWI.git`
 
-2. First of all, it's necessary to check in `~/PUWI/config.ini.inc` the following locations:
+2. Download the correct PHPUnit version to run this project and save it in the PUWI directory:[Download PHPUnit](http://localhost/ghpage/phpunit.tar.gz)
+
+3. First of all, it's necessary to check in `~/PUWI/config.ini.inc` the following locations:
 
 	 **- serverDirectory** is the directory where *php.ini* file is located, in Apache server is /etc/apache2/
 
@@ -30,7 +34,7 @@ It's necessary too:
     The default location to install these dependencies is *PUWI/vendor/*.
     
     
-3. Execute the installation script:  `sudo ~/PUWI/install.bash`
+4. Execute the installation script:  `sudo ~/PUWI/install.bash`
 
 ### Running tests
 To execute tests from a project using PUWI, execute *puwi* command in your project location.
