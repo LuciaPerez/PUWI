@@ -46,10 +46,8 @@ function change_owner {
 	
 	ls -l $path_pub_dir | sudo tee -a tmp_puwi/permissions.txt 1>/dev/null 
 
-	user=`awk '/'$pubDirectory'/ {print $0}' tmp_puwi/permissions.txt | cut -d " " -f4`
-
-	group=`awk '/'$pubDirectory'/ {print $0}' tmp_puwi/permissions.txt | cut -d " " -f5`
-
+	user=`awk '/'$pubDirectory'/ {print $0}' tmp_puwi/permissions.txt | awk '{print $3}'`
+	group=`awk '/'$pubDirectory'/ {print $0}' tmp_puwi/permissions.txt  | awk '{print $4}'`
 
 	sudo chown $user $2
 	sudo chgrp $group $2
