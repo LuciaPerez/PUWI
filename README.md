@@ -18,7 +18,7 @@ In order to revise the **coverage report**, it's necessary to have 'coverage-htm
 1. Download the project from the URL:   
   `git clone https://github.com/LuciaPerez/PUWI.git`
 
-2. Download the correct PHPUnit version to run this project and save it in the PUWI directory.
+2. Download and extract the correct PHPUnit version to run this project and save it in the PUWI directory: [Download PHPUnit](http://luciaperez.github.io/PUWI/).
 
 3. First of all, it's necessary to check in `~/PUWI/config.ini.inc` the following locations:
 
@@ -27,12 +27,6 @@ In order to revise the **coverage report**, it's necessary to have 'coverage-htm
 	 **- pubDirectory** is the location where files are published at the web server, in Apache server is /var/www
 
 	 **- runService** indicates the location of the service which must be restarted after modifying *php.ini* file, in Apache server is /etc/init.d/
-
-    2.1. Dependencies
-
-    Install PUWI involves installing automatically the last available PHPUnit version and every dependency that needs to work properly.
-    The default location to install these dependencies is *PUWI/vendor/*.
-    
     
 4. Execute the installation script:  `sudo ~/PUWI/install.bash`
 
