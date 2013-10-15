@@ -97,6 +97,29 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
     	}
     	$suite->injectFilter($filterFactory);
     }
+    
+    /**
+     * @param string $message
+     * @since Method available since Release 3.8.0
+     */
+    private function showExtensionNotLoadedMessage($extension, $message = '')
+    {
+    	if (isset($this->missingExtensions[$extension])) {
+    		return;
+    	}
+    
+    	if (!empty($message)) {
+    		$message = ' ' . $message;
+    	}
+    
+    	$this->showMessage(
+    			'The ' . $extension . ' extension is not loaded.' . $message . "\n"
+    	);
+    
+    	$this->missingExtensions[$extension] = TRUE;
+    }
+    
+    
     /**
      * @param  PHPUnit_Framework_Test $suite
      * @param  array   			$arguments
@@ -109,8 +132,8 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
 	
     	$this->processSuiteFilters($suite, $full_arguments);
     	
-		if(in_array('configuration',array_keys($full_arguments))){
-			if(in_array('coverage-html',$full_arguments['configuration']->getLoggingConfiguration())){
+		if(array_key_exists('configuration',$full_arguments)){
+			if(array_key_exists('coverage-html',$full_arguments['configuration']->getLoggingConfiguration())){
     			$this->setCoverageDestination($full_arguments['configuration']->getLoggingConfiguration()['coverage-html']);
 			}
 		}
@@ -216,13 +239,15 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
     		}
     	} else {
     		if (!extension_loaded('tokenizer')) {
+    			print "ENTRA!!! --------------------";
     			$this->showExtensionNotLoadedMessage(
     					'tokenizer', 'No code coverage will be generated.'
     			);
     		}
     	
     		else if (!extension_loaded('Xdebug')) {
-    			$this->showExtensionNotLoadedMessage(
+    			print "ENTRA!!! --------------------";
+    			parent::showExtensionNotLoadedMessage(
     					'Xdebug', 'No code coverage will be generated.'
     			);
     		}
