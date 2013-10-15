@@ -237,21 +237,7 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
     		if (isset($full_arguments['coverageXml'])) {
     			$codeCoverageReports++;
     		}
-    	} else {
-    		if (!extension_loaded('tokenizer')) {
-    			print "ENTRA!!! --------------------";
-    			$this->showExtensionNotLoadedMessage(
-    					'tokenizer', 'No code coverage will be generated.'
-    			);
-    		}
-    	
-    		else if (!extension_loaded('Xdebug')) {
-    			print "ENTRA!!! --------------------";
-    			parent::showExtensionNotLoadedMessage(
-    					'Xdebug', 'No code coverage will be generated.'
-    			);
-    		}
-    	}
+    	} 
     	
     	if ($codeCoverageReports > 0) {
     		$codeCoverage = new PHP_CodeCoverage(
