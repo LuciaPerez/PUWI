@@ -20,7 +20,7 @@ function main {
 	$scriptDir/load_deps.bash 
 
 	mv $scriptDir/ $pubDirectory
-	
+
 	if [[ `echo ${pubDirectory: -1}` = "/" ]]
 	then
 		path_puwi=$pubDirectory'PUWI/'
@@ -58,7 +58,7 @@ function addIncludePath {
 function createAlias {	
 	if [[ `grep "^alias puwi=" ~/.bashrc` = "" ]]
 	then
-		echo 'alias puwi='$pubDirectory'PUWI/launch_project.bash' >> ~/.bashrc && . ~/.bashrc 
+		echo 'alias puwi='$path_puwi'launch_project.bash' >> ~/.bashrc && . ~/.bashrc 
 	fi
 }
 
