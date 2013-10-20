@@ -256,11 +256,9 @@
 	line-height: 25px;
 }
 
-.buttonTest{
-	/*width: 1.5em;
-	height: 1.5em;*/
+.center{
+	text-align:center;
 }
-
 
 .fileFT{
 	float:left;
@@ -273,3 +271,5 @@
 .alwaysHidden{
 	display:none !important;
 }
+
+
