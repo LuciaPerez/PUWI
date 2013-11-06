@@ -28,7 +28,7 @@ function main {
 		path_puwi=$pubDirectory'/PUWI/'
 	fi
 
-	change_owner $pubDirectory $path_puwi	
+	chmod 777 $pubDirectory/PUWI/	
 
 	addIncludePath
 
