@@ -37,17 +37,17 @@ function main {
 }
 
 function parseConfig {
-	theCommand='include_path=".:phpunit/'
+	theCommand='include_path=".:vendor/phpunit/phpunit/'
 }
 
 function addPathAutoload {
-	pathAutoload="pathAutoload = phpunit/PHPUnit/Autoload.php";
+	pathAutoload="pathAutoload = vendor/phpunit/phpunit/PHPUnit/Autoload.php";
 	echo $pathAutoload >> ./config.ini 
 }
 
 function addIncludePath {
 	phpIniLocation=`find $serverDirectory -name php.ini 2>/dev/null`
-	if [[ `grep "^include_path=\".:phpunit" $phpIniLocation` = "" ]]
+	if [[ `grep "^include_path=\".:vendor/phpunit/phpunit" $phpIniLocation` = "" ]]
 	then
 		echo $theCommand:$phpDir"\"" >> $phpIniLocation
 		echo -e "Restarting server to update php.ini configuration...\n"
