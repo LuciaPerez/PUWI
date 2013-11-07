@@ -19,7 +19,7 @@ function main {
 	addPathAutoload
 	$scriptDir/load_deps.bash 
 
-	mv $scriptDir/ $pubDirectory
+	cp -Rf $scriptDir/ $pubDirectory
 
 	if [[ `echo ${pubDirectory: -1}` = "/" ]]
 	then
