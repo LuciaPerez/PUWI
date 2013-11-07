@@ -12,6 +12,7 @@
 	}
 	
 	include 'PUWI_Runner.php';
+	include 'PUWI_TestSuite.php';
 	include 'PUWI_GetResults.php';
 
 	
@@ -38,6 +39,7 @@
 			      $this->arguments['testSuffixes']
 			    );
 			}
+			$suite = new PUWI_TestSuite($suite);
 
 			unset($this->arguments['test']);
 			unset($this->arguments['testFile']);

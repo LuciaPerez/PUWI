@@ -312,10 +312,13 @@ class PUWI_Runner extends PHPUnit_TextUI_TestRunner
     				$full_arguments['timeoutForLargeTests']
     		);
     	}
-    	
+  
+/*  	
+        // TODO check with complex suites if deleting this code is a problem
     	if ($suite instanceof PHPUnit_Framework_TestSuite) {
     		$suite->setRunTestInSeparateProcess($full_arguments['processIsolation']);
     	}
+*/
     	
     	$suite->run($result);
     	

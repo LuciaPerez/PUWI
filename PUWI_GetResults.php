@@ -1,5 +1,6 @@
 <?php
 include_once 'PUWI_UtilFilter.php';
+include_once 'PUWI_TestSuite.php';
 
 class PUWI_GetResults{
 	
@@ -231,6 +232,7 @@ class PUWI_GetResults{
 		while (list($group_name, $group_content) = each($groups_details)){
 			$arrayTests = array();
 			while (list($index, $suite) = each($group_content)){				
+				$suite = new PUWI_TestSuite($suite);
 				$groups_suite = $suite->getGroupDetails();
 				
 				while (list($key, $value) = each($groups_suite[$group_name])){
