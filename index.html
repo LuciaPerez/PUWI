@@ -78,18 +78,18 @@ In addition, PUWI allows to:
 <ol>
 <p><li>Download the project from the URL:<br><code class="tabular">git clone https://github.com/LuciaPerez/PUWI.git</code>
 </li></p>
-<p><li>Download and extract the correct PHPUnit version to run this project and save it in the PUWI directory: <a href="phpunit.tar.gz"><strong><em>Download PHPUnit</em></strong></a>
+<p><li><code>cd PUWI/</code>
 </li></p>
 <p><li>
-First of all, it's necessary to check in <code>~/PUWI/config.ini.inc</code> the following locations:</p>
+First of all, it's necessary to check in <code>config.ini.inc</code> the following locations:</p>
 
 <p class="tabular"><strong>serverDirectory</strong> is the directory where <em>php.ini</em> file is located, in Apache server is /etc/apache2/</p>
 
 <p class="tabular"><strong>pubDirectory</strong> is the location where files are published at the web server, in Apache server is /var/www</p>
 
-<p class="tabular"><strong>runService</strong> indicates the location of the service which must be restarted after modifying <em>php.ini</em> file, in Apache server is /etc/init.d/</p>
+<p class="tabular"><strong>runService</strong> indicates the location of the service which must be restarted after modifying <em>php.ini</em> file, in Apache server is /etc/init.d/apache2</p>
 
-<p><li>Execute the installation script:  <code>sudo ~/PUWI/install.bash</code></li></p>
+<p><li>Execute the installation script:  <code>sudo ./install.bash</code></li></p>
 </ol><h3>
 <a name="running-tests" class="anchor" href="#running-tests"><span class="octicon octicon-link"></span></a>Running tests</h3>
 
