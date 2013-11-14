@@ -18,17 +18,17 @@ In order to revise the **coverage report**, it's necessary to have 'coverage-htm
 1. Download the project from the URL:   
   `git clone https://github.com/LuciaPerez/PUWI.git`
 
-2. Download and extract the correct PHPUnit version to run this project and save it in the PUWI directory: [Download PHPUnit](http://luciaperez.github.io/PUWI/).
+2. `cd PUWI/`
 
-3. First of all, it's necessary to check in `~/PUWI/config.ini.inc` the following locations:
+3. First of all, it's necessary to check in `config.ini.inc` the following locations:
 
 	 **- serverDirectory** is the directory where *php.ini* file is located, in Apache server is /etc/apache2/
 
 	 **- pubDirectory** is the location where files are published at the web server, in Apache server is /var/www
 
-	 **- runService** indicates the location of the service which must be restarted after modifying *php.ini* file, in Apache server is /etc/init.d/
+	 **- runService** indicates the location of the service which must be restarted after modifying *php.ini* file, in Apache server is /etc/init.d/apache2
     
-4. Execute the installation script:  `sudo ~/PUWI/install.bash`
+4. Execute the installation script:  `sudo ./install.bash`
 
 ### Running tests
 To execute tests from a project using PUWI, execute *puwi* command in your project location.
